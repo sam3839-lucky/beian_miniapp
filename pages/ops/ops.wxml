@@ -1,0 +1,89 @@
+<view class="page">
+  <!-- 加载态 -->
+  <view wx:if="{{loading && !status}}" class="state-msg">加载中...</view>
+
+  <!-- 错误态 -->
+  <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
+    <text class="err-icon">!</text>
+    <text>加载失败，点击重试</text>
+  </view>
+
+  <!-- 数据面板 -->
+  <view wx:if="{{status}}">
+    <!-- ═══ 核心指标 ═══ -->
+    <view class="overview">
+      <view class="stat-card">
+        <text class="stat-num">{{status.total}}</text>
+        <text class="stat-label">总房源</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num green">{{status.zones.length}}</text>
+        <text class="stat-label">覆盖区域</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{status.permits}}</text>
+        <text class="stat-label">预售证</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num blue">{{status.db_size_mb}}MB</text>
+        <text class="stat-label">数据库</text>
+      </view>
+    </view>
+
+    <!-- ═══ 同步状态 ═══ -->
+    <view class="section">
+      <view class="section-head"><text class="section-title">数据同步</text></view>
+      <view class="info-card">
+        <view class="info-row">
+          <text class="k">最近同步批次</text>
+          <text class="v mono">{{status.last_sync}}</text>
+        </view>
+        <view class="info-row">
+          <text class="k">最近更新日期</text>
+          <text class="v">{{status.last_check}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 状态分布 ═══ -->
+    <view class="section">
+      <view class="section-head"><text class="section-title">房源状态分布</text></view>
+      <view class="info-card">
+        <view class="info-row" wx:for="{{statusList}}" wx:key="key">
+          <text class="k">{{item.key}}</text>
+          <view class="bar-wrap">
+            <view class="bar" style="width:{{item.count / status.total * 100}}%;background:{{item.key === '未售' ? '#07C160' : item.key === '已网签' ? '#FAAD14' : item.key === '已备案' ? '#FF8C00' : '#D9D9D9'}}"></view>
+          </view>
+          <text class="v">{{item.count}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 用途分布 ═══ -->
+    <view class="section">
+      <view class="section-head"><text class="section-title">房屋用途 TOP5</text></view>
+      <view class="info-card">
+        <view class="info-row" wx:for="{{status.top_usage}}" wx:key="usage">
+          <text class="k">{{item.usage}}</text>
+          <text class="v">{{item.count}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 各区可售住宅 ═══ -->
+    <view class="section">
+      <view class="section-head"><text class="section-title">各区可售住宅</text></view>
+      <view class="info-card">
+        <view class="info-row" wx:for="{{status.zones}}" wx:key="name">
+          <text class="k">{{item.name}}</text>
+          <view class="bar-wrap">
+            <view class="bar" style="width:{{item.unsold / status.zones[0].unsold * 100}}%;background:#07C160"></view>
+          </view>
+          <text class="v green">{{item.unsold}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view style="height:40rpx;"></view>
+  </view>
+</view>

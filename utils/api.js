@@ -48,4 +48,5 @@ module.exports = {
   getOverview: () => request('/api/overview'),
   getRankings: () => request('/api/rankings'),
   getLatestPermits: () => request('/api/latest-permits'),
+  getAdminStatus: () => request('/api/admin/status'),
 };

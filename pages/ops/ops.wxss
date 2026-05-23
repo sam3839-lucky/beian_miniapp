@@ -1,0 +1,128 @@
+/* ═══ 运营面板 — WeUI 规范 ═══ */
+
+.page {
+  background: #F7F7F7;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 概览卡片 */
+.overview {
+  display: flex;
+  padding: 24rpx 32rpx;
+  gap: 16rpx;
+}
+.stat-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 8rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.stat-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #333;
+}
+.stat-num.green { color: #07C160; }
+.stat-num.blue  { color: #576B95; }
+.stat-label {
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* Section */
+.section {
+  margin: 32rpx 32rpx 0;
+}
+.section-head {
+  margin-bottom: 20rpx;
+}
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+/* 信息卡片 */
+.info-card {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 8rpx 0;
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 18rpx 28rpx;
+  min-height: 76rpx;
+}
+.info-row + .info-row {
+  border-top: 1rpx solid #F0F0F0;
+}
+.info-row .k {
+  font-size: 26rpx;
+  color: #333;
+  width: 180rpx;
+  flex-shrink: 0;
+}
+.info-row .v {
+  font-size: 26rpx;
+  color: #888;
+  text-align: right;
+  flex-shrink: 0;
+}
+.info-row .v.green { color: #07C160; }
+.info-row .v.mono { font-family: monospace; font-size: 22rpx; }
+
+/* 小柱状条 */
+.bar-wrap {
+  flex: 1;
+  height: 12rpx;
+  border-radius: 6rpx;
+  background: #F0F0F0;
+  overflow: hidden;
+}
+.bar {
+  height: 100%;
+  border-radius: 6rpx;
+  min-width: 4rpx;
+}
+
+/* 错误态 */
+.err-block {
+  background: #FFF7E6;
+  border-radius: 8rpx;
+  padding: 32rpx;
+  text-align: center;
+  color: #FAAD14;
+  font-size: 28rpx;
+  margin: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  min-height: 88rpx;
+}
+.err-icon {
+  width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  border-radius: 50%;
+  background: #FAAD14;
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* 加载/空态 */
+.state-msg {
+  text-align: center;
+  padding: 80rpx 32rpx;
+  color: #888;
+  font-size: 28rpx;
+}

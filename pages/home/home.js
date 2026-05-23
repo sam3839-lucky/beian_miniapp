@@ -194,4 +194,8 @@ Page({
       url: `/pages/index/index?price_min=${r.totalLow}&price_max=${r.affordMax}`
     });
   },
+
+  onOpenOps() {
+    wx.navigateTo({ url: '/pages/ops/ops' });
+  },
 });

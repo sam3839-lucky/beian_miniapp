@@ -170,5 +170,13 @@
     </view>
   </view>
 
+  <!-- ═══ 运营入口 ═══ -->
+  <view class="section">
+    <view class="ops-entry" bindtap="onOpenOps">
+      <text>运营面板</text>
+      <text style="color:#888">查看数据同步与系统状态 →</text>
+    </view>
+  </view>
+
   <view style="height:80rpx;"></view>
 </view>

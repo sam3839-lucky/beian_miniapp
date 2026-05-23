@@ -406,6 +406,19 @@
 .permit-card-hover { background: #F7F7F7; }
 .calc-btn-hover { background: #06AD56; }
 
+/* ═══ 运营入口 ═══ */
+.ops-entry {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 28rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  color: #576B95;
+  min-height: 88rpx;
+}
+
 /* ═══ 错误态 ═══ */
 .err-block {
   background: #FFF7E6;

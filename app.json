@@ -2,7 +2,8 @@
   "pages": [
     "pages/home/home",
     "pages/index/index",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/ops/ops"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",
