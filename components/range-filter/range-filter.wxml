@@ -1,0 +1,10 @@
+<view class="filter-tags">
+  <text class="tag-label">{{title}}</text>
+  <block wx:for="{{ranges}}" wx:key="*this">
+    <text 
+      class="tag {{index === active ? 'on' : ''}}" 
+      data-index="{{index}}"
+      bindtap="onTap"
+    >{{item}}</text>
+  </block>
+</view>

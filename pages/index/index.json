@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "price-card": "/components/price-card/price-card",
+    "range-filter": "/components/range-filter/range-filter"
+  },
+  "navigationBarTitleText": "备案价查询"
+}

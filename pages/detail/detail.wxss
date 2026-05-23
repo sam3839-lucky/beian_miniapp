@@ -1,0 +1,31 @@
+page { background: #f2f0ed; }
+.sheet {
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  margin: 20px 0 0;
+  padding: 24px 0 20px;
+}
+.big-no {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  color: #1c1917;
+  letter-spacing: -1px;
+}
+.big-status {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #059669;
+  margin: 2px 0 16px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+  font-size: 15px;
+  border-bottom: 1px solid #f5f5f4;
+}
+.row .k { color: #a8a29e; }
+.row .v { font-weight: 600; color: #1c1917; }
+.row .v.red { color: #dc2626; font-size: 20px; }

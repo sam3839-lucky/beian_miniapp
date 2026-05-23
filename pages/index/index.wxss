@@ -1,0 +1,153 @@
+.container { display:flex; flex-direction:column; height:100vh; background:#F7F7F7; }
+
+/* 筛选栏 */
+.filters {
+  background: #fff;
+  padding: 8px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.filter-row {
+  display: flex;
+  gap: 8px;
+}
+.filter-row picker {
+  flex: 1;
+}
+.picker-val {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e7e5e4;
+  font-size: 14px;
+  color: #1c1917;
+  background: #fafaf9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e7e5e4;
+  font-size: 14px;
+  background: #fafaf9;
+}
+
+/* 统计标题 */
+.bldg-title {
+  padding: 4px 18px 10px;
+  font-size: 13px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.title-text {
+  font-weight: 600;
+  color: #78716c;
+}
+.stats-inline {
+  font-weight: 500;
+  color: #a8a29e;
+  font-size: 12px;
+}
+.stats-inline .bold {
+  color: #07C160;
+  font-weight: 700;
+}
+
+/* 列表 */
+.list {
+  flex: 1;
+  padding: 0 14px;
+  overflow-y: auto;
+}
+
+/* 骨架屏 */
+.skeleton {
+  background: #fffefb;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 14px;
+}
+.s-bar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.s-line {
+  height: 14px;
+  border-radius: 6px;
+  background: #e7e5e4;
+}
+.s-line.short { width: 60%; }
+
+/* 状态提示 */
+.state-msg {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a8a29e;
+  font-size: 14px;
+}
+
+/* 楼层分隔 */
+.floor-sep {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px 8px;
+}
+.floor-sep .line {
+  flex: 1;
+  height: 1px;
+  background: #e7e5e4;
+}
+.floor-sep .num {
+  font-size: 12px;
+  font-weight: 700;
+  color: #a8a29e;
+  letter-spacing: 1px;
+}
+
+/* 统计栏（筛选区内） */
+.stat-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+  padding: 10px 0 2px;
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.val {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.val.t { color: #44403c; }
+.val.s { color: #a8a29e; }
+.val.u { color: #07C160; }
+.lbl {
+  font-size: 11px;
+  color: #a8a29e;
+  font-weight: 500;
+  letter-spacing: .5px;
+}
+.sep {
+  width: 1px;
+  height: 32px;
+  background: #f0efed;
+}
+.pct {
+  font-size: 10px;
+  color: #a8a29e;
+  margin-top: 1px;
+}

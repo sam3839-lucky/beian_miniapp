@@ -1,0 +1,12 @@
+<view class="sheet">
+  <view class="big-no">{{unit.unit_no}}</view>
+  <view class="big-status" style="color:{{statusColor}}">● {{status}}</view>
+
+  <view class="row"><text class="k">面积</text><text class="v">{{area}}㎡</text></view>
+  <view class="row"><text class="k">单价</text><text class="v">{{unitPrice}}</text></view>
+  <view class="row"><text class="k">总价</text><text class="v red">{{totalPrice}}</text></view>
+  <view class="row"><text class="k">备案日期</text><text class="v">{{unit.check_date || '-'}}</text></view>
+  <view class="row"><text class="k">用途</text><text class="v">{{unit.house_usage || '-'}}</text></view>
+  <view class="row"><text class="k">类型</text><text class="v">{{unit.sale_type || '-'}}</text></view>
+  <view class="row"><text class="k">楼栋</text><text class="v">{{project}} · {{building}}</text></view>
+</view>

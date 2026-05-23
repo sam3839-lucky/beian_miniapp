@@ -1,0 +1,442 @@
+/* ═══ 主页样式 — 微信小程序 WeUI 规范 ═══ */
+/* 750rpx = 屏幕宽度 | 色系: WeUI | 圆角: 8rpx | 间距: 16/24/32rpx 网格 */
+
+.page {
+  background: #F7F7F7;
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* ═══ 搜索栏 ═══ */
+.search-bar {
+  background: #fff;
+  padding: 24rpx 32rpx;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #F7F7F7;
+  border-radius: 8rpx;
+  padding: 20rpx 24rpx;
+  height: 72rpx;
+  box-sizing: border-box;
+}
+.search-icon {
+  font-size: 28rpx;
+  margin-right: 16rpx;
+}
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* ═══ 概览卡片 ═══ */
+.overview {
+  display: flex;
+  padding: 24rpx 32rpx;
+  gap: 16rpx;
+}
+.stat-card {
+  flex: 1;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 8rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.stat-num {
+  font-size: 44rpx;
+  font-weight: 700;
+}
+.stat-num.green { color: #07C160; }
+.stat-num.red   { color: #FF4D4F; }
+.stat-num.gray  { color: #333; }
+.stat-num.blue  { color: #576B95; }
+.stat-label {
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* ═══ 状态占比条 ═══ */
+.status-bar {
+  margin: 0 32rpx 32rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 28rpx;
+}
+.bar-track {
+  height: 16rpx;
+  border-radius: 8rpx;
+  background: #F0F0F0;
+  display: flex;
+  overflow: hidden;
+}
+.bar-seg { height: 100%; }
+.bar-seg.unsold      { background: #07C160; }
+.bar-seg.signed      { background: #FAAD14; }
+.bar-seg.filed       { background: #FF8C00; }
+.bar-seg.transferred { background: #D9D9D9; }
+.bar-legend {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #888;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.dot {
+  width: 16rpx; height: 16rpx;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4rpx;
+}
+.dot.unsold      { background: #07C160; }
+.dot.signed      { background: #FAAD14; }
+.dot.filed       { background: #FF8C00; }
+.dot.transferred { background: #D9D9D9; }
+
+/* ═══ Section 通用 ═══ */
+.section {
+  margin: 32rpx 32rpx 0;
+}
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+}
+
+/* ═══ 区域快捷标签 ═══ */
+.zone-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.zone-chip {
+  padding: 16rpx 28rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.4;
+  min-height: 88rpx;
+  display: flex;
+  align-items: center;
+}
+
+/* ═══ 区域对比 ═══ */
+.zone-compare {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 16rpx 28rpx;
+}
+.zone-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 14rpx 0;
+  min-height: 88rpx;
+}
+.zone-row + .zone-row {
+  border-top: 1rpx solid #E5E5E5;
+}
+.zname {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  width: 90rpx;
+}
+.zcount {
+  font-size: 24rpx;
+  color: #07C160;
+  font-weight: 600;
+  width: 80rpx;
+  text-align: right;
+}
+.zbar-wrap {
+  flex: 1;
+  height: 12rpx;
+  border-radius: 6rpx;
+  background: #F0F0F0;
+  overflow: hidden;
+}
+.zbar {
+  height: 100%;
+  border-radius: 6rpx;
+  background: #07C160;
+}
+.zprice {
+  font-size: 24rpx;
+  color: #888;
+  width: 100rpx;
+  text-align: right;
+}
+
+/* ═══ 排行榜 Tabs ═══ */
+.rank-tabs {
+  display: flex;
+  background: #fff;
+  border-radius: 8rpx 8rpx 0 0;
+}
+.rank-tab {
+  flex: 1;
+  text-align: center;
+  padding: 24rpx 0;
+  font-size: 28rpx;
+  color: #888;
+  border-bottom: 4rpx solid transparent;
+  min-height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rank-tab.on {
+  color: #07C160;
+  border-color: #07C160;
+  font-weight: 600;
+}
+
+/* ═══ 排行榜列表 ═══ */
+.rank-list {
+  background: #fff;
+  border-radius: 0 0 8rpx 8rpx;
+  overflow: hidden;
+}
+.rank-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 28rpx;
+  gap: 20rpx;
+  min-height: 88rpx;
+  border-top: 1rpx solid #F0F0F0;
+}
+.rank-idx {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #D9D9D9;
+  width: 40rpx;
+  text-align: center;
+}
+.rank-item:nth-child(1) .rank-idx { color: #FAAD14; }
+.rank-item:nth-child(2) .rank-idx { color: #A8A8A8; }
+.rank-item:nth-child(3) .rank-idx { color: #D97706; }
+.rank-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  min-width: 0;
+}
+.rank-proj {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rank-unit {
+  font-size: 24rpx;
+  color: #888;
+}
+.rank-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  flex-shrink: 0;
+}
+.rp-total {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #FF4D4F;
+}
+.rp-unit {
+  font-size: 22rpx;
+  color: #888;
+}
+
+/* ═══ 预售证横向滚动 ═══ */
+.permit-scroll {
+  display: flex;
+  flex-direction: row;
+}
+.permit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 28rpx;
+  margin-right: 16rpx;
+  width: 320rpx;
+  flex-shrink: 0;
+}
+.pm-zone {
+  font-size: 20rpx;
+  color: #07C160;
+  background: #E8F8EF;
+  align-self: flex-start;
+  padding: 4rpx 16rpx;
+  border-radius: 4rpx;
+}
+.pm-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-dev {
+  font-size: 22rpx;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pm-date {
+  font-size: 22rpx;
+  color: #888;
+}
+.pm-count {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  font-weight: 600;
+}
+
+/* ═══ 计算器 ═══ */
+.calc-card {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 28rpx;
+}
+.calc-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+.calc-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.calc-label {
+  font-size: 24rpx;
+  color: #888;
+}
+.calc-input {
+  padding: 20rpx 24rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #E5E5E5;
+  font-size: 28rpx;
+  background: #F7F7F7;
+  color: #333;
+  height: 76rpx;
+  box-sizing: border-box;
+}
+.calc-btn {
+  text-align: center;
+  padding: 24rpx;
+  background: #07C160;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  min-height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.calc-result {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #E5E5E5;
+}
+.cr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8rpx 0;
+  font-size: 28rpx;
+  color: #333;
+}
+.cr-val {
+  font-weight: 600;
+  color: #07C160;
+  font-size: 30rpx;
+}
+.cr-hint {
+  text-align: right;
+  font-size: 22rpx;
+  color: #07C160;
+  margin-top: 12rpx;
+}
+
+/* ═══ 骨架屏 ═══ */
+.overview-skel {
+  display: flex;
+  padding: 24rpx 32rpx;
+  gap: 16rpx;
+}
+.skel-card {
+  flex: 1;
+  height: 120rpx;
+  background: #E5E5E5;
+  border-radius: 8rpx;
+}
+
+/* ═══ hover 态（微信原生反馈） ═══ */
+.zone-chip-hover { background: #E8F8EF; }
+.zone-row-hover  { background: #F7F7F7; }
+.rank-item-hover { background: #F7F7F7; }
+.rank-tap-active { opacity: 0.7; }
+.permit-card-hover { background: #F7F7F7; }
+.calc-btn-hover { background: #06AD56; }
+
+/* ═══ 错误态 ═══ */
+.err-block {
+  background: #FFF7E6;
+  border-radius: 8rpx;
+  padding: 32rpx;
+  text-align: center;
+  color: #FAAD14;
+  font-size: 28rpx;
+  margin: 0 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  min-height: 88rpx;
+}
+.err-icon {
+  width: 40rpx;
+  height: 40rpx;
+  line-height: 40rpx;
+  border-radius: 50%;
+  background: #FAAD14;
+  color: #fff;
+  font-size: 24rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ═══ 空态 ═══ */
+.state-msg {
+  text-align: center;
+  padding: 48rpx 32rpx;
+  color: #888;
+  font-size: 28rpx;
+}

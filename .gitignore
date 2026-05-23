@@ -1,0 +1,29 @@
+# 数据库
+*.db
+*.db-shm
+*.db-wal
+
+# 依赖
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 预览产物
+docs/preview/
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
+
+# 密钥
+*.pem
+*.key
+.env
+.env.*

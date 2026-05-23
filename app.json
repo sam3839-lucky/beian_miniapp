@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/detail/detail"
+  ],
+  "window": {
+    "navigationBarTitleText": "备案价查询",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f2f0ed"
+  },
+  "usingComponents": {
+    "price-card": "/components/price-card/price-card",
+    "range-filter": "/components/range-filter/range-filter"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

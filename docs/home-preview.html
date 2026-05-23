@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>深圳新房备案价 — 主页预览</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: #f2f0ed;
+  min-height: 100vh;
+  padding-bottom: 40px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ 搜索栏 ═══ */
+.search-bar { background:#fff; padding:12px 14px; position:sticky; top:0; z-index:10; }
+.search-box { display:flex; align-items:center; background:#f5f3f0; border-radius:12px; padding:10px 14px; gap:8px; }
+.search-icon { font-size:14px; }
+.search-input { flex:1; font-size:14px; color:#1c1917; border:none; background:none; outline:none; }
+
+/* ═══ 概览卡片 ═══ */
+.overview { display:flex; padding:14px; gap:8px; }
+.stat-card { flex:1; background:#fff; border-radius:12px; padding:14px 6px; text-align:center;
+  display:flex; flex-direction:column; gap:2px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.stat-num { font-size:22px; font-weight:800; letter-spacing:-1px; }
+.stat-num.green { color:#059669; }
+.stat-num.red   { color:#dc2626; }
+.stat-num.gray  { color:#78716c; }
+.stat-num.blue  { color:#2563eb; }
+.stat-label { font-size:11px; color:#a8a29e; font-weight:500; }
+
+/* ═══ 状态占比条 ═══ */
+.status-bar { margin:0 14px 6px; background:#fff; border-radius:12px; padding:12px 14px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.bar-track { height:8px; border-radius:4px; background:#f0efed; display:flex; overflow:hidden; }
+.bar-seg { height:100%; }
+.bar-seg.unsold     { background:#059669; }
+.bar-seg.signed     { background:#f59e0b; }
+.bar-seg.filed      { background:#f97316; }
+.bar-seg.transferred { background:#d6d3d1; }
+.bar-legend { display:flex; gap:10px; margin-top:8px; font-size:11px; color:#78716c; align-items:center; flex-wrap:wrap; }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+.dot.unsold     { background:#059669; }
+.dot.signed     { background:#f59e0b; }
+.dot.filed      { background:#f97316; }
+.dot.transferred { background:#d6d3d1; }
+
+/* ═══ Section ═══ */
+.section { margin:14px 14px 0; }
+.section-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.section-title { font-size:16px; font-weight:700; color:#1c1917; }
+
+/* ═══ 区域 chips ═══ */
+.zone-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.zone-chip { padding:8px 14px; background:#fff; border-radius:20px; font-size:13px; color:#44403c;
+  font-weight:500; box-shadow:0 1px 2px rgba(0,0,0,.04); cursor:pointer; transition:.15s; border:none; }
+.zone-chip:active { background:#ecfdf5; color:#059669; }
+
+/* ═══ 区域对比 ═══ */
+.zone-compare { background:#fff; border-radius:12px; padding:10px 14px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.zone-row { display:flex; align-items:center; gap:10px; padding:7px 0; }
+.zone-row + .zone-row { border-top:1px solid #f5f3f0; }
+.zname { font-size:13px; font-weight:600; color:#1c1917; width:52px; }
+.zcount { font-size:12px; color:#059669; font-weight:600; width:40px; text-align:right; }
+.zbar-wrap { flex:1; height:6px; border-radius:3px; background:#f0efed; overflow:hidden; }
+.zbar { height:100%; border-radius:3px; background:linear-gradient(90deg, #059669, #34d399); transition:.3s; }
+.zprice { font-size:12px; color:#78716c; width:56px; text-align:right; }
+
+/* ═══ 榜单 ═══ */
+.rank-tabs { display:flex; background:#fff; border-radius:12px 12px 0 0; overflow:hidden; }
+.rank-tab { flex:1; text-align:center; padding:10px 0; font-size:13px; color:#78716c;
+  border-bottom:2px solid transparent; cursor:pointer; transition:.2s; border:none; background:none; }
+.rank-tab.on { color:#059669; border-color:#059669; font-weight:600; }
+.rank-list { background:#fff; border-radius:0 0 12px 12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.rank-item { display:flex; align-items:center; padding:10px 14px; gap:10px; border-top:1px solid #f5f3f0; cursor:pointer; transition:.1s; }
+.rank-item:active { background:#fafaf9; }
+.rank-idx { font-size:14px; font-weight:800; color:#d6d3d1; width:20px; flex-shrink:0; }
+.rank-item:nth-child(1) .rank-idx { color:#f59e0b; }
+.rank-item:nth-child(2) .rank-idx { color:#a8a29e; }
+.rank-item:nth-child(3) .rank-idx { color:#d97706; }
+.rank-info { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.rank-proj { font-size:13px; font-weight:600; color:#1c1917; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rank-unit { font-size:11px; color:#a8a29e; }
+.rank-price { text-align:right; display:flex; flex-direction:column; gap:2px; flex-shrink:0; }
+.rp-total { font-size:15px; font-weight:700; color:#dc2626; }
+.rp-unit { font-size:11px; color:#a8a29e; }
+
+/* ═══ 预售证 ═══ */
+.permit-scroll { display:flex; overflow-x:auto; gap:10px; padding-bottom:4px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.permit-scroll::-webkit-scrollbar { display:none; }
+.permit-card { flex-shrink:0; width:160px; background:#fff; border-radius:12px; padding:12px 14px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04); display:flex; flex-direction:column; gap:4px; cursor:pointer; }
+.permit-card:active { background:#fafaf9; }
+.pm-zone { font-size:10px; color:#059669; background:#ecfdf5; align-self:flex-start; padding:2px 8px; border-radius:8px; }
+.pm-name { font-size:13px; font-weight:600; color:#1c1917; line-height:1.3; }
+.pm-dev  { font-size:10px; color:#a8a29e; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-date { font-size:11px; color:#a8a29e; }
+.pm-count { font-size:12px; color:#dc2626; font-weight:600; }
+
+/* ═══ 计算器 ═══ */
+.calc-card { background:#fff; border-radius:12px; padding:14px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.calc-row { display:flex; gap:10px; margin-bottom:12px; }
+.calc-field { flex:1; display:flex; flex-direction:column; gap:4px; }
+.calc-label { font-size:12px; color:#78716c; font-weight:500; }
+.calc-input { padding:10px 12px; border-radius:10px; border:1px solid #e7e5e4; font-size:14px;
+  background:#fafaf9; outline:none; width:100%; }
+.calc-input:focus { border-color:#059669; }
+.calc-btn { text-align:center; padding:12px; background:#059669; color:#fff; border-radius:10px;
+  font-size:14px; font-weight:600; cursor:pointer; border:none; width:100%; transition:.15s; }
+.calc-btn:active { background:#047857; }
+.calc-result { margin-top:12px; padding-top:12px; border-top:1px solid #f0efed; display:none; }
+.calc-result.show { display:block; }
+.cr-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; font-size:13px; color:#44403c; }
+.cr-val { font-weight:700; color:#059669; font-size:14px; }
+.cr-hint { text-align:right; font-size:11px; color:#059669; margin-top:6px; }
+
+/* ═══ Page header ═══ */
+.page-header { background:#fff; padding:14px 14px 8px; text-align:center; }
+.page-header h1 { font-size:17px; font-weight:700; color:#1c1917; margin-bottom:2px; }
+.page-header .sub { font-size:11px; color:#a8a29e; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>深圳新房备案价</h1>
+  <div class="sub">数据来源：深圳市住建局 · 实时同步</div>
+</div>
+
+<!-- ═══ 搜索栏 ═══ -->
+<div class="search-bar">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" placeholder="搜项目名、开发商…" />
+  </div>
+</div>
+
+<!-- ═══ 概览卡片 ═══ -->
+<div class="overview" id="overview">
+  <div class="stat-card"><span class="stat-num green" id="ov-unsold">--</span><span class="stat-label">可售住宅</span></div>
+  <div class="stat-card"><span class="stat-num red" id="ov-avg">--</span><span class="stat-label">住宅均价</span></div>
+  <div class="stat-card"><span class="stat-num gray" id="ov-signed">--</span><span class="stat-label">已网签</span></div>
+  <div class="stat-card"><span class="stat-num blue" id="ov-recent">--</span><span class="stat-label">近7日更新</span></div>
+</div>
+
+<!-- ═══ 状态占比条 ═══ -->
+<div class="status-bar" id="status-bar">
+  <div class="bar-track" id="bar-track"></div>
+  <div class="bar-legend">
+    <span class="dot unsold"></span><span>未售 <b id="leg-unsold">--</b></span>
+    <span class="dot signed"></span><span>网签 <b id="leg-signed">--</b></span>
+    <span class="dot filed"></span><span>备案 <b id="leg-filed">--</b></span>
+    <span class="dot transferred"></span><span>转移 <b id="leg-trans">--</b></span>
+  </div>
+</div>
+
+<!-- ═══ 区域快捷入口 ═══ -->
+<div class="section" id="zone-section">
+  <div class="section-head"><span class="section-title">热门区域</span></div>
+  <div class="zone-chips" id="zone-chips"></div>
+</div>
+
+<!-- ═══ 区域对比 ═══ -->
+<div class="section">
+  <div class="section-head"><span class="section-title">各区对比</span></div>
+  <div class="zone-compare" id="zone-compare"></div>
+</div>
+
+<!-- ═══ 排行榜 ═══ -->
+<div class="section">
+  <div class="section-head"><span class="section-title">排行榜</span></div>
+  <div class="rank-tabs" id="rank-tabs">
+    <button class="rank-tab on" data-idx="0">总价最低</button>
+    <button class="rank-tab" data-idx="1">单价最低</button>
+    <button class="rank-tab" data-idx="2">面积最小</button>
+  </div>
+  <div class="rank-list" id="rank-list"></div>
+</div>
+
+<!-- ═══ 最新预售证 ═══ -->
+<div class="section">
+  <div class="section-head"><span class="section-title">最新预售证</span></div>
+  <div class="permit-scroll" id="permit-scroll"></div>
+</div>
+
+<!-- ═══ 计算器 ═══ -->
+<div class="section">
+  <div class="section-head"><span class="section-title">购房能力计算</span></div>
+  <div class="calc-card">
+    <div class="calc-row">
+      <div class="calc-field">
+        <span class="calc-label">首付预算（万）</span>
+        <input class="calc-input" type="number" id="calc-down" placeholder="如 150" />
+      </div>
+      <div class="calc-field">
+        <span class="calc-label">月供能力（万）</span>
+        <input class="calc-input" type="number" id="calc-monthly" placeholder="如 1.5" step="0.1" />
+      </div>
+    </div>
+    <button class="calc-btn" id="calc-btn">计算可负担总价</button>
+    <div class="calc-result" id="calc-result">
+      <div class="cr-row"><span>首付30%可买总价</span><span class="cr-val" id="cr-range">--</span></div>
+      <div class="cr-row"><span>月供范围内最高可贷</span><span class="cr-val" id="cr-loan">--</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ Live data ═══
+const overview = {"avg_total":530.6,"avg_unit":46741,"filed":14461,"recent":303,"signed":36703,"total":199525,"transferred":122068,"unsold":26293,"zones":[{"avg_total":463.3,"avg_unit":43355,"count":6299,"name":"龙岗"},{"avg_total":611.7,"avg_unit":58300,"count":4471,"name":"宝安"},{"avg_total":518.3,"avg_unit":51185,"count":3205,"name":"龙华"},{"avg_total":465.2,"avg_unit":42165,"count":2199,"name":"光明"},{"avg_total":615.0,"avg_unit":53447,"count":1761,"name":"南山"},{"avg_total":579.3,"avg_unit":51215,"count":1546,"name":"坪山"},{"avg_total":574.1,"avg_unit":50933,"count":692,"name":"罗湖"},{"avg_total":516.1,"avg_unit":46920,"count":640,"name":"盐田"}]};
+
+const rankings = {"cheap_total":[{"building_name":"佳盛园","built_area":107.34,"project_name":"佳盛园","total_price":177.6,"unit_no":"E-3A4","unit_price":16548,"zone":"龙岗"},{"building_name":"佳盛园","built_area":107.52,"project_name":"佳盛园","total_price":177.9,"unit_no":"E-7A4","unit_price":16548,"zone":"龙岗"},{"building_name":"佳盛园","built_area":107.34,"project_name":"佳盛园","total_price":178.2,"unit_no":"E-5A4","unit_price":16599,"zone":"龙岗"},{"building_name":"佳盛园","built_area":111.58,"project_name":"佳盛园","total_price":184.4,"unit_no":"A-302","unit_price":16523,"zone":"龙岗"},{"building_name":"佳盛园","built_area":106.95,"project_name":"佳盛园","total_price":185.0,"unit_no":"F-102","unit_price":17298,"zone":"龙岗"},{"building_name":"佳盛园","built_area":111.58,"project_name":"佳盛园","total_price":185.1,"unit_no":"A-402","unit_price":16590,"zone":"龙岗"},{"building_name":"佳盛园","built_area":112.7,"project_name":"佳盛园","total_price":187.0,"unit_no":"E-3A1","unit_price":16592,"zone":"龙岗"},{"building_name":"深房悦麟雅苑","built_area":87.82,"project_name":"深房悦麟雅苑","total_price":191.6,"unit_no":"1栋A座1502","unit_price":21820,"zone":"龙岗"},{"building_name":"佳盛园","built_area":120.95,"project_name":"佳盛园","total_price":199.4,"unit_no":"D-802","unit_price":16485,"zone":"龙岗"},{"building_name":"佳盛园","built_area":121.18,"project_name":"佳盛园","total_price":199.8,"unit_no":"D-603","unit_price":16485,"zone":"龙岗"}],"cheap_unit":[{"building_name":"御景半山花园","built_area":99.47,"project_name":"御景半山花园","total_price":220.0,"unit_no":"13栋303","unit_price":11000,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":99.42,"project_name":"御景半山花园","total_price":225.1,"unit_no":"13栋1503","unit_price":11250,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":101.79,"project_name":"御景半山花园","total_price":235.6,"unit_no":"13栋1102","unit_price":11500,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":101.79,"project_name":"御景半山花园","total_price":240.0,"unit_no":"13栋602","unit_price":11750,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":99.47,"project_name":"御景半山花园","total_price":237.1,"unit_no":"13栋1303","unit_price":11850,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":101.79,"project_name":"御景半山花园","total_price":241.5,"unit_no":"13栋1602","unit_price":11850,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":101.79,"project_name":"御景半山花园","total_price":249.4,"unit_no":"13栋2202","unit_price":12250,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":99.42,"project_name":"御景半山花园","total_price":244.1,"unit_no":"13栋2303","unit_price":12250,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":155.58,"project_name":"御景半山花园","total_price":386.3,"unit_no":"13栋2404","unit_price":12415,"zone":"龙岗"},{"building_name":"御景半山花园","built_area":99.42,"project_name":"御景半山花园","total_price":248.8,"unit_no":"13栋3303","unit_price":12500,"zone":"龙岗"}],"small_area":[{"building_name":"前海金岸大厦","built_area":28.05,"project_name":"前海金岸大厦","total_price":207.6,"unit_no":"金硕阁504","unit_price":74024,"zone":"南山"},{"building_name":"佳华沙湖广场","built_area":69.87,"project_name":"佳华沙湖广场","total_price":202.7,"unit_no":"8栋1705","unit_price":29015,"zone":"坪山"},{"building_name":"招商雍云府","built_area":70.56,"project_name":"招商雍云府","total_price":287.5,"unit_no":"3栋三单元505","unit_price":40750,"zone":"龙华"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":280.8,"unit_no":"4栋D座501","unit_price":37589,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":281.4,"unit_no":"4栋D座502","unit_price":37675,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":282.2,"unit_no":"4栋D座601","unit_price":37788,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":282.8,"unit_no":"4栋D座602","unit_price":37868,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":280.8,"unit_no":"4栋D座503","unit_price":37589,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":281.9,"unit_no":"4栋D座603","unit_price":37747,"zone":"龙岗"},{"building_name":"颐峰名庭","built_area":74.69,"project_name":"颐峰名庭","total_price":284.5,"unit_no":"4栋D座1002","unit_price":38097,"zone":"龙岗"}]};
+
+const permits = [{"developer":"深圳市凯投资有限公司","pass_date":"2026-05-21","permit_no":"深房许字（2026）南山005号","project_name":"翰熙典居","unsold":0,"zone":"南山"},{"developer":"深圳市航运集团有限公司","pass_date":"2026-05-21","permit_no":"深房许字（2026）南山004号","project_name":"元湾府","unsold":0,"zone":"南山"},{"developer":"深圳市招航置业有限公司","pass_date":"2026-05-20","permit_no":"深房许字（2026）南山003号","project_name":"后海沄玺花园","unsold":0,"zone":"南山"},{"developer":"深圳星中里名苑实业有限公司","pass_date":"2026-05-20","permit_no":"深房许字（2026）龙岗009号","project_name":"新霖臻邑花园","unsold":0,"zone":"龙岗"},{"developer":"深圳市鹏跃投资发展有限公司","pass_date":"2026-05-19","permit_no":"深房许字（2026）龙岗008号","project_name":"观潮府","unsold":437,"zone":"龙岗"},{"developer":"深圳市星中里名苑实业有限公司","pass_date":"2026-05-12","permit_no":"深房许字（2026）龙岗007号","project_name":"天境云玺家园","unsold":0,"zone":"龙岗"},{"developer":"深圳融通投资有限公司","pass_date":"2026-04-30","permit_no":"深房许字（2026）宝安006号","project_name":"观萃苑","unsold":0,"zone":"宝安"},{"developer":"深圳市红企投资开发有限公司","pass_date":"2026-04-29","permit_no":"深房许字（2026）龙华007号","project_name":"鹏宸云筑","unsold":0,"zone":"龙华"},{"developer":"深圳万科发展有限公司","pass_date":"2026-04-24","permit_no":"深房许字（2026）宝安005号","project_name":"都会四季花园","unsold":0,"zone":"宝安"},{"developer":"深圳市招华国际投资发展有限公司","pass_date":"2026-04-18","permit_no":"深房许字（2026）龙华006号","project_name":"北站华府","unsold":0,"zone":"龙华"}];
+
+// ═══ Render ═══
+(function() {
+  const nf = n => n.toLocaleString();
+  const pnf = n => (n/10000).toFixed(1);
+
+  // Overview cards
+  document.getElementById('ov-unsold').textContent = nf(overview.unsold);
+  document.getElementById('ov-avg').textContent = overview.avg_total + '万';
+  document.getElementById('ov-signed').textContent = nf(overview.signed);
+  document.getElementById('ov-recent').textContent = nf(overview.recent);
+
+  // Status bar
+  const barTrack = document.getElementById('bar-track');
+  const segs = [
+    {key:'unsold', pct:overview.unsold/overview.total*100},
+    {key:'signed', pct:overview.signed/overview.total*100},
+    {key:'filed', pct:overview.filed/overview.total*100},
+    {key:'transferred', pct:overview.transferred/overview.total*100}
+  ];
+  segs.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'bar-seg ' + s.key;
+    el.style.width = s.pct + '%';
+    barTrack.appendChild(el);
+  });
+  document.getElementById('leg-unsold').textContent = nf(overview.unsold);
+  document.getElementById('leg-signed').textContent = nf(overview.signed);
+  document.getElementById('leg-filed').textContent = nf(overview.filed);
+  document.getElementById('leg-trans').textContent = nf(overview.transferred);
+
+  // Zone chips
+  const chipContainer = document.getElementById('zone-chips');
+  overview.zones.forEach(z => {
+    const chip = document.createElement('button');
+    chip.className = 'zone-chip';
+    chip.textContent = z.name + ' ' + nf(z.count) + '套';
+    chipContainer.appendChild(chip);
+  });
+
+  // Zone compare
+  const cmpContainer = document.getElementById('zone-compare');
+  const maxCount = overview.zones[0].count;
+  overview.zones.forEach(z => {
+    const row = document.createElement('div');
+    row.className = 'zone-row';
+    row.innerHTML = '<span class="zname">' + z.name + '</span>' +
+      '<span class="zcount">' + nf(z.count) + '套</span>' +
+      '<div class="zbar-wrap"><div class="zbar" style="width:' + (z.count/maxCount*100) + '%"></div></div>' +
+      '<span class="zprice">' + z.avg_total + '万</span>';
+    cmpContainer.appendChild(row);
+  });
+
+  // Rankings
+  let rankTab = 0;
+  const rankKeys = ['cheap_total', 'cheap_unit', 'small_area'];
+  function renderRankings() {
+    const list = document.getElementById('rank-list');
+    list.innerHTML = '';
+    const data = rankings[rankKeys[rankTab]];
+    data.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'rank-item';
+      div.innerHTML = '<span class="rank-idx">' + (i+1) + '</span>' +
+        '<div class="rank-info"><span class="rank-proj">' + item.project_name + '</span>' +
+        '<span class="rank-unit">' + item.unit_no + ' | ' + item.built_area + '㎡</span></div>' +
+        '<div class="rank-price"><span class="rp-total">' + item.total_price + '万</span>' +
+        '<span class="rp-unit">' + pnf(item.unit_price) + '万/㎡</span></div>';
+      list.appendChild(div);
+    });
+  }
+  renderRankings();
+
+  document.getElementById('rank-tabs').addEventListener('click', function(e) {
+    if (!e.target.classList.contains('rank-tab')) return;
+    rankTab = parseInt(e.target.dataset.idx);
+    this.querySelectorAll('.rank-tab').forEach(t => t.classList.toggle('on', t === e.target));
+    renderRankings();
+  });
+
+  // Permits
+  const pScroll = document.getElementById('permit-scroll');
+  permits.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'permit-card';
+    card.innerHTML = '<span class="pm-zone">' + p.zone + '</span>' +
+      '<span class="pm-name">' + p.project_name + '</span>' +
+      '<span class="pm-dev">' + p.developer + '</span>' +
+      '<span class="pm-date">' + p.pass_date + '</span>' +
+      (p.unsold > 0 ? '<span class="pm-count">可售 ' + p.unsold + ' 套</span>' : '');
+    pScroll.appendChild(card);
+  });
+
+  // Calculator
+  document.getElementById('calc-btn').addEventListener('click', function() {
+    const down = parseFloat(document.getElementById('calc-down').value);
+    const monthly = parseFloat(document.getElementById('calc-monthly').value);
+    const result = document.getElementById('calc-result');
+    if (!down || down <= 0 || !monthly || monthly <= 0) {
+      result.classList.remove('show');
+      return;
+    }
+    const totalLow = Math.round(down / 0.3);
+    const totalHigh = Math.round(down / 0.2);
+    const rate = 0.0315, months = 360, mr = rate/12;
+    const factor = (mr * Math.pow(1+mr, months)) / (Math.pow(1+mr, months) - 1);
+    const loanMax = Math.round(monthly * 10000 / factor);
+    const affordMax = Math.round(down + loanMax);
+    document.getElementById('cr-range').textContent = totalLow + '万 ~ ' + totalHigh + '万';
+    document.getElementById('cr-loan').textContent = affordMax + '万';
+    result.classList.add('show');
+  });
+})();
+</script>
+
+</body>
+</html>

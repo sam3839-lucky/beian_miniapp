@@ -1,0 +1,174 @@
+<view class="page">
+  <!-- ═══ P0: 搜索栏 ═══ -->
+  <view class="search-bar">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜项目名、开发商…" value="{{search}}"
+             bindinput="onSearchInput" bindconfirm="onSearchConfirm" confirm-type="search"/>
+    </view>
+  </view>
+
+  <!-- ═══ P0: 市场概览卡片 ═══ -->
+  <view class="overview-skel" wx:if="{{!overview && !overviewError}}">
+    <view class="skel-card"></view><view class="skel-card"></view>
+    <view class="skel-card"></view><view class="skel-card"></view>
+  </view>
+  <view class="err-block" wx:if="{{overviewError}}" bindtap="onRetryOverview">
+    <text class="err-icon">!</text>
+    <text>数据加载失败，点击重试</text>
+  </view>
+  <view class="overview" wx:if="{{overview}}">
+    <view class="stat-card">
+      <text class="stat-num green">{{overview.unsold}}</text>
+      <text class="stat-label">可售住宅</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num red">{{overview.avg_total}}万</text>
+      <text class="stat-label">住宅均价</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num gray">{{overview.signed}}</text>
+      <text class="stat-label">已网签</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-num blue">{{overview.recent}}</text>
+      <text class="stat-label">近7日更新</text>
+    </view>
+  </view>
+
+  <!-- 状态占比条 -->
+  <view class="status-bar" wx:if="{{overview}}">
+    <view class="bar-track">
+      <view class="bar-seg unsold" style="width:{{overview.unsold / overview.total * 100}}%"></view>
+      <view class="bar-seg signed" style="width:{{overview.signed / overview.total * 100}}%"></view>
+      <view class="bar-seg filed" style="width:{{overview.filed / overview.total * 100}}%"></view>
+      <view class="bar-seg transferred" style="width:{{overview.transferred / overview.total * 100}}%"></view>
+    </view>
+    <view class="bar-legend">
+      <text class="dot unsold"></text><text>未售 {{overview.unsold}}</text>
+      <text class="dot signed"></text><text>网签 {{overview.signed}}</text>
+      <text class="dot filed"></text><text>备案 {{overview.filed}}</text>
+      <text class="dot transferred"></text><text>转移 {{overview.transferred}}</text>
+    </view>
+  </view>
+
+  <!-- ═══ P0: 区域快捷入口 ═══ -->
+  <view class="section" wx:if="{{overview}}">
+    <view class="section-head">
+      <text class="section-title">热门区域</text>
+    </view>
+    <view class="zone-chips">
+      <view class="zone-chip" wx:for="{{overview.zones}}" wx:key="name"
+            data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-chip-hover">
+        {{item.name}} {{item.count}}套
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ P1: 区域对比 ═══ -->
+  <view class="section" wx:if="{{overview && overview.zones.length}}">
+    <view class="section-head">
+      <text class="section-title">各区对比</text>
+    </view>
+    <view class="zone-compare">
+      <view class="zone-row" wx:for="{{overview.zones}}" wx:key="name"
+            data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-row-hover">
+        <text class="zname">{{item.name}}</text>
+        <text class="zcount">{{item.count}}套</text>
+        <view class="zbar-wrap">
+          <view class="zbar" style="width:{{item.count / overview.zones[0].count * 100}}%"></view>
+        </view>
+        <text class="zprice">{{item.avg_total}}万</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ P1: 榜单 ═══ -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">排行榜</text>
+    </view>
+    <view class="rank-tabs">
+      <view class="rank-tab {{rankTab === index ? 'on' : ''}}"
+            wx:for="{{rankTabs}}" wx:key="*this"
+            data-index="{{index}}" bindtap="onRankTabChange" hover-class="rank-tap-active">{{item}}</view>
+    </view>
+    <view class="rank-list">
+      <block wx:if="{{rankList.length}}">
+        <view class="rank-item" wx:for="{{rankList}}" wx:key="unit_no"
+              data-item="{{item}}" bindtap="onRankItemTap" hover-class="rank-item-hover">
+          <text class="rank-idx">{{index + 1}}</text>
+          <view class="rank-info">
+            <text class="rank-proj">{{item.project_name}}</text>
+            <text class="rank-unit">{{item.unit_no}}  |  {{item.built_area}}㎡</text>
+          </view>
+          <view class="rank-price">
+            <text class="rp-total">{{item.total_price}}万</text>
+            <text class="rp-unit">{{(item.unit_price / 10000).toFixed(1)}}万/㎡</text>
+          </view>
+        </view>
+      </block>
+      <view wx:elif="{{rankingsError}}" class="err-block" bindtap="onRetryRankings">
+        <text class="err-icon">!</text>
+        <text>排行榜加载失败，点击重试</text>
+      </view>
+      <view wx:else class="state-msg">加载中...</view>
+    </view>
+  </view>
+
+  <!-- ═══ P2: 最新预售证 ═══ -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">最新预售证</text>
+    </view>
+    <view wx:if="{{permitsError}}" class="err-block" bindtap="onRetryPermits">
+      <text class="err-icon">!</text>
+      <text>预售证加载失败，点击重试</text>
+    </view>
+    <scroll-view wx:elif="{{permits.length}}" class="permit-scroll" scroll-x enhanced enable-flex show-scrollbar="{{false}}">
+      <view class="permit-card" wx:for="{{permits}}" wx:key="permit_no"
+            data-project="{{item.project_name}}" bindtap="onPermitTap" hover-class="permit-card-hover">
+        <text class="pm-zone">{{item.zone}}</text>
+        <text class="pm-name">{{item.project_name}}</text>
+        <text class="pm-dev">{{item.developer}}</text>
+        <text class="pm-date">{{item.pass_date}}</text>
+        <text class="pm-count" wx:if="{{item.unsold}}">可售 {{item.unsold}} 套</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- ═══ P3: 购房能力计算器 ═══ -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">购房能力计算</text>
+    </view>
+    <view class="calc-card">
+      <view class="calc-row">
+        <view class="calc-field">
+          <text class="calc-label">首付预算（万）</text>
+          <input class="calc-input" type="digit" placeholder="如 150"
+                 value="{{calc.downPayment}}" data-field="downPayment" bindinput="onCalcInput"/>
+        </view>
+        <view class="calc-field">
+          <text class="calc-label">月供能力（万）</text>
+          <input class="calc-input" type="digit" placeholder="如 1.5"
+                 value="{{calc.monthlyPayment}}" data-field="monthlyPayment" bindinput="onCalcInput"/>
+        </view>
+      </view>
+      <view class="calc-btn" bindtap="onCalcSubmit" hover-class="calc-btn-hover">计算可负担总价</view>
+      <view class="calc-result" wx:if="{{calc.result}}" bindtap="onCalcResultTap">
+        <view class="cr-row">
+          <text>首付30%可买总价</text>
+          <text class="cr-val">{{calc.result.totalLow}}万 ~ {{calc.result.totalHigh}}万</text>
+        </view>
+        <view class="cr-row">
+          <text>月供{{calc.monthlyPayment}}万最高可贷</text>
+          <text class="cr-val">{{calc.result.affordMax}}万</text>
+        </view>
+        <view class="cr-hint">点击查看可购房源 →</view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height:80rpx;"></view>
+</view>
