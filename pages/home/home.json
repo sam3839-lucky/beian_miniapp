@@ -2,6 +2,5 @@
   "navigationBarTitleText": "深圳新房备案价",
   "enablePullDownRefresh": true,
   "backgroundColor": "#F7F7F7",
-  "backgroundTextStyle": "dark",
-  "usingComponents": {}
+  "backgroundTextStyle": "dark"
 }

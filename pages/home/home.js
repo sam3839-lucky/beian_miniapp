@@ -88,9 +88,13 @@ Page({
     try {
       const data = await api.getRankings();
       const keys = ['cheap_total', 'cheap_unit', 'small_area'];
+      const list = (data[keys[this.data.rankTab]] || []).map(item => ({
+        ...item,
+        unitPriceWan: (item.unit_price / 10000).toFixed(1)
+      }));
       this.setData({
         rankings: data,
-        rankList: data[keys[this.data.rankTab]] || [],
+        rankList: list,
         rankingsError: false
       });
     } catch (e) {
@@ -107,10 +111,11 @@ Page({
   onRankTabChange(e) {
     const idx = parseInt(e.currentTarget.dataset.index);
     const keys = ['cheap_total', 'cheap_unit', 'small_area'];
-    this.setData({
-      rankTab: idx,
-      rankList: (this.data.rankings || {})[keys[idx]] || []
-    });
+    const list = ((this.data.rankings || {})[keys[idx]] || []).map(item => ({
+      ...item,
+      unitPriceWan: (item.unit_price / 10000).toFixed(1)
+    }));
+    this.setData({ rankTab: idx, rankList: list });
   },
 
   onRankItemTap(e) {

@@ -1,7 +1,28 @@
 {
   "description": "深圳在售房源备案价格查询",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "value": "sync/__pycache__",
+        "type": "folder"
+      },
+      {
+        "value": "*.db",
+        "type": "glob"
+      },
+      {
+        "value": "*.db-shm",
+        "type": "glob"
+      },
+      {
+        "value": "*.db-wal",
+        "type": "glob"
+      },
+      {
+        "value": "docs",
+        "type": "folder"
+      }
+    ],
     "include": []
   },
   "setting": {
@@ -30,7 +51,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.3.4",
+  "libVersion": "3.16.1",
   "appid": "wx0c0ca47c02bcd376",
   "projectname": "beian-query",
   "condition": {},

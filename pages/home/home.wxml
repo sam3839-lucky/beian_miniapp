@@ -104,7 +104,7 @@
           </view>
           <view class="rank-price">
             <text class="rp-total">{{item.total_price}}万</text>
-            <text class="rp-unit">{{(item.unit_price / 10000).toFixed(1)}}万/㎡</text>
+            <text class="rp-unit">{{item.unitPriceWan}}万/㎡</text>
           </view>
         </view>
       </block>
