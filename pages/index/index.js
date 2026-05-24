@@ -250,7 +250,15 @@ Page({
 
   onCardTap(e) {
     const unit = e.detail.unit;
-    wx.setStorageSync('__detail_unit', { unit, project: this.data.projectName, building: this.data.buildingName });
-    wx.navigateTo({ url: '/pages/detail/detail' });
+    const p = [
+      'unit_no=' + encodeURIComponent(unit.unit_no || ''),
+      'area=' + (unit.built_area || 0),
+      'up=' + (unit.unit_price || 0),
+      'tp=' + (unit.total_price || 0),
+      'status=' + encodeURIComponent(unit.status || '未售'),
+      'project=' + encodeURIComponent(this.data.projectName || ''),
+      'building=' + encodeURIComponent(this.data.buildingName || '')
+    ].join('&');
+    wx.navigateTo({ url: '/pages/detail/detail?' + p });
   }
 });

@@ -102,7 +102,16 @@ Page({
 
   onItemTap(e) {
     const item = e.currentTarget.dataset.item;
-    wx.setStorageSync('__detail_unit', { unit: item, project: item.project_name, building: item.building_name });
-    wx.navigateTo({ url: '/pages/detail/detail' });
+    const u = item;
+    const p = [
+      'unit_no=' + encodeURIComponent(u.unit_no),
+      'area=' + (u.built_area || 0),
+      'up=' + (u.unit_price || 0),
+      'tp=' + (u.total_price || 0),
+      'status=' + encodeURIComponent(u.status || '未售'),
+      'project=' + encodeURIComponent(u.project_name || ''),
+      'building=' + encodeURIComponent(u.building_name || '')
+    ].join('&');
+    wx.navigateTo({ url: '/pages/detail/detail?' + p });
   }
 });

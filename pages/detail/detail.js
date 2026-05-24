@@ -21,55 +21,40 @@ Page({
     _totalWan: 0
   },
 
-  onLoad() {
-    this._renderUnit();
-  },
+  onLoad(opts) {
+    // URL 传参，逐字段解析
+    const unit = {
+      unit_no:     decodeURIComponent(opts.unit_no || ''),
+      built_area:  parseFloat(opts.area) || 0,
+      unit_price:  parseFloat(opts.up) || 0,
+      total_price: parseFloat(opts.tp) || 0,
+      status:      decodeURIComponent(opts.status || '未售'),
+    };
+    const project  = decodeURIComponent(opts.project || '');
+    const building = decodeURIComponent(opts.building || '');
 
-  onShow() {
-    // onLoad 未成功渲染时，onShow 补枪
-    if (!this._rendered) this._renderUnit();
-  },
+    const area = unit.built_area ? unit.built_area + '㎡' : '-';
+    const up = unit.unit_price ? (unit.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
+    const tw = unit.total_price;
+    const tp = tw > 0 ? tw.toFixed(1) + '万' : '-';
 
-  _renderUnit() {
-    try {
-      const ctx = wx.getStorageSync('__detail_unit') || {};
-      const unit = ctx.unit || {};
-      const project = ctx.project || '';
-      const building = ctx.building || '';
+    const statusMap = {
+      '未售':   { text: '可售',     color: '#07C160' },
+      '已网签': { text: '已网签',   color: '#FAAD14' },
+      '已备案': { text: '已备案',   color: '#FF8C00' },
+      '已转移登记': { text: '已转移登记', color: '#D9D9D9' }
+    };
+    const sm = statusMap[unit.status] || { text: unit.status, color: '#888' };
+    const rate = getApp().globalData.mortgageRate || 0.0305;
 
-      if (!unit.unit_no) {
-        console.warn('detail: no unit data');
-        return;
-      }
-
-      wx.removeStorageSync('__detail_unit');
-      const area = (unit.built_area || '-') + '㎡';
-      const up = unit.unit_price ? (unit.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
-      const tw = unit.total_price > 0 ? unit.total_price : 0;
-      const tp = tw > 0 ? tw.toFixed(1) + '万' : '-';
-
-      const statusMap = {
-        '未售':   { text: '可售',     color: '#07C160' },
-        '已网签': { text: '已网签',   color: '#FAAD14' },
-        '已备案': { text: '已备案',   color: '#FF8C00' },
-        '已转移登记': { text: '已转移登记', color: '#D9D9D9' }
-      };
-      const st = unit.status || '未售';
-      const sm = statusMap[st] || { text: st, color: '#888' };
-      const rate = getApp().globalData.mortgageRate || 0.0305;
-
-      this.setData({
-        unit, project, building,
-        area, unitPrice: up, totalPrice: tp,
-        status: sm.text, statusColor: sm.color,
-        _totalWan: tw,
-        mortgageRateText: (rate * 100).toFixed(2) + '%'
-      });
-      this._rendered = true;
-      this.calcMortgage();
-    } catch (e) {
-      wx.showToast({ title: '数据错误', icon: 'none' });
-    }
+    this.setData({
+      unit, project, building,
+      area, unitPrice: up, totalPrice: tp,
+      status: sm.text, statusColor: sm.color,
+      _totalWan: tw,
+      mortgageRateText: (rate * 100).toFixed(2) + '%'
+    });
+    this.calcMortgage();
   },
 
   onDiscountChange(e) {
