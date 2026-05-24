@@ -21,13 +21,19 @@ Page({
     _totalWan: 0
   },
 
-  onLoad() {
+  async onLoad() {
     try {
-      const ctx = getApp().globalData.detailUnit || {};
+      // 等待 globalData 被赋值（navigateTo 可能在赋值完成前触发 onLoad）
+      let ctx = getApp().globalData.detailUnit;
+      if (!ctx) {
+        // 延迟重试一次
+        await new Promise(r => setTimeout(r, 100));
+        ctx = getApp().globalData.detailUnit;
+      }
       getApp().globalData.detailUnit = null;
-      const unit = ctx.unit || {};
-      const project = ctx.project || '';
-      const building = ctx.building || '';
+      const unit = (ctx && ctx.unit) || {};
+      const project = (ctx && ctx.project) || '';
+      const building = (ctx && ctx.building) || '';
 
       const area = (unit.built_area || '-') + '㎡';
       const up = unit.unit_price ? (unit.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
