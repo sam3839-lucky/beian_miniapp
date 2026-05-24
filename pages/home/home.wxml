@@ -126,7 +126,7 @@
       <text>预售证加载失败，点击重试</text>
     </view>
     <scroll-view wx:elif="{{permits.length}}" class="permit-scroll" scroll-x enhanced enable-flex show-scrollbar="{{false}}">
-      <view class="permit-card" wx:for="{{permits}}" wx:key="permit_no"
+      <view class="permit-card" wx:for="{{permits}}" wx:key="project_name"
             data-project="{{item.project_name}}" data-zone="{{item.zone}}" bindtap="onPermitTap" hover-class="permit-card-hover">
         <text class="pm-zone">{{item.zone}}</text>
         <text class="pm-name">{{item.project_name}}</text>
