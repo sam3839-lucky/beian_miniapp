@@ -23,14 +23,14 @@ Page({
 
   onLoad() {
     try {
-      const ctx = getApp().globalData.detailUnit || {};
-      getApp().globalData.detailUnit = null;
+      const ctx = wx.getStorageSync('__detail_unit') || {};
+      wx.removeStorageSync('__detail_unit');
       const unit = ctx.unit || {};
       const project = ctx.project || '';
       const building = ctx.building || '';
 
       if (!unit.unit_no) {
-        console.warn('detail: no unit data in globalData');
+        console.warn('detail: no unit data');
         this.setData({
           project, building,
           area: '数据未加载', unitPrice: '-', totalPrice: '-',
