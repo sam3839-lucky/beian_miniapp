@@ -70,13 +70,18 @@ Page({
     this._pendingPrice = null;
 
     if (zone) {
-      const idx = this.data.zones.indexOf(zone);
-      if (idx > 0) {
+      let idx = this.data.zones.indexOf(zone);
+      if (idx <= 0) {
+        // zone 不在列表中：追加并选中
+        this.data.zones.push(zone);
+        idx = this.data.zones.length - 1;
+        this.setData({ zones: this.data.zones, zoneIdx: idx });
+      } else {
         this.setData({ zoneIdx: idx });
-        await this.onZoneChange({ detail: { value: idx } });
-        if (project) {
-          this._selectProject(project);
-        }
+      }
+      await this.onZoneChange({ detail: { value: idx } });
+      if (project) {
+        this._selectProject(project);
       }
     } else if (project) {
       await this._selectGlobalProject(project);
@@ -88,9 +93,16 @@ Page({
   },
 
   _selectProject(project) {
-    const pi = this.data.projects.findIndex(p => p.value === project);
-    if (pi > 0) {
+    let pi = this.data.projects.findIndex(p => p.value === project);
+    if (pi <= 0) {
+      // 项目不在列表中（新盘预售证，房源未入库）：追加到列表并选中
+      const items = [...this.data.projects, { name: `${this.data.projects.length}. ${project}`, value: project }];
+      pi = items.length - 1;
+      this.setData({ projects: items, projectIdx: pi, projectName: project });
+    } else {
       this.setData({ projectIdx: pi, projectName: project });
+    }
+    if (pi > 0) {
       this.onProjectChange({ detail: { value: pi } });
     }
   },
