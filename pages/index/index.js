@@ -93,9 +93,17 @@ Page({
   },
 
   _selectProject(project) {
+    // 精确匹配
     let pi = this.data.projects.findIndex(p => p.value === project);
+    // 宽松匹配：trim + 包含
     if (pi <= 0) {
-      // 项目不在列表中（新盘预售证，房源未入库）：追加到列表并选中
+      const pj = project.trim();
+      pi = this.data.projects.findIndex(p =>
+        p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value))
+      );
+    }
+    if (pi <= 0) {
+      // 仍不匹配（新盘预售证，房源未入库）：追加到列表并选中
       const items = [...this.data.projects, { name: `${this.data.projects.length}. ${project}`, value: project }];
       pi = items.length - 1;
       this.setData({ projects: items, projectIdx: pi, projectName: project });
@@ -110,17 +118,25 @@ Page({
   async _selectGlobalProject(project) {
     try {
       const data = await api.getProjects('');
-      const idx = data.projects.indexOf(project);
-      if (idx >= 0) {
-        // 注入该项目到列表并选中
-        const items = [{name: '选择小区', value: ''}].concat(
-          data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
-        );
-        const pi = items.findIndex(p => p.value === project);
-        this.setData({ projects: items, projectIdx: pi, projectName: project });
-        if (pi > 0) {
-          this.onProjectChange({ detail: { value: pi } });
-        }
+      const pj = project.trim();
+      let idx = data.projects.indexOf(project);
+      if (idx < 0) {
+        idx = data.projects.findIndex(p => p.trim() === pj || p.includes(pj) || pj.includes(p));
+      }
+      const items = [{name: '选择小区', value: ''}].concat(
+        data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
+      );
+      let pi = items.findIndex(p => p.value === project);
+      if (pi <= 0) {
+        pi = items.findIndex(p => p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value)));
+      }
+      if (pi <= 0) {
+        items.push({ name: `${items.length}. ${project}`, value: project });
+        pi = items.length - 1;
+      }
+      this.setData({ projects: items, projectIdx: pi, projectName: project });
+      if (pi > 0) {
+        this.onProjectChange({ detail: { value: pi } });
       }
     } catch (e) {
       // 静默失败
