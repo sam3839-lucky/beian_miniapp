@@ -18,10 +18,10 @@
 .picker-val {
   padding: 10px 14px;
   border-radius: 12px;
-  border: 1px solid #e7e5e4;
+  border: 1px solid #E5E5E5;
   font-size: 14px;
-  color: #1c1917;
-  background: #fafaf9;
+  color: #333;
+  background: #F7F7F7;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -30,9 +30,9 @@
   flex: 1;
   padding: 10px 14px;
   border-radius: 12px;
-  border: 1px solid #e7e5e4;
+  border: 1px solid #E5E5E5;
   font-size: 14px;
-  background: #fafaf9;
+  background: #F7F7F7;
 }
 
 /* 统计标题 */
@@ -45,11 +45,11 @@
 }
 .title-text {
   font-weight: 600;
-  color: #78716c;
+  color: #888;
 }
 .stats-inline {
   font-weight: 500;
-  color: #a8a29e;
+  color: #888;
   font-size: 12px;
 }
 .stats-inline .bold {
@@ -82,7 +82,7 @@
 .s-line {
   height: 14px;
   border-radius: 6px;
-  background: #e7e5e4;
+  background: #E5E5E5;
 }
 .s-line.short { width: 60%; }
 
@@ -90,7 +90,7 @@
 .state-msg {
   text-align: center;
   padding: 40px 20px;
-  color: #a8a29e;
+  color: #888;
   font-size: 14px;
 }
 
@@ -104,12 +104,12 @@
 .floor-sep .line {
   flex: 1;
   height: 1px;
-  background: #e7e5e4;
+  background: #E5E5E5;
 }
 .floor-sep .num {
   font-size: 12px;
   font-weight: 700;
-  color: #a8a29e;
+  color: #888;
   letter-spacing: 1px;
 }
 
@@ -132,12 +132,12 @@
   font-weight: 800;
   letter-spacing: -1px;
 }
-.val.t { color: #44403c; }
-.val.s { color: #a8a29e; }
+.val.t { color: #333; }
+.val.s { color: #888; }
 .val.u { color: #07C160; }
 .lbl {
   font-size: 11px;
-  color: #a8a29e;
+  color: #888;
   font-weight: 500;
   letter-spacing: .5px;
 }
@@ -148,6 +148,6 @@
 }
 .pct {
   font-size: 10px;
-  color: #a8a29e;
+  color: #888;
   margin-top: 1px;
 }

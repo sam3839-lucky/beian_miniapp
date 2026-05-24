@@ -2,7 +2,7 @@
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
 /* ═══ 环形图 ═══ */
-.ring-card { background: #fff; margin: 12rpx 32rpx; border-radius: 16rpx; padding: 28rpx 0 24rpx; text-align: center; }
+.ring-card { background: #fff; margin: 12rpx 32rpx; border-radius: 8rpx; padding: 28rpx 0 24rpx; text-align: center; }
 .ring-subtitle { font-size: 24rpx; color: #888; margin-bottom: 16rpx; }
 .ring-wrap { width: 200px; height: 200px; margin: 0 auto; }
 .donut-canvas { width: 200px; height: 200px; }
@@ -20,7 +20,7 @@
 .section-title { font-size: 32rpx; font-weight: 700; color: #333; }
 
 /* ═══ 成交概况表格 ═══ */
-.data-table { background: #fff; border-radius: 12rpx; overflow: hidden; }
+.data-table { background: #fff; border-radius: 8rpx; overflow: hidden; }
 .th-row { display: flex; align-items: center; padding: 20rpx 28rpx 14rpx; border-bottom: 1rpx solid #E5E5E5; }
 .th-label { width: 100rpx; flex-shrink: 0; }
 .th-val { flex: 1; text-align: center; font-size: 24rpx; color: #A8A8A8; }
@@ -36,7 +36,7 @@
 
 /* ═══ 各区占比 ═══ */
 .two-col { display: flex; gap: 16rpx; }
-.dcol { flex: 1; background: #fff; border-radius: 12rpx; padding: 20rpx; }
+.dcol { flex: 1; background: #fff; border-radius: 8rpx; padding: 20rpx; }
 .dcol-title { font-size: 26rpx; font-weight: 600; color: #333; margin-bottom: 16rpx; display: flex; align-items: center; gap: 8rpx; }
 .dcdot { width: 14rpx; height: 14rpx; border-radius: 50%; }
 .dcdot.new { background: #07C160; }
@@ -44,8 +44,8 @@
 .drow { display: flex; align-items: center; gap: 8rpx; padding: 8rpx 0; }
 .drow + .drow { border-top: 0.5px solid #F0F0F0; }
 .dname { font-size: 24rpx; color: #333; font-weight: 500; width: 60rpx; }
-.dbar-wrap { flex: 1; height: 14rpx; border-radius: 7rpx; background: #F0F0F0; overflow: hidden; }
-.dbar { height: 100%; border-radius: 7rpx; }
+.dbar-wrap { flex: 1; height: 14rpx; border-radius: 4rpx; background: #F0F0F0; overflow: hidden; }
+.dbar { height: 100%; border-radius: 4rpx; }
 .dbar.new { background: #07C160; }
 .dbar.used { background: #FF8C00; }
 .dcnt { font-size: 22rpx; color: #888; width: 60rpx; text-align: right; }
@@ -58,11 +58,11 @@
 .range-tab.on { background: #07C160; color: #fff; font-weight: 600; }
 
 /* ═══ 月度走势 ═══ */
-.trend-chart { background: #fff; border-radius: 12rpx; padding: 16rpx 16rpx 4rpx; }
+.trend-chart { background: #fff; border-radius: 8rpx; padding: 16rpx 16rpx 4rpx; }
 .trend-row { display: flex; align-items: center; gap: 12rpx; padding: 12rpx 0; min-height: 60rpx; }
 .trend-row + .trend-row { border-top: 1rpx solid #F0F0F0; }
 .tr-month { font-size: 22rpx; color: #888; width: 80rpx; text-align: center; }
-.tr-bar-wrap { flex: 1; height: 20rpx; border-radius: 10rpx; background: #F0F0F0; overflow: hidden; display: flex; }
+.tr-bar-wrap { flex: 1; height: 20rpx; border-radius: 8rpx; background: #F0F0F0; overflow: hidden; display: flex; }
 .tr-bar-new { height: 100%; background: #07C160; }
 .tr-bar-used { height: 100%; background: #FF8C00; }
 .tr-count { font-size: 24rpx; color: #333; font-weight: 600; width: 100rpx; text-align: right; white-space: nowrap; }
@@ -72,7 +72,7 @@
 .trend-legend .dot.used { background: #FF8C00; }
 
 /* ═══ 日成交 ═══ */
-.tx-list { background: #fff; border-radius: 12rpx; }
+.tx-list { background: #fff; border-radius: 8rpx; }
 .tx-item { display: flex; align-items: center; padding: 20rpx 28rpx; gap: 16rpx;
   min-height: 76rpx; border-top: 1rpx solid #F0F0F0; }
 .tx-item:first-child { border-top: none; }

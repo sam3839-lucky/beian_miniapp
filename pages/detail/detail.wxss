@@ -2,7 +2,7 @@
 .wrapper { background: #F7F7F7; min-height: 100vh; }
 .sheet {
   background: #fff;
-  border-radius: 16rpx 16rpx 0 0;
+  border-radius: 8rpx 16rpx 0 0;
   margin: 40rpx 0 0;
   padding: 48rpx 0 40rpx;
 }
@@ -33,7 +33,7 @@
 .calc-card {
   background: #fff;
   margin: 32rpx;
-  border-radius: 16rpx;
+  border-radius: 8rpx;
   padding: 32rpx;
 }
 .calc-title {
