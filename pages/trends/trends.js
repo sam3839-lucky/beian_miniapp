@@ -40,11 +40,13 @@ Page({
         api.getTransactionTrends(this.data.range),
         api.getRecentTransactions(30)
       ]);
-      // 预处理月份标签（WXML 不支持 substring）
-      const trendsLabeled = (trends.trends || []).map(t => ({
-        ...t,
-        monthLabel: t.month.split('-')[1] + '月'
-      }));
+      // 预处理月份标签：跨年时显示年份，否则只显示月份
+      const years = new Set((trends.trends || []).map(t => t.month.split('-')[0]));
+      const crossYear = years.size > 1;
+      const trendsLabeled = (trends.trends || []).map(t => {
+        const [y, m] = t.month.split('-');
+        return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
+      });
       this.setData({
         summary, trends: trendsLabeled,
         dailyItems: recent.items || [],
@@ -59,10 +61,13 @@ Page({
   async loadTrends(months) {
     try {
       const data = await api.getTransactionTrends(months);
-      const labeled = (data.trends || []).map(t => ({
-        ...t,
-        monthLabel: t.month.split('-')[1] + '月'
-      }));
+      const raw = data.trends || [];
+      const years = new Set(raw.map(t => t.month.split('-')[0]));
+      const crossYear = years.size > 1;
+      const labeled = raw.map(t => {
+        const [y, m] = t.month.split('-');
+        return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
+      });
       this.setData({ trends: labeled });
     } catch (e) { /* keep existing data */ }
   },
