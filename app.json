@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/home/home",
-    "pages/trends/trends",
     "pages/index/index",
+    "pages/trends/trends",
     "pages/detail/detail",
     "pages/ops/ops"
   ],
@@ -25,16 +25,16 @@
         "selectedIconPath": "assets/tabbar/home-active.png"
       },
       {
-        "pagePath": "pages/trends/trends",
-        "text": "成交",
-        "iconPath": "assets/tabbar/chart.png",
-        "selectedIconPath": "assets/tabbar/chart-active.png"
-      },
-      {
         "pagePath": "pages/index/index",
         "text": "找房",
         "iconPath": "assets/tabbar/search.png",
         "selectedIconPath": "assets/tabbar/search-active.png"
+      },
+      {
+        "pagePath": "pages/trends/trends",
+        "text": "成交",
+        "iconPath": "assets/tabbar/chart.png",
+        "selectedIconPath": "assets/tabbar/chart-active.png"
       }
     ]
   },

@@ -136,8 +136,8 @@ Page({
   },
 
   onPermitTap(e) {
-    const project = e.currentTarget.dataset.project;
-    if (project) this._navToFilter({ project });
+    const { project, zone } = e.currentTarget.dataset;
+    if (project) this._navToFilter({ project, zone });
   },
 
   // ── P3: 购房计算器 ──

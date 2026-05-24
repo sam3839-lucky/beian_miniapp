@@ -127,7 +127,7 @@
     </view>
     <scroll-view wx:elif="{{permits.length}}" class="permit-scroll" scroll-x enhanced enable-flex show-scrollbar="{{false}}">
       <view class="permit-card" wx:for="{{permits}}" wx:key="permit_no"
-            data-project="{{item.project_name}}" bindtap="onPermitTap" hover-class="permit-card-hover">
+            data-project="{{item.project_name}}" data-zone="{{item.zone}}" bindtap="onPermitTap" hover-class="permit-card-hover">
         <text class="pm-zone">{{item.zone}}</text>
         <text class="pm-name">{{item.project_name}}</text>
         <text class="pm-dev">{{item.developer}}</text>
