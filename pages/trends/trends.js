@@ -86,7 +86,8 @@ Page({
       ctx.scale(dpr, dpr);
 
       const cx = 100, cy = 100, r = 70, sw = 22;
-      const n = s.this_month.new, u = s.this_month.used, t = n + u;
+      const n = s.this_month.new || 0, u = s.this_month.used || 0, t = n + u;
+      if (t <= 0) return;
       ctx.clearRect(0, 0, w, w);
 
       // 二手（底层，从12点顺时针）
