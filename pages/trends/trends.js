@@ -47,7 +47,13 @@ Page({
         const [y, m] = t.month.split('-');
         return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
       });
-      this.setData({ summary, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
+      const s = summary;
+      if (s && s.this_month) {
+        const t = s.this_month.total || 1;
+        s.newPct = (s.this_month.new / t * 100).toFixed(1);
+        s.usedPct = (s.this_month.used / t * 100).toFixed(1);
+      }
+      this.setData({ summary: s, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
       this.drawDonut(summary);
     } catch (e) {
       console.error(e); this.setData({ loading: false, error: true });

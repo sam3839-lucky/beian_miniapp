@@ -16,13 +16,13 @@
           <text class="ldot new"></text>
           <text>一手</text>
           <text class="lnum">{{summary.this_month.new}}</text>
-          <text class="lpct">{{summary.this_month.total > 0 ? (summary.this_month.new / summary.this_month.total * 100).toFixed(1) : 0}}%</text>
+          <text class="lpct">{{summary.newPct}}%</text>
         </view>
         <view class="legend-item">
           <text class="ldot used"></text>
           <text>二手</text>
           <text class="lnum">{{summary.this_month.used}}</text>
-          <text class="lpct">{{summary.this_month.total > 0 ? (summary.this_month.used / summary.this_month.total * 100).toFixed(1) : 0}}%</text>
+          <text class="lpct">{{summary.usedPct}}%</text>
         </view>
       </view>
     </view>
