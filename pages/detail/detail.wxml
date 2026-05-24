@@ -10,3 +10,33 @@
   <view class="row"><text class="k">类型</text><text class="v">{{unit.sale_type || '-'}}</text></view>
   <view class="row"><text class="k">楼栋</text><text class="v">{{project}} · {{building}}</text></view>
 </view>
+
+<!-- ═══ 月供计算器 ═══ -->
+<view class="calc-card">
+  <view class="calc-title">月供计算</view>
+  <view class="calc-row">
+    <view class="calc-field">
+      <text class="calc-label">首付比例</text>
+      <view class="ratio-picker">
+        <view class="ratio-btn {{calcRatio === 20 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{20}}">20%</view>
+        <view class="ratio-btn {{calcRatio === 30 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{30}}">30%</view>
+        <view class="ratio-btn {{calcRatio === 50 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{50}}">50%</view>
+      </view>
+    </view>
+  </view>
+  <view class="calc-result">
+    <view class="cr-row">
+      <text class="cr-k">首付</text>
+      <text class="cr-v">{{calcDown}}万</text>
+    </view>
+    <view class="cr-row">
+      <text class="cr-k">贷款</text>
+      <text class="cr-v">{{calcLoan}}万</text>
+    </view>
+    <view class="cr-row cr-main">
+      <text class="cr-k">月供</text>
+      <text class="cr-v big">{{calcMonthly}}万</text>
+    </view>
+    <view class="cr-note">按LPR 3.15% · 30年期等额本息</view>
+  </view>
+</view>

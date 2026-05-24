@@ -1,31 +1,113 @@
-page { background: #f2f0ed; }
+/* ═══ 房源详情 — WeUI 规范 ═══ */
+
+page { background: #F7F7F7; }
 .sheet {
   background: #fff;
-  border-radius: 24px 24px 0 0;
-  margin: 20px 0 0;
-  padding: 24px 0 20px;
+  border-radius: 16rpx 16rpx 0 0;
+  margin: 40rpx 0 0;
+  padding: 48rpx 0 40rpx;
 }
 .big-no {
   text-align: center;
-  font-size: 32px;
+  font-size: 64rpx;
   font-weight: 800;
-  color: #1c1917;
-  letter-spacing: -1px;
+  color: #333;
 }
 .big-status {
   text-align: center;
-  font-size: 13px;
+  font-size: 26rpx;
   font-weight: 600;
-  color: #059669;
-  margin: 2px 0 16px;
+  margin: 4rpx 0 32rpx;
 }
 .row {
   display: flex;
   justify-content: space-between;
-  padding: 12px 24px;
-  font-size: 15px;
-  border-bottom: 1px solid #f5f5f4;
+  padding: 24rpx 48rpx;
+  font-size: 30rpx;
+  border-bottom: 1rpx solid #F0F0F0;
 }
-.row .k { color: #a8a29e; }
-.row .v { font-weight: 600; color: #1c1917; }
-.row .v.red { color: #dc2626; font-size: 20px; }
+.row .k { color: #888; }
+.row .v { font-weight: 600; color: #333; }
+.row .v.red { color: #FF4D4F; font-size: 40rpx; }
+
+/* ═══ 月供计算器 ═══ */
+.calc-card {
+  background: #fff;
+  margin: 32rpx;
+  border-radius: 16rpx;
+  padding: 32rpx;
+}
+.calc-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+.calc-row {
+  margin-bottom: 24rpx;
+}
+.calc-label {
+  font-size: 26rpx;
+  color: #888;
+  margin-bottom: 12rpx;
+  display: block;
+}
+.ratio-picker {
+  display: flex;
+  gap: 16rpx;
+}
+.ratio-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #333;
+  background: #F7F7F7;
+  border-radius: 8rpx;
+  min-height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ratio-btn.on {
+  background: #07C160;
+  color: #fff;
+  font-weight: 600;
+}
+.calc-result {
+  background: #F7F7F7;
+  border-radius: 8rpx;
+  padding: 24rpx;
+}
+.cr-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8rpx 0;
+}
+.cr-row + .cr-row {
+  border-top: 1rpx solid #E5E5E5;
+}
+.cr-main {
+  padding: 16rpx 0;
+}
+.cr-k {
+  font-size: 28rpx;
+  color: #888;
+}
+.cr-v {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+}
+.cr-v.big {
+  font-size: 40rpx;
+  color: #07C160;
+  font-weight: 800;
+}
+.cr-note {
+  text-align: right;
+  font-size: 22rpx;
+  color: #A8A8A8;
+  margin-top: 12rpx;
+}
