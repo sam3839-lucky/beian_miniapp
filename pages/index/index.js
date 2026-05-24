@@ -249,7 +249,8 @@ Page({
   },
 
   onCardTap(e) {
-    const unit = e.detail.unit;
+    const unit = (e.detail && e.detail.unit) || {};
+    if (!unit.unit_no) return;
     const p = [
       'unit_no=' + encodeURIComponent(unit.unit_no || ''),
       'area=' + (unit.built_area || 0),
