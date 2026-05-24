@@ -34,7 +34,7 @@
       </view>
       <view class="trend-chart">
         <view class="trend-row" wx:for="{{trends}}" wx:key="month">
-          <text class="tr-month">{{item.month.substring(5)}}月</text>
+          <text class="tr-month">{{item.monthLabel}}</text>
           <view class="tr-bar-wrap">
             <view class="tr-bar-new" style="width:{{item.new / trends[trends.length-1].total * 100}}%"></view>
             <view class="tr-bar-used" style="width:{{item.used / trends[trends.length-1].total * 100}}%"></view>

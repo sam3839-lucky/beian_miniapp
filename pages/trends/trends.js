@@ -40,8 +40,13 @@ Page({
         api.getTransactionTrends(this.data.range),
         api.getRecentTransactions(30)
       ]);
+      // 预处理月份标签（WXML 不支持 substring）
+      const trendsLabeled = (trends.trends || []).map(t => ({
+        ...t,
+        monthLabel: t.month.split('-')[1] + '月'
+      }));
       this.setData({
-        summary, trends,
+        summary, trends: trendsLabeled,
         dailyItems: recent.items || [],
         loading: false
       });
@@ -54,7 +59,11 @@ Page({
   async loadTrends(months) {
     try {
       const data = await api.getTransactionTrends(months);
-      this.setData({ trends: data.trends || [] });
+      const labeled = (data.trends || []).map(t => ({
+        ...t,
+        monthLabel: t.month.split('-')[1] + '月'
+      }));
+      this.setData({ trends: labeled });
     } catch (e) { /* keep existing data */ }
   },
 
