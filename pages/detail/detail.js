@@ -9,10 +9,12 @@ Page({
     status: '',
     statusColor: '',
     calcRatio: 30,
+    discount: 0,
     dealPrice: '',
     calcDown: '--',
     calcLoan: '--',
     calcMonthly: '--',
+    mortgageRateText: '3.05%',
     _totalWan: 0
   },
 
@@ -35,12 +37,14 @@ Page({
       };
       const st = unit.status || '未售';
       const sm = statusMap[st] || { text: st, color: '#888' };
+      const rate = getApp().globalData.mortgageRate || 0.0305;
 
       this.setData({
         unit, project, building,
         area, unitPrice: up, totalPrice: tp,
         status: sm.text, statusColor: sm.color,
-        _totalWan: tw
+        _totalWan: tw,
+        mortgageRateText: (rate * 100).toFixed(2) + '%'
       });
       this.calcMortgage();
     } catch (e) {
@@ -48,20 +52,25 @@ Page({
     }
   },
 
+  onDiscountTap(e) {
+    const d = parseInt(e.currentTarget.dataset.discount);
+    const prev = this.data.discount;
+    const discount = prev === d ? 0 : d; // 再次点击取消
+    const tw = this.data._totalWan;
+    const dealPrice = discount > 0 ? (tw * discount / 100).toFixed(1) : '';
+    this.setData({ discount, dealPrice });
+    this.calcMortgage();
+  },
+
   onRatioTap(e) {
     this.setData({ calcRatio: parseInt(e.currentTarget.dataset.ratio) });
     this.calcMortgage();
   },
 
-  onDealPriceInput(e) {
-    this.setData({ dealPrice: e.detail.value });
-    this.calcMortgage();
-  },
-
   calcMortgage() {
-    // 成交总价优先，否则用备案总价
-    const dealWan = parseFloat(this.data.dealPrice);
-    const total = (dealWan && dealWan > 0) ? dealWan : this.data._totalWan;
+    // 折扣价优先，否则用备案总价
+    const d = this.data.discount;
+    const total = (d > 0) ? this.data._totalWan * d / 100 : this.data._totalWan;
     if (!total || total <= 0) return;
     const ratio = this.data.calcRatio / 100;
     const down = Math.round(total * ratio);

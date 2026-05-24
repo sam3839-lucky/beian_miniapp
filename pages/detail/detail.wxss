@@ -90,6 +90,15 @@ page { background: #F7F7F7; }
   height: 76rpx;
   box-sizing: border-box;
 }
+.discount-picker {
+  display: flex;
+  gap: 16rpx;
+}
+.calc-deal-tag {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #07C160;
+}
 .calc-result {
   background: #F7F7F7;
   border-radius: 8rpx;
