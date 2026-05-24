@@ -251,6 +251,6 @@ Page({
   onCardTap(e) {
     const unit = e.detail.unit;
     getApp().globalData.detailUnit = { unit, project: this.data.projectName, building: this.data.buildingName };
-    wx.navigateTo({ url: '/pages/detail/detail' });
+    wx.navigateTo({ url: '/pages/detail/detail?_t=' + Date.now() });
   }
 });

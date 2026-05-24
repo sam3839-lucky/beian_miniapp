@@ -115,7 +115,7 @@ Page({
   onRankItemTap(e) {
     const item = e.currentTarget.dataset.item;
     getApp().globalData.detailUnit = { unit: item, project: item.project_name, building: item.building_name };
-    wx.navigateTo({ url: '/pages/detail/detail' });
+    wx.navigateTo({ url: '/pages/detail/detail?_t=' + Date.now() });
   },
 
   // ── P2: 最新预售证 ──
