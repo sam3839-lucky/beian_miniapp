@@ -48,7 +48,8 @@
 .dbar { height: 100%; border-radius: 4rpx; }
 .dbar.new { background: #07C160; }
 .dbar.used { background: #FF8C00; }
-.dcnt { font-size: 22rpx; color: #888; width: 60rpx; text-align: right; }
+.dcnt { font-size: 22rpx; color: #888; width: 56rpx; text-align: right; }
+.dpct { font-size: 22rpx; color: #333; font-weight: 600; width: 64rpx; text-align: right; }
 
 /* ═══ 时间范围 ═══ */
 .range-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }

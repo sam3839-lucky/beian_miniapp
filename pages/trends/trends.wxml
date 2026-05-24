@@ -66,16 +66,18 @@
           <view class="dcol-title"><text class="dcdot new"></text>一手</view>
           <view wx:for="{{districts.new.items}}" wx:key="zone" wx:for-item="d" class="drow">
             <text class="dname">{{d.zone}}</text>
-            <view class="dbar-wrap"><view class="dbar new" style="width:{{d.count / districts.new.items[0].count * 100}}%"></view></view>
+            <view class="dbar-wrap"><view class="dbar new" style="width:{{d.pct * 2}}%"></view></view>
             <text class="dcnt">{{d.count}}</text>
+            <text class="dpct">{{d.pct}}%</text>
           </view>
         </view>
         <view class="dcol">
           <view class="dcol-title"><text class="dcdot used"></text>二手</view>
           <view wx:for="{{districts.used.items}}" wx:key="zone" wx:for-item="d" class="drow">
             <text class="dname">{{d.zone}}</text>
-            <view class="dbar-wrap"><view class="dbar used" style="width:{{d.count / districts.used.items[0].count * 100}}%"></view></view>
+            <view class="dbar-wrap"><view class="dbar used" style="width:{{d.pct * 2}}%"></view></view>
             <text class="dcnt">{{d.count}}</text>
+            <text class="dpct">{{d.pct}}%</text>
           </view>
         </view>
       </view>
