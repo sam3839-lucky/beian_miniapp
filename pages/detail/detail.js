@@ -8,8 +8,11 @@ Page({
     totalPrice: '',
     status: '',
     statusColor: '',
-    calcRatio: 30,
+    calcRatio: 15,
     discount: 0,
+    discountIdx: 0,
+    discountOptions: ['无折扣', '99折', '98折', '97折', '96折', '95折', '94折', '93折', '92折', '91折', '90折', '89折', '88折', '87折', '86折', '85折'],
+    discountValues:  [0, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85],
     dealPrice: '',
     calcDown: '--',
     calcLoan: '--',
@@ -52,13 +55,12 @@ Page({
     }
   },
 
-  onDiscountTap(e) {
-    const d = parseInt(e.currentTarget.dataset.discount);
-    const prev = this.data.discount;
-    const discount = prev === d ? 0 : d; // 再次点击取消
+  onDiscountChange(e) {
+    const idx = parseInt(e.detail.value);
+    const discount = this.data.discountValues[idx];
     const tw = this.data._totalWan;
     const dealPrice = discount > 0 ? (tw * discount / 100).toFixed(1) : '';
-    this.setData({ discount, dealPrice });
+    this.setData({ discountIdx: idx, discount, dealPrice });
     this.calcMortgage();
   },
 

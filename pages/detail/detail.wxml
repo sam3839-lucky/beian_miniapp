@@ -1,12 +1,10 @@
 <view class="sheet">
   <view class="big-no">{{unit.unit_no}}</view>
-  <view class="big-status" style="color:{{statusColor}}">● {{status}}</view>
+  <view class="big-subtitle">{{project}} · {{building}}</view>
 
   <view class="row"><text class="k">面积</text><text class="v">{{area}}㎡</text></view>
   <view class="row"><text class="k">单价</text><text class="v">{{unitPrice}}</text></view>
   <view class="row"><text class="k">总价</text><text class="v red">{{totalPrice}}</text></view>
-  <view class="row"><text class="k">备案日期</text><text class="v">{{unit.check_date || '-'}}</text></view>
-  <view class="row"><text class="k">楼栋</text><text class="v">{{project}} · {{building}}</text></view>
 </view>
 
 <!-- ═══ 月供计算器 ═══ -->
@@ -20,12 +18,9 @@
   <view class="calc-row">
     <view class="calc-field">
       <text class="calc-label">折扣</text>
-      <view class="discount-picker">
-        <view class="ratio-btn {{discount === 98 ? 'on' : ''}}" bindtap="onDiscountTap" data-discount="{{98}}">98折</view>
-        <view class="ratio-btn {{discount === 95 ? 'on' : ''}}" bindtap="onDiscountTap" data-discount="{{95}}">95折</view>
-        <view class="ratio-btn {{discount === 90 ? 'on' : ''}}" bindtap="onDiscountTap" data-discount="{{90}}">90折</view>
-        <view class="ratio-btn {{discount === 85 ? 'on' : ''}}" bindtap="onDiscountTap" data-discount="{{85}}">85折</view>
-      </view>
+      <picker mode="selector" range="{{discountOptions}}" value="{{discountIdx}}" bindchange="onDiscountChange">
+        <view class="picker-val">{{discount > 0 ? discount + '折' : '无折扣'}}</view>
+      </picker>
     </view>
   </view>
   <view class="calc-row" wx:if="{{dealPrice}}">

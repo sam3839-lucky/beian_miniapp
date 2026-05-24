@@ -1,6 +1,5 @@
 /* ═══ 房源详情 — WeUI 规范 ═══ */
-
-page { background: #F7F7F7; }
+.wrapper { background: #F7F7F7; min-height: 100vh; }
 .sheet {
   background: #fff;
   border-radius: 16rpx 16rpx 0 0;
@@ -13,10 +12,10 @@ page { background: #F7F7F7; }
   font-weight: 800;
   color: #333;
 }
-.big-status {
+.big-subtitle {
   text-align: center;
   font-size: 26rpx;
-  font-weight: 600;
+  color: #888;
   margin: 4rpx 0 32rpx;
 }
 .row {
@@ -93,6 +92,18 @@ page { background: #F7F7F7; }
 .discount-picker {
   display: flex;
   gap: 16rpx;
+}
+.picker-val {
+  padding: 20rpx 24rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #E5E5E5;
+  font-size: 28rpx;
+  color: #333;
+  background: #F7F7F7;
+  min-height: 76rpx;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 .calc-deal-tag {
   font-size: 36rpx;
