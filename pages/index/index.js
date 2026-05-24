@@ -103,13 +103,14 @@ Page({
       );
     }
     if (pi <= 0) {
-      // 仍不匹配（新盘预售证，房源未入库）：追加到列表并选中
+      // 仍不匹配：追加到列表并选中
       const items = [...this.data.projects, { name: `${this.data.projects.length}. ${project}`, value: project }];
       pi = items.length - 1;
-      this.setData({ projects: items, projectIdx: pi, projectName: project });
-    } else {
-      this.setData({ projectIdx: pi, projectName: project });
+      this.setData({ projects: items });
     }
+    // 使用列表中的真实项目名，而非传入参数（两表名字可能不同）
+    const realName = this.data.projects[pi] ? this.data.projects[pi].value : project;
+    this.setData({ projectIdx: pi, projectName: realName });
     if (pi > 0) {
       this.onProjectChange({ detail: { value: pi } });
     }
@@ -134,7 +135,9 @@ Page({
         items.push({ name: `${items.length}. ${project}`, value: project });
         pi = items.length - 1;
       }
-      this.setData({ projects: items, projectIdx: pi, projectName: project });
+      this.setData({ projects: items });
+      const realName = items[pi] ? items[pi].value : project;
+      this.setData({ projectIdx: pi, projectName: realName });
       if (pi > 0) {
         this.onProjectChange({ detail: { value: pi } });
       }
@@ -176,7 +179,7 @@ Page({
     try {
       const [bldgData] = await Promise.all([api.getBuildings(name)]);
       this.setData({ buildings: ['全部楼栋', ...bldgData.buildings] });
-      this.loadUnits();
+      this.loadUnits(name);
     } catch (e) {
       wx.showToast({ title: '加载楼栋失败', icon: 'none' });
     }
@@ -216,14 +219,15 @@ Page({
     this.loadUnits();
   },
 
-  async loadUnits() {
-    if (!this.data.projectName) return;
+  async loadUnits(projectName) {
+    const pn = projectName || this.data.projectName;
+    if (!pn) return;
     this.setData({ loading: true });
     try {
-      const { projectName, buildingName, search, priceFilter, areaFilter } = this.data;
+      const { buildingName, search, priceFilter, areaFilter } = this.data;
       const [unitData, statsData] = await Promise.all([
-        api.getUnits(projectName, buildingName, search, priceFilter, areaFilter),
-        api.getStats(projectName, buildingName, priceFilter, areaFilter)
+        api.getUnits(pn, buildingName, search, priceFilter, areaFilter),
+        api.getStats(pn, buildingName, priceFilter, areaFilter)
       ]);
       this.setData({ allUnits: unitData.units, stats: statsData, loading: false });
       this.groupAndRender(unitData.units);
