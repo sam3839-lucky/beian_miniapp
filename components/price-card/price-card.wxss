@@ -7,30 +7,26 @@
   margin-bottom: 16rpx;
   border-left: 8rpx solid #07C160;
 }
-.r1 {
+.row {
   display: flex;
-  align-items: center;
-  margin-bottom: 12rpx;
+  align-items: stretch;
 }
-.r2 {
+.col {
   display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.col-left {
+  flex: 1;
+  min-width: 0;
+}
+.col-mid {
+  flex: 1;
   align-items: center;
-  color: #888;
-  font-size: 24rpx;
 }
-.bldg {
+.col-right {
   flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.date {
-  flex: 1;
-  text-align: center;
-}
-.up {
-  flex: 1;
-  text-align: right;
+  align-items: flex-end;
 }
 .no {
   font-size: 36rpx;
@@ -40,11 +36,17 @@
 .area {
   font-size: 28rpx;
   color: #888;
-  text-align: center;
-  flex: 1;
 }
 .price {
   font-size: 36rpx;
   font-weight: 700;
   color: #FF4D4F;
+}
+.sub {
+  font-size: 24rpx;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }

@@ -1,12 +1,16 @@
 <view class="card" bindtap="onTap">
-  <view class="r1">
-    <text class="no">{{unit.unit_no}}</text>
-    <text class="area">{{areaText}}㎡</text>
-    <text class="price">{{priceText}}</text>
-  </view>
-  <view class="r2">
-    <text class="bldg">{{bldgName}}</text>
-    <text class="date">{{dateText}}</text>
-    <text class="up">{{unitPriceText}}</text>
+  <view class="row">
+    <view class="col col-left">
+      <text class="no">{{unit.unit_no}}</text>
+      <text class="sub">{{bldgName}}</text>
+    </view>
+    <view class="col col-mid">
+      <text class="area">{{areaText}}㎡</text>
+      <text class="sub">{{dateText}}</text>
+    </view>
+    <view class="col col-right">
+      <text class="price">{{priceText}}</text>
+      <text class="sub">{{unitPriceText}}</text>
+    </view>
   </view>
 </view>
