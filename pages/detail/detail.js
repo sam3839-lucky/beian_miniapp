@@ -9,6 +9,7 @@ Page({
     status: '',
     statusColor: '',
     calcRatio: 30,
+    dealPrice: '',
     calcDown: '--',
     calcLoan: '--',
     calcMonthly: '--',
@@ -52,8 +53,15 @@ Page({
     this.calcMortgage();
   },
 
+  onDealPriceInput(e) {
+    this.setData({ dealPrice: e.detail.value });
+    this.calcMortgage();
+  },
+
   calcMortgage() {
-    const total = this.data._totalWan;
+    // 成交总价优先，否则用备案总价
+    const dealWan = parseFloat(this.data.dealPrice);
+    const total = (dealWan && dealWan > 0) ? dealWan : this.data._totalWan;
     if (!total || total <= 0) return;
     const ratio = this.data.calcRatio / 100;
     const down = Math.round(total * ratio);

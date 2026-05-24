@@ -16,8 +16,21 @@
   <view class="calc-title">月供计算</view>
   <view class="calc-row">
     <view class="calc-field">
+      <text class="calc-label">备案总价</text>
+      <text class="calc-price-tag">{{totalPrice}}</text>
+    </view>
+  </view>
+  <view class="calc-row">
+    <view class="calc-field">
+      <text class="calc-label">成交总价（万）</text>
+      <input class="calc-input" type="digit" placeholder="输入实际成交价" value="{{dealPrice}}" bindinput="onDealPriceInput"/>
+    </view>
+  </view>
+  <view class="calc-row">
+    <view class="calc-field">
       <text class="calc-label">首付比例</text>
       <view class="ratio-picker">
+        <view class="ratio-btn {{calcRatio === 15 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{15}}">15%</view>
         <view class="ratio-btn {{calcRatio === 20 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{20}}">20%</view>
         <view class="ratio-btn {{calcRatio === 30 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{30}}">30%</view>
         <view class="ratio-btn {{calcRatio === 50 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{50}}">50%</view>

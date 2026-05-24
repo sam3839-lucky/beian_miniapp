@@ -1,5 +1,5 @@
 const BASE_URL = 'https://ruiheqi.cn';
-const MORTGAGE_RATE = 0.0315;  // LPR 利率，更新时改这里
+const MORTGAGE_RATE = 0.0305;  // LPR 利率，更新时改这里
 
 App({
   globalData: {
