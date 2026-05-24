@@ -123,8 +123,7 @@ Page({
   async loadPermits() {
     try {
       const data = await api.getLatestPermits();
-      const active = (data.permits || []).filter(p => p.unsold > 0).slice(0, 8);
-      this.setData({ permits: active, permitsError: false });
+      this.setData({ permits: (data.permits || []).slice(0, 8), permitsError: false });
     } catch (e) {
       console.error('permits load failed', e);
       this.setData({ permitsError: true });
