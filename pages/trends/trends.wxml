@@ -6,28 +6,30 @@
           data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
   </view>
 
-  <!-- ═══ 加载/错误态 ═══ -->
   <view wx:if="{{loading && !summary}}" class="state-msg">加载中...</view>
   <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
     <text class="err-icon">!</text>
     <text>加载失败，点击重试</text>
   </view>
 
-  <!-- ═══ 数据区 ═══ -->
   <view wx:if="{{summary}}">
     <!-- 本月概览 -->
     <view class="overview">
       <view class="stat-card">
-        <text class="stat-num green">{{summary.this_month.count}}</text>
+        <text class="stat-num green">{{summary.this_month.total}}</text>
         <text class="stat-label">本月成交</text>
       </view>
       <view class="stat-card">
-        <text class="stat-num red">{{summary.this_month.avg_total}}万</text>
-        <text class="stat-label">成交均价</text>
+        <text class="stat-num">{{summary.this_month.new}}</text>
+        <text class="stat-label">新房</text>
       </view>
       <view class="stat-card">
-        <text class="stat-num {{summary.delta_count_pct >= 0 ? 'green' : 'red'}}">
-          {{summary.delta_count_pct >= 0 ? '+' : ''}}{{summary.delta_count_pct}}%
+        <text class="stat-num">{{summary.this_month.used}}</text>
+        <text class="stat-label">二手房</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num {{summary.delta_total_pct > 0 ? 'green' : 'red'}}">
+          {{summary.delta_total_pct > 0 ? '+' : ''}}{{summary.delta_total_pct}}%
         </text>
         <text class="stat-label">环比上月</text>
       </view>
@@ -40,49 +42,36 @@
         <view class="trend-row" wx:for="{{trends}}" wx:key="month">
           <text class="tr-month">{{item.month.slice(5)}}月</text>
           <view class="tr-bar-wrap">
-            <view class="tr-bar" style="width:{{item.count / trends[trends.length-1].count * 100}}%"></view>
+            <view class="tr-bar-new" style="width:{{item.new / trends[trends.length-1].total * 100}}%"></view>
+            <view class="tr-bar-used" style="width:{{item.used / trends[trends.length-1].total * 100}}%"></view>
           </view>
-          <text class="tr-count">{{item.count}}套</text>
-          <text class="tr-price">{{item.avg_total}}万</text>
+          <text class="tr-count">{{item.total}}套</text>
         </view>
+      </view>
+      <view class="trend-legend">
+        <text class="dot new"></text><text>新房</text>
+        <text class="dot used"></text><text>二手</text>
       </view>
     </view>
 
-    <!-- 区域排名 -->
-    <view class="section" wx:if="{{zoneRanking.length}}">
-      <view class="section-head"><text class="section-title">各区成交排名</text></view>
-      <view class="zone-compare">
-        <view class="zone-row" wx:for="{{zoneRanking}}" wx:key="zone">
-          <text class="zname">{{item.zone}}</text>
-          <text class="zcount">{{item.count}}套</text>
-          <view class="zbar-wrap">
-            <view class="zbar" style="width:{{item.count / zoneRanking[0].count * 100}}%"></view>
-          </view>
-          <text class="zprice">{{item.avgPrice}}万</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 近期成交 -->
+    <!-- 近期日成交 -->
     <view class="section">
-      <view class="section-head"><text class="section-title">近期成交</text></view>
+      <view class="section-head"><text class="section-title">近期日成交</text></view>
       <view class="tx-list">
-        <view class="tx-item" wx:for="{{items}}" wx:key="unit_no"
-              data-item="{{item}}" bindtap="onItemTap" hover-class="tx-item-hover">
+        <view class="tx-item" wx:for="{{dailyItems}}" wx:key="date">
           <view class="tx-info">
-            <text class="tx-proj">{{item.project_name}}</text>
-            <text class="tx-unit">{{item.unit_no}} | {{item.built_area}}㎡</text>
+            <text class="tx-date">{{item.date}}</text>
+            <text class="tx-area">{{item.area}}㎡</text>
           </view>
           <view class="tx-price">
-            <text class="tx-total">{{item.total_price}}万</text>
-            <text class="tx-date">{{item.date_signed}}</text>
+            <text class="tx-total">{{item.count}}套</text>
+            <text class="tx-unit">{{item.area}}㎡</text>
           </view>
         </view>
       </view>
-      <view wx:if="{{loadingMore}}" class="state-msg" style="padding:24rpx">加载更多...</view>
-      <view wx:elif="{{!hasMore && items.length}}" class="state-msg" style="padding:24rpx;color:#ccc">— 已加载全部 —</view>
     </view>
 
+    <view class="data-note">数据来源：深圳开放数据平台 · 含新房+二手房</view>
     <view style="height:40rpx;"></view>
   </view>
 </view>
