@@ -43,15 +43,13 @@
 
 /* 日成交列表 */
 .tx-list { background: #fff; border-radius: 8rpx; }
-.tx-item { display: flex; align-items: center; padding: 20rpx 28rpx; gap: 20rpx;
+.tx-item { display: flex; align-items: center; padding: 20rpx 28rpx; gap: 16rpx;
   min-height: 76rpx; border-top: 1rpx solid #F0F0F0; }
 .tx-item:first-child { border-top: none; }
-.tx-info { flex: 1; display: flex; flex-direction: column; gap: 4rpx; min-width: 0; }
-.tx-date { font-size: 26rpx; font-weight: 500; color: #333; }
-.tx-area { font-size: 22rpx; color: #A8A8A8; }
-.tx-price { text-align: right; display: flex; flex-direction: column; gap: 4rpx; flex-shrink: 0; }
-.tx-total { font-size: 30rpx; font-weight: 700; color: #333; }
-.tx-unit { font-size: 22rpx; color: #888; }
+.tx-date { font-size: 26rpx; font-weight: 500; color: #333; width: 170rpx; flex-shrink: 0; }
+.tx-new { font-size: 24rpx; color: #07C160; text-align: right; width: 120rpx; white-space: nowrap; }
+.tx-used { font-size: 24rpx; color: #FF8C00; text-align: right; width: 120rpx; white-space: nowrap; }
+.tx-total { font-size: 26rpx; font-weight: 700; color: #333; text-align: right; flex: 1; }
 
 .data-note { text-align: center; font-size: 22rpx; color: #A8A8A8; padding: 24rpx 0; }
 

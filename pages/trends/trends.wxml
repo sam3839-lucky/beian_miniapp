@@ -53,14 +53,10 @@
       <view class="section-head"><text class="section-title">近期日成交</text></view>
       <view class="tx-list">
         <view class="tx-item" wx:for="{{dailyItems}}" wx:key="date">
-          <view class="tx-info">
-            <text class="tx-date">{{item.date}}</text>
-            <text class="tx-area">{{item.area}}㎡</text>
-          </view>
-          <view class="tx-price">
-            <text class="tx-total">{{item.count}}套</text>
-            <text class="tx-unit">{{item.area}}㎡</text>
-          </view>
+          <text class="tx-date">{{item.date}}</text>
+          <text class="tx-new">新房 {{item.new}}套</text>
+          <text class="tx-used">二手 {{item.used}}套</text>
+          <text class="tx-total">共 {{item.total}}套</text>
         </view>
       </view>
     </view>
