@@ -61,26 +61,20 @@ Page({
     this.setData({ search: e.detail.value });
   },
 
+  _navToFilter(params) {
+    const app = getApp();
+    app.globalData.filterParams = params;
+    wx.switchTab({ url: '/pages/index/index' });
+  },
+
   onSearchConfirm() {
     const kw = this.data.search.trim();
-    if (kw) {
-      wx.navigateTo({
-        url: `/pages/index/index?search=${encodeURIComponent(kw)}`
-      });
-    }
+    if (kw) this._navToFilter({ search: kw });
   },
 
-  // ── P0: 区域快捷入口 ──
   onZoneTap(e) {
     const zone = e.currentTarget.dataset.zone;
-    wx.navigateTo({
-      url: `/pages/index/index?zone=${encodeURIComponent(zone)}`
-    });
-  },
-
-  // ── P0: 查看全部 ──
-  onViewAll() {
-    wx.switchTab ? wx.switchTab({ url: '/pages/index/index' }) : wx.navigateTo({ url: '/pages/index/index' });
+    this._navToFilter({ zone });
   },
 
   // ── P1: 榜单 ──
@@ -143,11 +137,7 @@ Page({
 
   onPermitTap(e) {
     const project = e.currentTarget.dataset.project;
-    if (project) {
-      wx.navigateTo({
-        url: `/pages/index/index?project=${encodeURIComponent(project)}`
-      });
-    }
+    if (project) this._navToFilter({ project });
   },
 
   // ── P3: 购房计算器 ──
@@ -195,9 +185,7 @@ Page({
   onCalcResultTap() {
     if (!this.data.calc.result) return;
     const r = this.data.calc.result;
-    wx.navigateTo({
-      url: `/pages/index/index?price_min=${r.totalLow}&price_max=${r.affordMax}`
-    });
+    this._navToFilter({ price_min: r.totalLow, price_max: r.affordMax });
   },
 
   onOpenOps() {

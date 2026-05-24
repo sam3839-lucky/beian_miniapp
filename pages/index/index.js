@@ -24,23 +24,23 @@ Page({
     areaFilter: { min: 0, max: 9999 }
   },
 
-  onLoad(options) {
+  onLoad() {
     this.loadZones();
-    // 从主页传入的筛选参数
-    if (options.zone) {
-      this._pendingZone = decodeURIComponent(options.zone);
+  },
+
+  onShow() {
+    const app = getApp();
+    const params = app.globalData.filterParams;
+    if (!params) return;
+    app.globalData.filterParams = null;
+
+    if (params.zone) this._pendingZone = params.zone;
+    if (params.project) this._pendingProject = params.project;
+    if (params.search) this.setData({ search: params.search });
+    if (params.price_min) {
+      this._pendingPrice = { min: params.price_min, max: params.price_max || 999999 };
     }
-    if (options.project) {
-      this._pendingProject = decodeURIComponent(options.project);
-    }
-    if (options.search) {
-      this.setData({ search: decodeURIComponent(options.search) });
-    }
-    if (options.price_min) {
-      const pMin = parseInt(options.price_min);
-      const pMax = options.price_max ? parseInt(options.price_max) : 999999;
-      this._pendingPrice = { min: pMin, max: pMax };
-    }
+    if (this.data.zones.length > 1) this._applyPendingNav();
   },
 
   // 区域加载完成后，自动执行从主页传来的导航

@@ -49,4 +49,12 @@ module.exports = {
   getRankings: () => request('/api/rankings'),
   getLatestPermits: () => request('/api/latest-permits'),
   getAdminStatus: () => request('/api/admin/status'),
+  getTransactionSummary: () => request('/api/transactions/summary'),
+  getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
+  getRecentTransactions: (cursor = '', pageSize = 20, zone = '') => {
+    let url = '/api/transactions/recent?page_size=' + pageSize;
+    if (cursor) url += '&cursor=' + encodeURIComponent(cursor);
+    if (zone) url += '&zone=' + encodeURIComponent(zone);
+    return request(url);
+  },
 };

@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/home/home",
+    "pages/trends/trends",
     "pages/index/index",
     "pages/detail/detail",
     "pages/ops/ops"
@@ -9,7 +10,33 @@
     "navigationBarTitleText": "备案价查询",
     "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#f2f0ed"
+    "backgroundColor": "#F7F7F7"
+  },
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#07C160",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "assets/tabbar/home.png",
+        "selectedIconPath": "assets/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/trends/trends",
+        "text": "成交",
+        "iconPath": "assets/tabbar/chart.png",
+        "selectedIconPath": "assets/tabbar/chart-active.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "找房",
+        "iconPath": "assets/tabbar/search.png",
+        "selectedIconPath": "assets/tabbar/search-active.png"
+      }
+    ]
   },
   "usingComponents": {
     "price-card": "/components/price-card/price-card",
