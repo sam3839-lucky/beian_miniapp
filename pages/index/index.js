@@ -250,8 +250,7 @@ Page({
 
   onCardTap(e) {
     const unit = e.detail.unit;
-    wx.navigateTo({
-      url: `/pages/detail/detail?data=${encodeURIComponent(JSON.stringify(unit))}&project=${encodeURIComponent(this.data.projectName)}&building=${encodeURIComponent(this.data.buildingName)}`
-    });
+    getApp().globalData.detailUnit = { unit, project: this.data.projectName, building: this.data.buildingName };
+    wx.navigateTo({ url: '/pages/detail/detail' });
   }
 });

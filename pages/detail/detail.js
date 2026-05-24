@@ -21,11 +21,13 @@ Page({
     _totalWan: 0
   },
 
-  onLoad(options) {
+  onLoad() {
     try {
-      const unit = JSON.parse(decodeURIComponent(options.data || '{}'));
-      const project = decodeURIComponent(options.project || '');
-      const building = decodeURIComponent(options.building || '');
+      const ctx = getApp().globalData.detailUnit || {};
+      getApp().globalData.detailUnit = null;
+      const unit = ctx.unit || {};
+      const project = ctx.project || '';
+      const building = ctx.building || '';
 
       const area = (unit.built_area || '-') + '㎡';
       const up = unit.unit_price ? (unit.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
