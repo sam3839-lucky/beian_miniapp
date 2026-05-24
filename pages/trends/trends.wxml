@@ -20,12 +20,14 @@
       <view class="hero-detail">
         <text class="hero-tag new">新房 {{summary.this_month.new}}</text>
         <text class="hero-tag used">二手 {{summary.this_month.used}}</text>
-        <text class="hero-tag {{summary.delta_mom_pct > 0 ? 'up' : 'down'}}">
-          环比 {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
-        </text>
-        <text class="hero-tag {{summary.delta_yoy_pct > 0 ? 'up' : 'down'}}" wx:if="{{summary.yoy_month}}">
-          同比 {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
-        </text>
+        <view class="hero-row">
+          <text class="hero-tag {{summary.delta_mom_pct > 0 ? 'up' : 'down'}}">
+            环比 {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
+          </text>
+          <text class="hero-tag {{summary.delta_yoy_pct > 0 ? 'up' : 'down'}}" wx:if="{{summary.yoy_month}}">
+            同比 {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
+          </text>
+        </view>
       </view>
     </view>
 

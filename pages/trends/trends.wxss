@@ -15,6 +15,7 @@
 .hero-num { font-size: 80rpx; font-weight: 800; color: #07C160; line-height: 1; }
 .hero-label { font-size: 26rpx; color: #888; margin: 12rpx 0 24rpx; display: block; }
 .hero-detail { display: flex; flex-wrap: wrap; justify-content: center; gap: 12rpx; }
+.hero-row { display: flex; justify-content: center; gap: 16rpx; }
 .hero-tag { font-size: 24rpx; padding: 8rpx 20rpx; border-radius: 20rpx; font-weight: 500; }
 .hero-tag.new { background: #E8F8EF; color: #07C160; }
 .hero-tag.used { background: #FFF3E6; color: #FF8C00; }
