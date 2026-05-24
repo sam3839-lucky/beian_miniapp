@@ -14,30 +14,18 @@
 
   <view wx:if="{{summary}}">
     <!-- 本月概览 -->
-    <view class="overview">
-      <view class="stat-card">
-        <text class="stat-num green">{{summary.this_month.total}}</text>
-        <text class="stat-label">本月成交</text>
-      </view>
-      <view class="stat-card">
-        <text class="stat-num">{{summary.this_month.new}}</text>
-        <text class="stat-label">新房</text>
-      </view>
-      <view class="stat-card">
-        <text class="stat-num">{{summary.this_month.used}}</text>
-        <text class="stat-label">二手房</text>
-      </view>
-      <view class="stat-card">
-        <text class="stat-num {{summary.delta_mom_pct > 0 ? 'green' : 'red'}}">
-          {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
+    <view class="overview-hero">
+      <text class="hero-num">{{summary.this_month.total}}</text>
+      <text class="hero-label">本月成交（套）</text>
+      <view class="hero-detail">
+        <text class="hero-tag new">新房 {{summary.this_month.new}}</text>
+        <text class="hero-tag used">二手 {{summary.this_month.used}}</text>
+        <text class="hero-tag {{summary.delta_mom_pct > 0 ? 'up' : 'down'}}">
+          环比 {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
         </text>
-        <text class="stat-label">环比上月</text>
-      </view>
-      <view class="stat-card" wx:if="{{summary.yoy_month}}">
-        <text class="stat-num {{summary.delta_yoy_pct > 0 ? 'green' : 'red'}}">
-          {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
+        <text class="hero-tag {{summary.delta_yoy_pct > 0 ? 'up' : 'down'}}" wx:if="{{summary.yoy_month}}">
+          同比 {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
         </text>
-        <text class="stat-label">同比去年</text>
       </view>
     </view>
 
