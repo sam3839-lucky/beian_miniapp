@@ -40,50 +40,59 @@ Page({
     if (params.price_min) {
       this._pendingPrice = { min: params.price_min, max: params.price_max || 999999 };
     }
-    if (this.data.zones.length > 1) this._applyPendingNav();
+
+    // zones 已加载：直接执行；否则等 loadZones 回调触发
+    if (this.data.zones.length > 1) {
+      this._applyPendingNav();
+    }
+  },
+
+  async loadZones() {
+    try {
+      const data = await api.getZones();
+      this.setData({ zones: ['全深圳', ...data.zones] });
+      // zones 加载完毕，消费待处理的导航参数
+      if (this._pendingZone || this._pendingProject || this._pendingPrice) {
+        this._applyPendingNav();
+      }
+    } catch (e) {
+      wx.showToast({ title: '加载失败', icon: 'none' });
+    }
   },
 
   // 区域加载完成后，自动执行从主页传来的导航
-  _applyPendingNav() {
+  async _applyPendingNav() {
     const zone = this._pendingZone;
     const project = this._pendingProject;
+    const priceFilter = this._pendingPrice;
     this._pendingZone = null;
     this._pendingProject = null;
+    this._pendingPrice = null;
 
     if (zone) {
       const idx = this.data.zones.indexOf(zone);
       if (idx > 0) {
         this.setData({ zoneIdx: idx });
-        this.onZoneChange({ detail: { value: idx } });
+        await this.onZoneChange({ detail: { value: idx } });
         if (project) {
-          this._awaitProjectAndSelect(project);
+          this._selectProject(project);
         }
       }
     } else if (project) {
-      // 只有项目名无区域：全局搜项目并选中
-      this._selectGlobalProject(project);
+      await this._selectGlobalProject(project);
     }
 
-    if (this._pendingPrice) {
-      const p = this._pendingPrice;
-      this._pendingPrice = null;
-      this.setData({ priceFilter: p, priceActive: 5 });
+    if (priceFilter) {
+      this.setData({ priceFilter, priceActive: 5 });
     }
   },
 
-  _awaitProjectAndSelect(project) {
-    let attempts = 0;
-    const check = setInterval(() => {
-      attempts++;
-      const pi = this.data.projects.findIndex(p => p.value === project);
-      if (pi > 0) {
-        clearInterval(check);
-        this.setData({ projectIdx: pi, projectName: project });
-        this.onProjectChange({ detail: { value: pi } });
-      } else if (attempts > 16) {
-        clearInterval(check);
-      }
-    }, 300);
+  _selectProject(project) {
+    const pi = this.data.projects.findIndex(p => p.value === project);
+    if (pi > 0) {
+      this.setData({ projectIdx: pi, projectName: project });
+      this.onProjectChange({ detail: { value: pi } });
+    }
   },
 
   async _selectGlobalProject(project) {
@@ -103,16 +112,6 @@ Page({
       }
     } catch (e) {
       // 静默失败
-    }
-  },
-
-  async loadZones() {
-    try {
-      const data = await api.getZones();
-      this.setData({ zones: ['全深圳', ...data.zones] });
-      this._applyPendingNav();
-    } catch (e) {
-      wx.showToast({ title: '加载失败', icon: 'none' });
     }
   },
 
