@@ -22,23 +22,27 @@ Page({
   },
 
   onLoad() {
+    this._renderUnit();
+  },
+
+  onShow() {
+    // onLoad 未成功渲染时，onShow 补枪
+    if (!this._rendered) this._renderUnit();
+  },
+
+  _renderUnit() {
     try {
       const ctx = wx.getStorageSync('__detail_unit') || {};
-      wx.removeStorageSync('__detail_unit');
       const unit = ctx.unit || {};
       const project = ctx.project || '';
       const building = ctx.building || '';
 
       if (!unit.unit_no) {
         console.warn('detail: no unit data');
-        this.setData({
-          project, building,
-          area: '数据未加载', unitPrice: '-', totalPrice: '-',
-          status: '-', statusColor: '#888'
-        });
         return;
       }
 
+      wx.removeStorageSync('__detail_unit');
       const area = (unit.built_area || '-') + '㎡';
       const up = unit.unit_price ? (unit.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
       const tw = unit.total_price > 0 ? unit.total_price : 0;
@@ -61,6 +65,7 @@ Page({
         _totalWan: tw,
         mortgageRateText: (rate * 100).toFixed(2) + '%'
       });
+      this._rendered = true;
       this.calcMortgage();
     } catch (e) {
       wx.showToast({ title: '数据错误', icon: 'none' });
