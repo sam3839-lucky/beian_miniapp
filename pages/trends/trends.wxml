@@ -1,11 +1,4 @@
 <view class="page">
-  <!-- ═══ 时间范围切换 ═══ -->
-  <view class="range-bar">
-    <view class="range-tab {{range === item.value ? 'on' : ''}}"
-          wx:for="{{ranges}}" wx:key="value"
-          data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
-  </view>
-
   <view wx:if="{{loading && !summary}}" class="state-msg">加载中...</view>
   <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
     <text class="err-icon">!</text>
@@ -34,6 +27,11 @@
     <!-- 月度走势 -->
     <view class="section">
       <view class="section-head"><text class="section-title">月度成交走势</text></view>
+      <view class="range-bar">
+        <view class="range-tab {{range === item.value ? 'on' : ''}}"
+              wx:for="{{ranges}}" wx:key="value"
+              data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
+      </view>
       <view class="trend-chart">
         <view class="trend-row" wx:for="{{trends}}" wx:key="month">
           <text class="tr-month">{{item.month.substring(5)}}月</text>

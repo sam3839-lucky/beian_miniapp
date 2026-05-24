@@ -3,7 +3,7 @@
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
 /* 时间范围切换 */
-.range-bar { display: flex; background: #fff; padding: 16rpx 32rpx; gap: 16rpx; }
+.range-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
 .range-tab { flex: 1; text-align: center; padding: 16rpx 0; font-size: 26rpx; color: #888;
   background: #F7F7F7; border-radius: 8rpx; min-height: 64rpx; display: flex;
   align-items: center; justify-content: center; }
