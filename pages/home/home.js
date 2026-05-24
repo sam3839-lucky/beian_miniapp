@@ -9,7 +9,7 @@ Page({
     search: '',
     // P1: 榜单 tab
     rankTab: 0,
-    rankTabs: ['总价最低', '单价最低', '面积最小'],
+    rankTabs: ['总价最低', '总价最高', '单价最低', '单价最高'],
     rankings: null,
     rankList: [],
     rankingsError: false,
@@ -81,7 +81,7 @@ Page({
   async loadRankings() {
     try {
       const data = await api.getRankings();
-      const keys = ['cheap_total', 'cheap_unit', 'small_area'];
+      const keys = ['cheap_total', 'dear_total', 'cheap_unit', 'dear_unit'];
       const list = (data[keys[this.data.rankTab]] || []).map(item => ({
         ...item,
         unitPriceWan: (item.unit_price / 10000).toFixed(1)
@@ -104,7 +104,7 @@ Page({
 
   onRankTabChange(e) {
     const idx = parseInt(e.currentTarget.dataset.index);
-    const keys = ['cheap_total', 'cheap_unit', 'small_area'];
+    const keys = ['cheap_total', 'dear_total', 'cheap_unit', 'dear_unit'];
     const list = ((this.data.rankings || {})[keys[idx]] || []).map(item => ({
       ...item,
       unitPriceWan: (item.unit_price / 10000).toFixed(1)
