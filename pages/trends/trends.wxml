@@ -28,10 +28,16 @@
         <text class="stat-label">二手房</text>
       </view>
       <view class="stat-card">
-        <text class="stat-num {{summary.delta_total_pct > 0 ? 'green' : 'red'}}">
-          {{summary.delta_total_pct > 0 ? '+' : ''}}{{summary.delta_total_pct}}%
+        <text class="stat-num {{summary.delta_mom_pct > 0 ? 'green' : 'red'}}">
+          {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
         </text>
         <text class="stat-label">环比上月</text>
+      </view>
+      <view class="stat-card" wx:if="{{summary.yoy_month}}">
+        <text class="stat-num {{summary.delta_yoy_pct > 0 ? 'green' : 'red'}}">
+          {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
+        </text>
+        <text class="stat-label">同比去年</text>
       </view>
     </view>
 
