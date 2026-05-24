@@ -52,4 +52,5 @@ module.exports = {
   getTransactionSummary: () => request('/api/transactions/summary'),
   getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
   getRecentTransactions: (days = 30) => request('/api/transactions/recent?days=' + days),
+  getTransactionDistricts: () => request('/api/transactions/districts'),
 };

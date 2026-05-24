@@ -1,36 +1,91 @@
 <view class="page">
   <view wx:if="{{loading && !summary}}" class="state-msg">加载中...</view>
   <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
-    <text class="err-icon">!</text>
-    <text>加载失败，点击重试</text>
+    <text class="err-icon">!</text><text>加载失败，点击重试</text>
   </view>
 
   <view wx:if="{{summary}}">
-    <!-- 本月概览 -->
-    <view class="overview-hero">
-      <text class="hero-num">{{summary.this_month.total}}</text>
-      <text class="hero-label">本月成交（套）</text>
-      <view class="hero-detail">
-        <text class="hero-tag new">新房 {{summary.this_month.new}}</text>
-        <text class="hero-tag used">二手 {{summary.this_month.used}}</text>
-        <view class="hero-row">
-          <text class="hero-tag {{summary.delta_mom_pct > 0 ? 'up' : 'down'}}">
-            环比 {{summary.delta_mom_pct > 0 ? '+' : ''}}{{summary.delta_mom_pct}}%
-          </text>
-          <text class="hero-tag {{summary.delta_yoy_pct > 0 ? 'up' : 'down'}}" wx:if="{{summary.yoy_month}}">
-            同比 {{summary.delta_yoy_pct > 0 ? '+' : ''}}{{summary.delta_yoy_pct}}%
-          </text>
+    <!-- ═══ 环形图 + 图例 ═══ -->
+    <view class="ring-card">
+      <view class="ring-subtitle">本月成交 · 完整度 {{summary.this_month.completeness}}%</view>
+      <view class="ring-wrap">
+        <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
+      </view>
+      <view class="ring-legend">
+        <view class="legend-item">
+          <text class="ldot new"></text>
+          <text>一手</text>
+          <text class="lnum">{{summary.this_month.new}}</text>
+          <text class="lpct">{{summary.this_month.total > 0 ? (summary.this_month.new / summary.this_month.total * 100).toFixed(1) : 0}}%</text>
+        </view>
+        <view class="legend-item">
+          <text class="ldot used"></text>
+          <text>二手</text>
+          <text class="lnum">{{summary.this_month.used}}</text>
+          <text class="lpct">{{summary.this_month.total > 0 ? (summary.this_month.used / summary.this_month.total * 100).toFixed(1) : 0}}%</text>
         </view>
       </view>
     </view>
 
-    <!-- 月度走势 -->
+    <!-- ═══ 成交概况表格 ═══ -->
+    <view class="section">
+      <view class="section-head"><text class="section-title">成交概况</text></view>
+      <view class="data-table">
+        <view class="th-row">
+          <text class="th-label"></text>
+          <text class="th-val">套数</text>
+          <text class="th-val">环比</text>
+          <text class="th-val">同比</text>
+        </view>
+        <view class="td-row">
+          <view class="td-label"><text class="dot new"></text>一手</view>
+          <text class="td-val">{{summary.this_month.new}}</text>
+          <text class="td-val {{summary.new_mom_pct > 0 ? 'up' : 'down'}}">{{summary.new_mom_pct > 0 ? '+' : ''}}{{summary.new_mom_pct}}%</text>
+          <text class="td-val {{summary.new_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.new_yoy_pct > 0 ? '+' : ''}}{{summary.new_yoy_pct}}%</text>
+        </view>
+        <view class="td-row">
+          <view class="td-label"><text class="dot used"></text>二手</view>
+          <text class="td-val">{{summary.this_month.used}}</text>
+          <text class="td-val {{summary.used_mom_pct > 0 ? 'up' : 'down'}}">{{summary.used_mom_pct > 0 ? '+' : ''}}{{summary.used_mom_pct}}%</text>
+          <text class="td-val {{summary.used_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.used_yoy_pct > 0 ? '+' : ''}}{{summary.used_yoy_pct}}%</text>
+        </view>
+        <view class="td-row total">
+          <view class="td-label">合计</view>
+          <text class="td-val">{{summary.this_month.total}}</text>
+          <text class="td-val {{summary.total_mom_pct > 0 ? 'up' : 'down'}}">{{summary.total_mom_pct > 0 ? '+' : ''}}{{summary.total_mom_pct}}%</text>
+          <text class="td-val {{summary.total_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.total_yoy_pct > 0 ? '+' : ''}}{{summary.total_yoy_pct}}%</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 各区成交占比 ═══ -->
+    <view class="section" wx:if="{{districts}}">
+      <view class="section-head"><text class="section-title">各区成交占比</text></view>
+      <view class="two-col">
+        <view class="dcol">
+          <view class="dcol-title"><text class="dcdot new"></text>一手</view>
+          <view wx:for="{{districts.new.items}}" wx:key="zone" wx:for-item="d" class="drow">
+            <text class="dname">{{d.zone}}</text>
+            <view class="dbar-wrap"><view class="dbar new" style="width:{{d.count / districts.new.items[0].count * 100}}%"></view></view>
+            <text class="dcnt">{{d.count}}</text>
+          </view>
+        </view>
+        <view class="dcol">
+          <view class="dcol-title"><text class="dcdot used"></text>二手</view>
+          <view wx:for="{{districts.used.items}}" wx:key="zone" wx:for-item="d" class="drow">
+            <text class="dname">{{d.zone}}</text>
+            <view class="dbar-wrap"><view class="dbar used" style="width:{{d.count / districts.used.items[0].count * 100}}%"></view></view>
+            <text class="dcnt">{{d.count}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- ═══ 月度成交走势 ═══ -->
     <view class="section">
       <view class="section-head"><text class="section-title">月度成交走势</text></view>
       <view class="range-bar">
-        <view class="range-tab {{range === item.value ? 'on' : ''}}"
-              wx:for="{{ranges}}" wx:key="value"
-              data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
+        <view class="range-tab {{range === item.value ? 'on' : ''}}" wx:for="{{ranges}}" wx:key="value" data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
       </view>
       <view class="trend-chart">
         <view class="trend-row" wx:for="{{trends}}" wx:key="month">
@@ -43,25 +98,24 @@
         </view>
       </view>
       <view class="trend-legend">
-        <text class="dot new"></text><text>新房</text>
+        <text class="dot new"></text><text>一手</text>
         <text class="dot used"></text><text>二手</text>
       </view>
     </view>
 
-    <!-- 近期日成交 -->
+    <!-- ═══ 近期日成交 ═══ -->
     <view class="section">
       <view class="section-head"><text class="section-title">近期日成交</text></view>
       <view class="tx-list">
         <view class="tx-item" wx:for="{{dailyItems}}" wx:key="date">
           <text class="tx-date">{{item.date}}</text>
-          <text class="tx-new">新房 {{item.new}}套</text>
+          <text class="tx-new">一手 {{item.new}}套</text>
           <text class="tx-used">二手 {{item.used}}套</text>
           <text class="tx-total">共 {{item.total}}套</text>
         </view>
       </view>
     </view>
 
-    <view class="data-note">数据来源：深圳开放数据平台 · 含新房+二手房</view>
-    <view style="height:40rpx;"></view>
+    <view class="note">数据来源：深圳开放数据平台 · 含一手+二手房</view>
   </view>
 </view>
