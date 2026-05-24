@@ -102,9 +102,7 @@ Page({
 
   onItemTap(e) {
     const item = e.currentTarget.dataset.item;
-    wx.navigateTo({
     getApp().globalData.detailUnit = { unit: item, project: item.project_name, building: item.building_name };
     wx.navigateTo({ url: '/pages/detail/detail' });
-    });
   }
 });
