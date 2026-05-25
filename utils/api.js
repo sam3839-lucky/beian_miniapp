@@ -53,4 +53,5 @@ module.exports = {
   getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
   getRecentTransactions: (days = 30) => request('/api/transactions/recent?days=' + days),
   getTransactionDistricts: () => request('/api/transactions/districts'),
+  quickSearch: (q) => request('/api/quick-search?q=' + encodeURIComponent(q)),
 };

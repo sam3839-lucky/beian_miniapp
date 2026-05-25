@@ -4,7 +4,49 @@
     <view class="search-box">
       <text class="search-icon">🔍</text>
       <input class="search-input" placeholder="搜项目名、开发商…" value="{{search}}"
-             bindinput="onSearchInput" bindconfirm="onSearchConfirm" confirm-type="search"/>
+             bindinput="onSearchInput" bindconfirm="onQuickSearch" confirm-type="search"
+             focus="{{searchFocus}}"/>
+    </view>
+    <view class="search-clear" wx:if="{{search}}" bindtap="onClearSearch">
+      <text>✕</text>
+    </view>
+  </view>
+
+  <!-- ═══ 瞬搜结果 ═══ -->
+  <view class="quick-results" wx:if="{{search && !searchLoading}}">
+    <view class="qr-list" wx:if="{{searchResults.length}}">
+      <view class="qr-card" wx:for="{{searchResults}}" wx:key="project_name"
+            data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+            bindtap="onQuickResultTap" hover-class="qr-card-hover">
+        <view class="qr-head">
+          <text class="qr-name">{{item.project_name}}</text>
+          <text class="qr-zone">{{item.zone}}</text>
+        </view>
+        <view class="qr-stats">
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.unsold_count}}</text>
+            <text class="qr-slabel">可售套</text>
+          </view>
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.avg_unit_w}}</text>
+            <text class="qr-slabel">万/㎡</text>
+          </view>
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.price_min}}-{{item.price_max}}</text>
+            <text class="qr-slabel">万</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="qr-empty" wx:if="{{!searchResults.length && searchTapped}}">
+      <text>未找到匹配项目，试试输入区域名或开发商名</text>
+    </view>
+    <view class="qr-history" wx:if="{{!searchResults.length && !searchTapped}}">
+      <view wx:if="{{searchHistory.length}}">
+        <text class="qh-title">最近搜索</text>
+        <view class="qh-item" wx:for="{{searchHistory}}" wx:key="*this"
+              bindtap="onHistoryTap" data-kw="{{item}}">{{item}}</view>
+      </view>
     </view>
   </view>
 

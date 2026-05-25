@@ -5,8 +5,13 @@ Page({
     // P0: 概览
     overview: null,
     overviewError: false,
-    // P0: 搜索
+    // P0: 搜索（瞬搜模式）
     search: '',
+    searchResults: [],
+    searchLoading: false,
+    searchTapped: false,
+    searchHistory: [],
+    searchFocus: false,
     // P1: 榜单 tab
     rankTab: 0,
     rankTabs: ['总价最低', '总价最高', '单价最低', '单价最高'],
@@ -26,10 +31,28 @@ Page({
 
   onLoad() {
     this.loadAll();
+    this._loadHistory();
   },
 
   onPullDownRefresh() {
     this.loadAll().finally(() => wx.stopPullDownRefresh());
+  },
+
+  _loadHistory() {
+    try {
+      const h = wx.getStorageSync('search_history') || [];
+      this.setData({ searchHistory: h.slice(0, 10) });
+    } catch (e) { /* ignore */ }
+  },
+
+  _saveHistory(kw) {
+    if (!kw.trim()) return;
+    try {
+      let h = wx.getStorageSync('search_history') || [];
+      h = [kw, ...h.filter(k => k !== kw)].slice(0, 10);
+      wx.setStorageSync('search_history', h);
+      this.setData({ searchHistory: h });
+    } catch (e) { /* ignore */ }
   },
 
   async loadAll() {
@@ -56,9 +79,62 @@ Page({
     this.loadOverview();
   },
 
-  // ── P0: 搜索 ──
+  // ── P0: 瞬搜 ──
   onSearchInput(e) {
-    this.setData({ search: e.detail.value });
+    const v = e.detail.value;
+    this.setData({ search: v, searchTapped: false });
+    if (this._timer) clearTimeout(this._timer);
+    if (!v.trim()) {
+      this.setData({ searchResults: [], searchLoading: false });
+      return;
+    }
+    this._timer = setTimeout(() => this._doSearch(v.trim()), 300);
+  },
+
+  onQuickSearch() {
+    const v = this.data.search.trim();
+    if (!v) return;
+    this._saveHistory(v);
+    this.setData({ searchTapped: true });
+    if (this._timer) clearTimeout(this._timer);
+    this._doSearch(v);
+  },
+
+  async _doSearch(q) {
+    this.setData({ searchLoading: true });
+    try {
+      const data = await api.quickSearch(q);
+      const results = (data.results || []).map(r => ({
+        ...r,
+        avg_unit_w: (r.avg_unit / 10000).toFixed(1),
+        avg_total: r.avg_total || 0,
+        price_min: r.price_min || 0,
+        price_max: r.price_max || 0
+      }));
+      this.setData({ searchResults: results, searchLoading: false });
+    } catch (e) {
+      console.error('quick search failed', e);
+      this.setData({ searchLoading: false });
+    }
+  },
+
+  onClearSearch() {
+    this.setData({
+      search: '', searchResults: [], searchTapped: false, searchFocus: false
+    });
+  },
+
+  onQuickResultTap(e) {
+    const { project, zone } = e.currentTarget.dataset;
+    this._saveHistory(project);
+    this._navToFilter({ project, zone });
+  },
+
+  onHistoryTap(e) {
+    const kw = e.currentTarget.dataset.kw;
+    this.setData({ search: kw, searchFocus: true });
+    this._doSearch(kw);
+    this._saveHistory(kw);
   },
 
   _navToFilter(params) {
