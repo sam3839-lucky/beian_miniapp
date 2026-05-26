@@ -60,7 +60,7 @@
     <text class="cta-title">开通方式</text>
     <view class="cta-card">
       <text class="cta-step">1. 复制下方微信号</text>
-      <text class="cta-wechat">samxxx</text>
+      <text class="cta-wechat">bogelsf</text>
       <view class="cta-copy" bindtap="onCopyWechat" hover-class="cta-copy-hover">
         <text>复制微信号</text>
       </view>

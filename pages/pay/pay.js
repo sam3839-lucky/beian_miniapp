@@ -30,7 +30,7 @@ Page({
 
   onCopyWechat() {
     wx.setClipboardData({
-      data: 'samxxx',
+      data: 'bogelsf',
       success: () => wx.showToast({ title: '已复制微信号，去微信添加', icon: 'none', duration: 2000 })
     });
   }
