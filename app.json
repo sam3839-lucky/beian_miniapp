@@ -4,7 +4,8 @@
     "pages/index/index",
     "pages/trends/trends",
     "pages/detail/detail",
-    "pages/ops/ops"
+    "pages/ops/ops",
+    "pages/subscriptions/subscriptions"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",

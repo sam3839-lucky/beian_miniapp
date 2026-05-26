@@ -212,6 +212,14 @@
     </view>
   </view>
 
+  <!-- ═══ 我的关注 ═══ -->
+  <view class="section">
+    <view class="ops-entry" bindtap="onOpenSubscriptions">
+      <text>🔔 我的关注</text>
+      <text style="color:#888">管理关注的项目 →</text>
+    </view>
+  </view>
+
   <!-- ═══ 运营入口 ═══ -->
   <view class="section">
     <view class="ops-entry" bindtap="onOpenOps">

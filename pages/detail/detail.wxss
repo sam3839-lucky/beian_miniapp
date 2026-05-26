@@ -166,3 +166,21 @@
 }
 .poster-btn-hover { background: #E8F8EF; }
 .poster-icon { font-size: 32rpx; }
+
+/* ═══ 关注项目 ═══ */
+.follow-bar { margin: 32rpx 32rpx 0; }
+.follow-btn {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 2rpx solid #FF8C00;
+}
+.follow-btn.on { border-color: #FF8C00; background: #FFF7E6; }
+.follow-btn-hover { background: #FFF7E6; }
+.follow-icon { font-size: 32rpx; }
+.follow-hint { font-size: 22rpx; color: #888; margin-left: auto; }

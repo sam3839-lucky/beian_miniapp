@@ -18,6 +18,7 @@ Page({
     calcLoan: '--',
     calcMonthly: '--',
     mortgageRateText: '3.05%',
+    subscribed: false,
     _totalWan: 0
   },
 
@@ -119,5 +120,40 @@ Page({
         wx.showToast({ title: '网络错误，请重试', icon: 'none' });
       }
     });
+  },
+
+  onToggleFollow() {
+    const openid = getApp().globalData.openid;
+    if (!openid) {
+      wx.showToast({ title: '请稍后再试', icon: 'none' });
+      return;
+    }
+    const project = this.data.project;
+    const api = require('../../utils/api');
+    const subscribed = this.data.subscribed;
+
+    if (subscribed) {
+      api.unsubscribe(openid, project).then(() => {
+        this.setData({ subscribed: false });
+        wx.showToast({ title: '已取消关注', icon: 'none' });
+      });
+    } else {
+      // 微信订阅消息授权
+      wx.requestSubscribeMessage({
+        tmplIds: ['TEMPLATE_ID_PLACEHOLDER'],  // 替换为实际模板 ID
+        success: () => {
+          api.subscribe(openid, project).then(res => {
+            if (res.count >= res.max) {
+              wx.showToast({ title: '已达关注上限(5个)', icon: 'none' });
+            }
+            this.setData({ subscribed: true });
+            wx.showToast({ title: '已关注', icon: 'success' });
+          });
+        },
+        fail: () => {
+          wx.showToast({ title: '需要授权才能接收通知', icon: 'none' });
+        }
+      });
+    }
   }
 });

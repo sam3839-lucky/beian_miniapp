@@ -57,6 +57,15 @@
   </view>
 </view>
 
+<!-- ═══ 关注项目 ═══ -->
+<view class="follow-bar" wx:if="{{project}}">
+  <view class="follow-btn {{subscribed ? 'on' : ''}}" bindtap="onToggleFollow" hover-class="follow-btn-hover">
+    <text class="follow-icon">{{subscribed ? '🔔' : '🔕'}}</text>
+    <text>{{subscribed ? '已关注' : '关注此项目'}}</text>
+    <text wx:if="{{!subscribed}}" class="follow-hint">有新动向第一时间通知</text>
+  </view>
+</view>
+
 <!-- ═══ 分享海报 ═══ -->
 <view class="poster-bar" wx:if="{{project}}">
   <view class="poster-btn" bindtap="onSharePoster" hover-class="poster-btn-hover">
