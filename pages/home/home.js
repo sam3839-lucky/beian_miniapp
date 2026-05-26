@@ -284,15 +284,4 @@ Page({
     this._navToFilter({ price_min: r.totalLow, price_max: r.affordMax });
   },
 
-  onOpenSubscriptions() {
-    wx.navigateTo({ url: '/pages/subscriptions/subscriptions' });
-  },
-
-  onOpenMember() {
-    wx.navigateTo({ url: '/pages/member/member' });
-  },
-
-  onOpenOps() {
-    wx.navigateTo({ url: '/pages/ops/ops' });
-  },
 });

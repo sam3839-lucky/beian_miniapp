@@ -1,0 +1,66 @@
+<view class="page">
+  <!-- 会员卡片 -->
+  <view class="member-card {{tier === 'free' ? 'free' : 'pro'}}">
+    <view class="mc-badge" wx:if="{{tier === 'pro' || tier === 'team'}}">PRO</view>
+    <text class="mc-tier">{{tierLabel}}</text>
+    <text class="mc-expire" wx:if="{{tier === 'free'}}">升级解锁全部功能</text>
+    <text class="mc-expire" wx:elif="{{expireText}}">有效期至 {{expireText}}</text>
+    <view class="mc-btn" wx:if="{{tier === 'free'}}" bindtap="onUpgrade" hover-class="mc-btn-hover">
+      升级专业版 ¥29/月
+    </view>
+  </view>
+
+  <!-- 未登录提示 -->
+  <view class="login-hint" wx:if="{{!openid && !loading}}">
+    <text>登录后可查看会员信息</text>
+  </view>
+
+  <!-- 今日用量 -->
+  <view class="section" wx:if="{{openid}}">
+    <text class="section-title">今日用量</text>
+    <view class="usage-list">
+      <view class="usage-row">
+        <text class="ur-name">瞬搜查价</text>
+        <text class="ur-val">{{tier === 'free' ? searchesUsed : '∞'}}{{tier === 'free' ? '/' + searchesMax : ''}} 次</text>
+      </view>
+      <view class="usage-row">
+        <text class="ur-name">分享海报</text>
+        <text class="ur-val">{{tier === 'free' ? postersUsed : '∞'}}{{tier === 'free' ? '/' + postersMax : ''}} 张</text>
+      </view>
+      <view class="usage-row">
+        <text class="ur-name">关注项目</text>
+        <text class="ur-val">{{followCount}}{{tier === 'free' ? '/' + followMax : ''}} 个</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的关注 -->
+  <view class="section">
+    <view class="menu-row" bindtap="onOpenSubscriptions" hover-class="menu-row-hover">
+      <text>🔔 我的关注</text>
+      <view class="menu-right">
+        <text class="menu-badge" wx:if="{{followCount}}">{{followCount}}</text>
+        <text class="menu-arrow">→</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 升级专业版 -->
+  <view class="section" wx:if="{{tier === 'free' && openid}}">
+    <view class="menu-row" bindtap="onUpgrade" hover-class="menu-row-hover">
+      <text>💰 升级专业版</text>
+      <view class="menu-right">
+        <text class="menu-hint">¥29/月</text>
+        <text class="menu-arrow">→</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 运营面板 -->
+  <view class="section ops-entry">
+    <view class="menu-row" bindtap="onOpenOps" hover-class="menu-row-hover">
+      <text class="ops-text">运营面板</text>
+      <text class="menu-arrow">→</text>
+    </view>
+  </view>
+</view>

@@ -215,29 +215,5 @@
     </view>
   </view>
 
-  <!-- ═══ 我的关注 ═══ -->
-  <view class="section">
-    <view class="ops-entry" bindtap="onOpenSubscriptions">
-      <text>🔔 我的关注</text>
-      <text style="color:#888">管理关注的项目 →</text>
-    </view>
-  </view>
-
-  <!-- ═══ 会员中心 ═══ -->
-  <view class="section">
-    <view class="ops-entry" bindtap="onOpenMember">
-      <text>👤 会员中心</text>
-      <text style="color:#888">查看会员等级与权益 →</text>
-    </view>
-  </view>
-
-  <!-- ═══ 运营入口 ═══ -->
-  <view class="section">
-    <view class="ops-entry" bindtap="onOpenOps">
-      <text>运营面板</text>
-      <text style="color:#888">查看数据同步与系统状态 →</text>
-    </view>
-  </view>
-
   <view style="height:80rpx;"></view>
 </view>
