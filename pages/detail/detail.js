@@ -90,5 +90,34 @@ Page({
       calcLoan: loan.toFixed(0),
       calcMonthly: monthly.toFixed(2)
     });
+  },
+
+  onSharePoster() {
+    const project = this.data.project;
+    if (!project) return;
+    wx.showLoading({ title: '生成海报中...' });
+    const baseUrl = getApp().globalData.baseUrl || 'https://ruiheqi.cn';
+    const url = baseUrl + '/api/generate-poster?project=' + encodeURIComponent(project);
+    wx.downloadFile({
+      url,
+      success: res => {
+        wx.hideLoading();
+        if (res.statusCode !== 200) {
+          wx.showToast({ title: '生成失败', icon: 'none' });
+          return;
+        }
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath,
+          success: () => wx.showToast({ title: '已保存到相册，去分享吧', icon: 'none', duration: 2000 }),
+          fail: () => {
+            wx.showToast({ title: '请授权保存图片', icon: 'none' });
+          }
+        });
+      },
+      fail: () => {
+        wx.hideLoading();
+        wx.showToast({ title: '网络错误，请重试', icon: 'none' });
+      }
+    });
   }
 });

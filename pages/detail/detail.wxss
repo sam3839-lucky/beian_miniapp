@@ -147,3 +147,22 @@
   color: #A8A8A8;
   margin-top: 12rpx;
 }
+
+/* ═══ 分享海报 ═══ */
+.poster-bar {
+  margin: 32rpx 32rpx 40rpx;
+}
+.poster-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 24rpx;
+  background: #fff;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 2rpx solid #07C160;
+}
+.poster-btn-hover { background: #E8F8EF; }
+.poster-icon { font-size: 32rpx; }

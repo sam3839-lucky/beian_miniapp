@@ -56,3 +56,11 @@
     <view class="cr-note">按LPR {{mortgageRateText}} · 30年期等额本息</view>
   </view>
 </view>
+
+<!-- ═══ 分享海报 ═══ -->
+<view class="poster-bar" wx:if="{{project}}">
+  <view class="poster-btn" bindtap="onSharePoster" hover-class="poster-btn-hover">
+    <text class="poster-icon">📊</text>
+    <text>生成分享海报</text>
+  </view>
+</view>
