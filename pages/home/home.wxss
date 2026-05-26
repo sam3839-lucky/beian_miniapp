@@ -268,7 +268,13 @@
 .zprice {
   font-size: 24rpx;
   color: #888;
-  width: 100rpx;
+  width: 120rpx;
+  text-align: right;
+}
+.zinv {
+  font-size: 22rpx;
+  color: #A8A8A8;
+  width: 72rpx;
   text-align: right;
 }
 
