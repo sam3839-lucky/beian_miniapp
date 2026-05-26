@@ -6,7 +6,9 @@ App({
     baseUrl: BASE_URL,
     openid: '',
     mortgageRate: MORTGAGE_RATE,
-    launchScene: null  // 扫码进入时携带的项目名
+    launchScene: null,  // 扫码进入时携带的项目名
+    tier: 'free',       // 会员等级
+    tierLimits: {}      // 用量限制
   },
 
   onLaunch(options) {
@@ -39,10 +41,26 @@ App({
             success: resp => {
               if (resp.data && resp.data.openid) {
                 this.globalData.openid = resp.data.openid;
+                this.loadTier(resp.data.openid);
               }
             },
             fail: () => {}
           });
+        }
+      },
+      fail: () => {}
+    });
+  },
+
+  loadTier(openid) {
+    wx.request({
+      url: `${BASE_URL}/api/user-tier?openid=${encodeURIComponent(openid)}`,
+      success: resp => {
+        if (resp.data) {
+          this.globalData.tier = resp.data.tier || 'free';
+          this.globalData.tierLimits = resp.data.limits || {};
+          this.globalData.searchesUsed = resp.data.searches_used || 0;
+          this.globalData.postersUsed = resp.data.posters_used || 0;
         }
       },
       fail: () => {}

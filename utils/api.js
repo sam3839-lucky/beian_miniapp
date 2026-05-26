@@ -57,4 +57,6 @@ module.exports = {
   subscribe: (openid, project) => request('/api/subscribe', 'POST', { openid, project }),
   unsubscribe: (openid, project) => request('/api/unsubscribe', 'POST', { openid, project }),
   getMySubscriptions: (openid) => request('/api/my-subscriptions?openid=' + encodeURIComponent(openid)),
+  getUserTier: (openid) => request('/api/user-tier?openid=' + encodeURIComponent(openid)),
+  incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
 };

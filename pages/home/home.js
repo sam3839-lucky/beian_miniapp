@@ -12,6 +12,9 @@ Page({
     searchTapped: false,
     searchHistory: [],
     searchFocus: false,
+    searchUsed: 0,
+    searchMax: 20,
+    showUsageBadge: false,
     // P1: 榜单 tab
     rankTab: 0,
     rankTabs: ['总价最低', '总价最高', '单价最低', '单价最高'],
@@ -111,6 +114,15 @@ Page({
         price_min: r.price_min || 0,
         price_max: r.price_max || 0
       }));
+      // 增量计数
+      const openid = getApp().globalData.openid;
+      if (openid) {
+        api.incrementUsage(openid, 'searches').then(usage => {
+          const app = getApp();
+          app.globalData.searchesUsed = usage.used;
+          this.setData({ searchUsed: usage.used, searchMax: usage.max, showUsageBadge: true });
+        }).catch(() => {});
+      }
       this.setData({ searchResults: results, searchLoading: false });
     } catch (e) {
       console.error('quick search failed', e);

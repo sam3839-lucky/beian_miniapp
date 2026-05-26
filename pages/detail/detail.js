@@ -1,3 +1,5 @@
+const api = require('../../utils/api');
+
 Page({
   data: {
     unit: {},
@@ -96,8 +98,29 @@ Page({
   onSharePoster() {
     const project = this.data.project;
     if (!project) return;
+
+    // 免费用户检查海报用量
+    const app = getApp();
+    const openid = app.globalData.openid;
+    if (openid && app.globalData.tier === 'free') {
+      const max = app.globalData.tierLimits.posters || 3;
+      const used = (app.globalData.postersUsed || 0);
+      if (used >= max) {
+        wx.showModal({
+          title: '今日海报已达上限',
+          content: `免费版每天可生成 ${max} 张海报。升级专业版无限使用。`,
+          confirmText: '升级',
+          success: r => { if (r.confirm) wx.navigateTo({ url: '/pages/pay/pay' }); }
+        });
+        return;
+      }
+      api.incrementUsage(openid, 'posters').then(u => {
+        app.globalData.postersUsed = u.used;
+      }).catch(() => {});
+    }
+
     wx.showLoading({ title: '生成海报中...' });
-    const baseUrl = getApp().globalData.baseUrl || 'https://ruiheqi.cn';
+    const baseUrl = app.globalData.baseUrl || 'https://ruiheqi.cn';
     const url = baseUrl + '/api/generate-poster?project=' + encodeURIComponent(project);
     wx.downloadFile({
       url,
@@ -129,7 +152,6 @@ Page({
       return;
     }
     const project = this.data.project;
-    const api = require('../../utils/api');
     const subscribed = this.data.subscribed;
 
     if (subscribed) {
