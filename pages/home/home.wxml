@@ -144,7 +144,10 @@
               data-item="{{item}}" bindtap="onRankItemTap" hover-class="rank-item-hover">
           <text class="rank-idx">{{index + 1}}</text>
           <view class="rank-info">
-            <text class="rank-proj">{{item.project_name}}</text>
+            <view class="rank-proj-row">
+              <text class="rank-proj">{{item.project_name}}</text>
+              <text class="rank-zone" wx:if="{{item.zone}}">{{item.zone}}</text>
+            </view>
             <text class="rank-unit">{{item.unit_no}}  |  {{item.built_area}}㎡</text>
           </view>
           <view class="rank-price">

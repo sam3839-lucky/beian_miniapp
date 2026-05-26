@@ -327,6 +327,7 @@
   gap: 4rpx;
   min-width: 0;
 }
+.rank-proj-row { display: flex; align-items: center; gap: 10rpx; }
 .rank-proj {
   font-size: 28rpx;
   font-weight: 500;
@@ -334,6 +335,14 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.rank-zone {
+  font-size: 20rpx;
+  color: #07C160;
+  background: rgba(7, 193, 96, 0.08);
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+  flex-shrink: 0;
 }
 .rank-unit {
   font-size: 24rpx;
