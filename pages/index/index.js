@@ -31,6 +31,21 @@ Page({
   onShow() {
     const app = getApp();
     const params = app.globalData.filterParams;
+
+    // 扫码直达：海报二维码携带项目名 scene
+    const scene = app.globalData.launchScene;
+    if (scene) {
+      app.globalData.launchScene = null; // 仅消费一次
+      if (!params) {
+        // 直接用 scene 作为项目名跳转
+        this._pendingProject = scene;
+        if (this.data.zones.length > 1) {
+          this._applyPendingNav();
+        }
+        return;
+      }
+    }
+
     if (!params) return;
     app.globalData.filterParams = null;
 

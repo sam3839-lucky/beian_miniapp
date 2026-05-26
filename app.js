@@ -5,10 +5,25 @@ App({
   globalData: {
     baseUrl: BASE_URL,
     openid: '',
-    mortgageRate: MORTGAGE_RATE
+    mortgageRate: MORTGAGE_RATE,
+    launchScene: null  // 扫码进入时携带的项目名
   },
 
-  onLaunch() {
+  onLaunch(options) {
+    // 解析扫码 scene（base64url 编码的项目名，调服务端解码）
+    if (options && options.query && options.query.scene) {
+      const scene = decodeURIComponent(options.query.scene);
+      console.log('launch scene:', scene);
+      wx.request({
+        url: BASE_URL + '/api/resolve-scene?code=' + encodeURIComponent(scene),
+        success: res => {
+          if (res.data && res.data.project_name) {
+            this.globalData.launchScene = res.data.project_name;
+          }
+        },
+        fail: () => {}
+      });
+    }
     // 延迟登录，不阻塞页面加载
     setTimeout(() => this.login(), 500);
   },
