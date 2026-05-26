@@ -47,31 +47,13 @@ Page({
         const [y, m] = t.month.split('-');
         return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
       });
-      // 合并一手+二手区划数据，按总数降序
-      const districtMap = {};
-      const newItems = (districts && districts.new && districts.new.items) || [];
-      const usedItems = (districts && districts.used && districts.used.items) || [];
-      newItems.forEach(d => { districtMap[d.zone] = { zone: d.zone, newCount: d.count, usedCount: 0 }; });
-      usedItems.forEach(d => {
-        if (!districtMap[d.zone]) districtMap[d.zone] = { zone: d.zone, newCount: 0, usedCount: 0 };
-        districtMap[d.zone].usedCount = d.count;
-      });
-      const combined = Object.values(districtMap).map(d => ({
-        ...d,
-        total: d.newCount + d.usedCount,
-        newPct: (d.newCount / (d.newCount + d.usedCount || 1) * 100).toFixed(0),
-        usedPct: (d.usedCount / (d.newCount + d.usedCount || 1) * 100).toFixed(0),
-      }));
-      combined.sort((a, b) => b.total - a.total);
-      const maxTotal = combined.length > 0 ? combined[0].total : 1;
-
       const s = summary;
       if (s && s.this_month) {
         const t = s.this_month.total || 1;
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
         s.usedPct = (s.this_month.used / t * 100).toFixed(1);
       }
-      this.setData({ summary: s, trends: trendsLabeled, districts, districtCombined: combined, maxTotal, dailyItems: recent.items || [], loading: false });
+      this.setData({ summary: s, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
       this.drawDonut(summary);
     } catch (e) {
       console.error(e); this.setData({ loading: false, error: true });

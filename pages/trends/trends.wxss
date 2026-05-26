@@ -34,20 +34,22 @@
 .td-val.up { color: #07C160; }
 .td-val.down { color: #FF4D4F; }
 
-/* ═══ 各区占比 — 合并叠加柱状图 ═══ */
-.section-legend { display: flex; align-items: center; gap: 8rpx 24rpx; font-size: 22rpx; color: #888; }
-.district-stacked { background: #fff; border-radius: 8rpx; overflow: hidden; }
-.ds-row { display: flex; align-items: center; padding: 18rpx 24rpx; gap: 12rpx; border-bottom: 0.5px solid #F0F0F0; }
-.ds-row:last-child { border-bottom: none; }
-.ds-name { font-size: 26rpx; font-weight: 600; color: #333; width: 70rpx; flex-shrink: 0; }
-.ds-bar-wrap { flex: 1; display: flex; flex-direction: column; gap: 4rpx; }
-.ds-bar-track { display: flex; height: 16rpx; border-radius: 4rpx; overflow: hidden; background: #F0F0F0; }
-.ds-bar-new { height: 100%; background: #07C160; }
-.ds-bar-used { height: 100%; background: #FF8C00; }
-.ds-labels { display: flex; justify-content: space-between; }
-.ds-label-new { font-size: 18rpx; color: #07C160; font-weight: 600; }
-.ds-label-used { font-size: 18rpx; color: #FF8C00; font-weight: 600; }
-.ds-total { font-size: 28rpx; font-weight: 700; color: #333; width: 80rpx; text-align: right; flex-shrink: 0; }
+/* ═══ 各区占比 ═══ */
+.two-col { display: flex; gap: 16rpx; }
+.dcol { flex: 1; background: #fff; border-radius: 8rpx; padding: 20rpx; }
+.dcol-title { font-size: 26rpx; font-weight: 600; color: #333; margin-bottom: 16rpx; display: flex; align-items: center; gap: 8rpx; }
+.dcdot { width: 14rpx; height: 14rpx; border-radius: 50%; }
+.dcdot.new { background: #07C160; }
+.dcdot.used { background: #FF8C00; }
+.drow { display: flex; align-items: center; gap: 8rpx; padding: 8rpx 0; }
+.drow + .drow { border-top: 0.5px solid #F0F0F0; }
+.dname { font-size: 24rpx; color: #333; font-weight: 500; width: 60rpx; }
+.dbar-wrap { flex: 1; height: 14rpx; border-radius: 4rpx; background: #F0F0F0; overflow: hidden; }
+.dbar { height: 100%; border-radius: 4rpx; }
+.dbar.new { background: #07C160; }
+.dbar.used { background: #FF8C00; }
+.dcnt { font-size: 22rpx; color: #888; width: 56rpx; text-align: right; }
+.dpct { font-size: 22rpx; color: #333; font-weight: 600; width: 64rpx; text-align: right; }
 
 /* ═══ 时间范围 ═══ */
 .range-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }

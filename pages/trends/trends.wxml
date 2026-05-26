@@ -59,28 +59,26 @@
     </view>
 
     <!-- ═══ 各区成交占比 ═══ -->
-    <view class="section" wx:if="{{districtCombined.length}}">
-      <view class="section-head">
-        <text class="section-title">各区成交占比</text>
-        <view class="section-legend">
-          <text class="dot new"></text><text>一手</text>
-          <text class="dot used"></text><text>二手</text>
-        </view>
-      </view>
-      <view class="district-stacked">
-        <view class="ds-row" wx:for="{{districtCombined}}" wx:key="zone">
-          <text class="ds-name">{{item.zone}}</text>
-          <view class="ds-bar-wrap">
-            <view class="ds-bar-track">
-              <view class="ds-bar-new" style="width:{{item.newCount / maxTotal * 100}}%"></view>
-              <view class="ds-bar-used" style="width:{{item.usedCount / maxTotal * 100}}%"></view>
-            </view>
-            <view class="ds-labels">
-              <text class="ds-label-new">{{item.newCount}}</text>
-              <text class="ds-label-used">{{item.usedCount}}</text>
-            </view>
+    <view class="section" wx:if="{{districts}}">
+      <view class="section-head"><text class="section-title">各区成交占比</text></view>
+      <view class="two-col">
+        <view class="dcol">
+          <view class="dcol-title"><text class="dcdot new"></text>一手</view>
+          <view wx:for="{{districts.new.items}}" wx:key="zone" wx:for-item="d" class="drow">
+            <text class="dname">{{d.zone}}</text>
+            <view class="dbar-wrap"><view class="dbar new" style="width:{{d.pct * 2}}%"></view></view>
+            <text class="dcnt">{{d.count}}</text>
+            <text class="dpct">{{d.pct}}%</text>
           </view>
-          <text class="ds-total">{{item.total}}套</text>
+        </view>
+        <view class="dcol">
+          <view class="dcol-title"><text class="dcdot used"></text>二手</view>
+          <view wx:for="{{districts.used.items}}" wx:key="zone" wx:for-item="d" class="drow">
+            <text class="dname">{{d.zone}}</text>
+            <view class="dbar-wrap"><view class="dbar used" style="width:{{d.pct * 2}}%"></view></view>
+            <text class="dcnt">{{d.count}}</text>
+            <text class="dpct">{{d.pct}}%</text>
+          </view>
         </view>
       </view>
     </view>
