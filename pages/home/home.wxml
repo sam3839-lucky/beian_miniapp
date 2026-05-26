@@ -151,8 +151,8 @@
             <text class="rank-unit">{{item.unit_no}}  |  {{item.built_area}}㎡</text>
           </view>
           <view class="rank-price">
-            <text class="rp-total">{{item.total_price}}万</text>
             <text class="rp-unit">{{item.unitPriceWan}}万/㎡</text>
+            <text class="rp-total">{{item.total_price}}万</text>
           </view>
         </view>
       </block>
