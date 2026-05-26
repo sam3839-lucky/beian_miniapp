@@ -1,5 +1,4 @@
 const api = require('../../utils/api');
-const app = getApp();
 
 Page({
   data: {
@@ -21,7 +20,7 @@ Page({
   },
 
   async loadData() {
-    const openid = app.globalData.openid;
+    const openid = getApp().globalData.openid;
     this.setData({ openid: openid || '', loading: true });
 
     // 加载会员信息
