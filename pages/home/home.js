@@ -276,6 +276,10 @@ Page({
     wx.navigateTo({ url: '/pages/subscriptions/subscriptions' });
   },
 
+  onOpenMember() {
+    wx.navigateTo({ url: '/pages/member/member' });
+  },
+
   onOpenOps() {
     wx.navigateTo({ url: '/pages/ops/ops' });
   },

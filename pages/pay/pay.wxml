@@ -1,0 +1,73 @@
+<view class="page">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="h-title">升级专业版</text>
+    <text class="h-sub">解锁全部功能，一天不到一块钱</text>
+  </view>
+
+  <!-- 月付/年付切换 -->
+  <view class="billing-switch">
+    <view class="bs-track">
+      <view class="bs-thumb {{billing === 'monthly' ? 'left' : 'right'}}"></view>
+    </view>
+    <view class="bs-labels">
+      <text class="{{billing === 'monthly' ? 'on' : ''}}" data-billing="monthly" bindtap="onSwitchBilling">月付</text>
+      <text class="{{billing === 'yearly' ? 'on' : ''}}" data-billing="yearly" bindtap="onSwitchBilling">年付 省¥149</text>
+    </view>
+  </view>
+
+  <!-- 三档卡片 -->
+  <view class="tiers">
+    <!-- 免费版 -->
+    <view class="tier-card">
+      <text class="tc-name">免费版</text>
+      <text class="tc-price">¥0</text>
+      <text class="tc-desc">日常使用</text>
+
+    <!-- 专业版（推荐） -->
+    <view class="tier-card pro">
+      <view class="tc-badge">推荐</view>
+      <text class="tc-name">专业版</text>
+      <text class="tc-price">¥{{billing === 'yearly' ? 16.6 : 29}}<text class="tc-unit">/月</text></text>
+      <text class="tc-desc" wx:if="{{billing === 'yearly'}}">年付 ¥199</text>
+      <text class="tc-desc" wx:else>一天不到一块钱</text>
+
+    <!-- 团队版 -->
+    <view class="tier-card">
+      <text class="tc-name">团队版</text>
+      <text class="tc-price">¥99<text class="tc-unit">/月</text></text>
+      <text class="tc-desc">5人共享</text>
+  </view>
+
+  <!-- 功能对比表 -->
+  <view class="feature-table">
+    <view class="ft-header">
+      <text class="fth-name">功能</text>
+      <text class="fth-tier">免费</text>
+      <text class="fth-tier pro-col">专业版</text>
+      <text class="fth-tier">团队</text>
+    </view>
+    <view class="ft-row" wx:for="{{features}}" wx:key="name">
+      <text class="ftr-name">{{item.name}}</text>
+      <text class="ftr-val">{{item.free}}</text>
+      <text class="ftr-val pro-col">{{item.pro}}</text>
+      <text class="ftr-val">{{item.team}}</text>
+    </view>
+  </view>
+
+  <!-- 开通方式 -->
+  <view class="cta-section">
+    <text class="cta-title">开通方式</text>
+    <view class="cta-card">
+      <text class="cta-step">1. 复制下方微信号</text>
+      <text class="cta-wechat">samxxx</text>
+      <view class="cta-copy" bindtap="onCopyWechat" hover-class="cta-copy-hover">
+        <text>复制微信号</text>
+      </view>
+      <text class="cta-step">2. 添加微信，转账备注"专业版"</text>
+      <text class="cta-step">3. 5分钟内开通，小程序自动生效</text>
+    </view>
+  </view>
+
+  <view class="footer-note">已有 32 位中介开通专业版</view>
+</view>
