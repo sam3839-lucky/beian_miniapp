@@ -23,6 +23,7 @@
       <text class="tc-name">免费版</text>
       <text class="tc-price">¥0</text>
       <text class="tc-desc">日常使用</text>
+    </view>
 
     <!-- 专业版（推荐） -->
     <view class="tier-card pro">
@@ -31,12 +32,14 @@
       <text class="tc-price">¥{{billing === 'yearly' ? 16.6 : 29}}<text class="tc-unit">/月</text></text>
       <text class="tc-desc" wx:if="{{billing === 'yearly'}}">年付 ¥199</text>
       <text class="tc-desc" wx:else>一天不到一块钱</text>
+    </view>
 
     <!-- 团队版 -->
     <view class="tier-card">
       <text class="tc-name">团队版</text>
       <text class="tc-price">¥99<text class="tc-unit">/月</text></text>
       <text class="tc-desc">5人共享</text>
+    </view>
   </view>
 
   <!-- 功能对比表 -->
