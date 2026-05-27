@@ -324,11 +324,11 @@ Page({
   onQuickResultTap(e) {
     const { project, zone } = e.currentTarget.dataset;
     this.setData({ quickSearch: '', searchResults: [], searchTapped: false });
-    this._selectProject(project, zone);
+    this._quickSelectProject(project, zone);
   },
 
-  _selectProject(project, zone) {
-    // 选择区域
+  async _quickSelectProject(project, zone) {
+    // 选择区域并加载项目
     if (zone) {
       let zi = this.data.zones.indexOf(zone);
       if (zi <= 0) {
@@ -338,23 +338,9 @@ Page({
       } else {
         this.setData({ zoneIdx: zi });
       }
-      this.onZoneChange({ detail: { value: zi } });
+      await this.onZoneChange({ detail: { value: zi } });
     }
-    // 选择项目
-    setTimeout(() => {
-      let pi = this.data.projects.findIndex(p => p.value === project);
-      if (pi <= 0) {
-        pi = this.data.projects.findIndex(p => p.value && (p.value.trim() === project.trim() || p.value.includes(project.trim())));
-      }
-      if (pi <= 0) {
-        const items = [...this.data.projects, { name: `${this.data.projects.length}. ${project}`, value: project }];
-        pi = items.length - 1;
-        this.setData({ projects: items });
-      }
-      this.setData({ projectIdx: pi, projectName: project });
-      if (pi > 0) {
-        this.onProjectChange({ detail: { value: pi } });
-      }
-    }, 300);
+    // 区域加载完毕后再选项目
+    this._selectProject(project);
   }
 });
