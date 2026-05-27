@@ -251,9 +251,9 @@
   font-size: 24rpx;
   color: #07C160;
   font-weight: 600;
-  width: 68rpx;
   text-align: right;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 .zbar-wrap {
   flex: 1;
