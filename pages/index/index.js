@@ -114,11 +114,11 @@ Page({
   _selectProject(project) {
     // 精确匹配
     let pi = this.data.projects.findIndex(p => p.value === project);
-    // 宽松匹配：trim + 包含
+    // 宽松匹配：项目名包含搜索词（如搜"御景"→"宝昌利御景公馆"）
     if (pi <= 0) {
       const pj = project.trim();
       pi = this.data.projects.findIndex(p =>
-        p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value))
+        p.value && (p.value.trim() === pj || p.value.includes(pj))
       );
     }
     if (pi <= 0) {
@@ -141,14 +141,14 @@ Page({
       const pj = project.trim();
       let idx = data.projects.indexOf(project);
       if (idx < 0) {
-        idx = data.projects.findIndex(p => p.trim() === pj || p.includes(pj) || pj.includes(p));
+        idx = data.projects.findIndex(p => p.trim() === pj || p.includes(pj));
       }
       const items = [{name: '选择小区', value: ''}].concat(
         data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
       );
       let pi = items.findIndex(p => p.value === project);
       if (pi <= 0) {
-        pi = items.findIndex(p => p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value)));
+        pi = items.findIndex(p => p.value && (p.value.trim() === pj || p.value.includes(pj)));
       }
       if (pi <= 0) {
         items.push({ name: `${items.length}. ${project}`, value: project });
