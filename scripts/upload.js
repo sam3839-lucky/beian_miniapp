@@ -25,7 +25,8 @@ if (!fs.existsSync(PRIVATE_KEY)) {
 
 const version = process.argv[2] || new Date().toISOString().slice(0, 16).replace('T', '.');
 const desc    = process.argv[3] || '自动上传 ' + new Date().toLocaleString('zh-CN');
-const robot   = parseInt(process.argv[4]) || 1;  // 开发者编号 1-30
+const robot   = parseInt(process.argv[4]) || 1;  // 微信后台 CI 机器人编号 1-30
+const TEAM    = '波哥深房内参团队';
 
 (async () => {
   const project = new ci.Project({
@@ -51,6 +52,7 @@ const robot   = parseInt(process.argv[4]) || 1;  // 开发者编号 1-30
   console.log(`📦 上传小程序 ${APPID}`);
   console.log(`   版本: ${version}`);
   console.log(`   描述: ${desc}`);
+  console.log(`   团队: ${TEAM} (robot #${robot})`);
 
   const result = await ci.upload({
     project,
