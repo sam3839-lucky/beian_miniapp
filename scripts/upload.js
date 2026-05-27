@@ -25,6 +25,7 @@ if (!fs.existsSync(PRIVATE_KEY)) {
 
 const version = process.argv[2] || new Date().toISOString().slice(0, 16).replace('T', '.');
 const desc    = process.argv[3] || '自动上传 ' + new Date().toLocaleString('zh-CN');
+const robot   = parseInt(process.argv[4]) || 1;  // 开发者编号 1-30
 
 (async () => {
   const project = new ci.Project({
@@ -55,6 +56,7 @@ const desc    = process.argv[3] || '自动上传 ' + new Date().toLocaleString('
     project,
     version,
     desc,
+    robot,
     setting: {
       es6: true,
       es7: true,
