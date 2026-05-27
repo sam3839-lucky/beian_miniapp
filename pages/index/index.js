@@ -21,7 +21,11 @@ Page({
     areaRanges: ['全部', '70-90㎡', '90-120㎡', '120-150㎡', '150-200㎡', '自定义'],
     areaActive: 0,
     priceFilter: { min: 0, max: 999999 },
-    areaFilter: { min: 0, max: 9999 }
+    areaFilter: { min: 0, max: 9999 },
+    // 瞬搜
+    quickSearch: '',
+    searchResults: [],
+    searchTapped: false,
   },
 
   onLoad() {
@@ -278,5 +282,79 @@ Page({
       'building=' + encodeURIComponent(this.data.buildingName || '')
     ].join('&');
     wx.navigateTo({ url: '/pages/detail/detail?' + p });
+  },
+
+  // ── 瞬搜 ──
+  onQuickSearchInput(e) {
+    const v = e.detail.value;
+    this.setData({ quickSearch: v, searchTapped: false });
+    if (this._timer) clearTimeout(this._timer);
+    if (!v.trim()) {
+      this.setData({ searchResults: [] });
+      return;
+    }
+    this._timer = setTimeout(() => this._doQuickSearch(v.trim()), 300);
+  },
+
+  onQuickSearchConfirm() {
+    const v = this.data.quickSearch.trim();
+    if (!v) return;
+    this.setData({ searchTapped: true });
+    if (this._timer) clearTimeout(this._timer);
+    this._doQuickSearch(v);
+  },
+
+  async _doQuickSearch(q) {
+    try {
+      const data = await api.quickSearch(q);
+      const results = (data.results || []).map(r => ({
+        ...r,
+        avg_unit_w: (r.avg_unit / 10000).toFixed(1),
+      }));
+      this.setData({ searchResults: results });
+    } catch (e) {
+      console.error('quick search failed', e);
+    }
+  },
+
+  onClearQuickSearch() {
+    this.setData({ quickSearch: '', searchResults: [], searchTapped: false });
+  },
+
+  onQuickResultTap(e) {
+    const { project, zone } = e.currentTarget.dataset;
+    this.setData({ quickSearch: '', searchResults: [], searchTapped: false });
+    this._selectProject(project, zone);
+  },
+
+  _selectProject(project, zone) {
+    // 选择区域
+    if (zone) {
+      let zi = this.data.zones.indexOf(zone);
+      if (zi <= 0) {
+        this.data.zones.push(zone);
+        zi = this.data.zones.length - 1;
+        this.setData({ zones: this.data.zones, zoneIdx: zi });
+      } else {
+        this.setData({ zoneIdx: zi });
+      }
+      this.onZoneChange({ detail: { value: zi } });
+    }
+    // 选择项目
+    setTimeout(() => {
+      let pi = this.data.projects.findIndex(p => p.value === project);
+      if (pi <= 0) {
+        pi = this.data.projects.findIndex(p => p.value && (p.value.trim() === project.trim() || p.value.includes(project.trim())));
+      }
+      if (pi <= 0) {
+        const items = [...this.data.projects, { name: `${this.data.projects.length}. ${project}`, value: project }];
+        pi = items.length - 1;
+        this.setData({ projects: items });
+      }
+      this.setData({ projectIdx: pi, projectName: project });
+      if (pi > 0) {
+        this.onProjectChange({ detail: { value: pi } });
+      }
+    }, 300);
   }
 });
