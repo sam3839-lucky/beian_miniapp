@@ -167,15 +167,17 @@ Page({
       projects: [{name: '选择小区', value: ''}], buildings: ['全部楼栋'],
       projectName: '', buildingName: '',
       units: [], floors: [], groups: {}, stats: null });
-    if (idx === 0) return;
     try {
-      const [data, statsData] = await Promise.all([
-        api.getProjects(this.data.zones[idx]),
-        api.getZoneStats(this.data.zones[idx], this.data.priceFilter, this.data.areaFilter)
-      ]);
+      // idx === 0: 全深圳，加载所有项目
+      const zone = idx === 0 ? '' : this.data.zones[idx];
+      const projectsData = await api.getProjects(zone);
       const items = [{name: '选择小区', value: ''}].concat(
-        data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
+        projectsData.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
       );
+      let statsData = null;
+      if (idx > 0) {
+        try { statsData = await api.getZoneStats(zone, this.data.priceFilter, this.data.areaFilter); } catch(e) {}
+      }
       this.setData({ projects: items, stats: statsData });
     } catch (e) {
       wx.showToast({ title: '加载小区失败', icon: 'none' });
