@@ -12,6 +12,10 @@ Page({
     trends: [],
     districts: null,
     dailyItems: [],
+    salesRanks: [],
+    salesZones: [],
+    salesZone: '',
+    salesLoading: false,
     loading: true,
     error: false,
     pctFmt: v => (v > 0 ? '+' : '') + v + '%',
@@ -65,6 +69,7 @@ Page({
       }
       this.setData({ summary: s, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
       this.drawDonut(summary);
+      this.loadSalesRank('');
     } catch (e) {
       console.error(e); this.setData({ loading: false, error: true });
     }
@@ -128,4 +133,32 @@ Page({
   },
 
   onRetry() { this.loadAll(); },
+
+  // ── 销量排行 ──
+  async loadSalesRank(zone) {
+    const z = zone || '';
+    this.setData({ salesZone: z, salesLoading: true });
+    try {
+      const data = await api.getProjectSalesRank(z, 30);
+      this.setData({
+        salesRanks: data.ranks || [],
+        salesZones: data.zones || [],
+        salesLoading: false
+      });
+    } catch (e) {
+      this.setData({ salesLoading: false });
+    }
+  },
+
+  onSalesZoneTap(e) {
+    const zone = e.currentTarget.dataset.zone || '';
+    this.loadSalesRank(zone);
+  },
+
+  onSalesRankTap(e) {
+    const { project, zone } = e.currentTarget.dataset;
+    const app = getApp();
+    app.globalData.filterParams = { project, zone };
+    wx.switchTab({ url: '/pages/index/index' });
+  }
 });

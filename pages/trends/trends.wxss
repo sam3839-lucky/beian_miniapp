@@ -52,6 +52,22 @@
 .dcnt { font-size: 22rpx; color: #888; width: 56rpx; text-align: right; }
 .dpct { font-size: 22rpx; color: #333; font-weight: 600; width: 64rpx; text-align: right; }
 
+/* ═══ 销量排行 ═══ */
+.sales-tabs { white-space: nowrap; margin-bottom: 16rpx; }
+.sales-tab { display: inline-block; font-size: 24rpx; color: #888; background: #fff; padding: 12rpx 24rpx; border-radius: 8rpx; margin-right: 12rpx; }
+.sales-tab.on { background: #07C160; color: #fff; font-weight: 600; }
+.sales-list { background: #fff; border-radius: 8rpx; overflow: hidden; }
+.sales-row { display: flex; align-items: center; padding: 18rpx 24rpx; gap: 16rpx; border-bottom: 1rpx solid #F0F0F0; }
+.sales-row:last-child { border-bottom: none; }
+.sales-row-hover { background: #F7F7F7; }
+.sr-idx { font-size: 28rpx; font-weight: 700; color: #07C160; width: 40rpx; text-align: center; }
+.sr-info { flex: 1; min-width: 0; }
+.sr-name { font-size: 28rpx; font-weight: 500; color: #333; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-zone { font-size: 22rpx; color: #07C160; background: rgba(7,193,96,0.08); padding: 2rpx 10rpx; border-radius: 4rpx; display: inline-block; margin-top: 4rpx; }
+.sr-count { font-size: 30rpx; font-weight: 700; color: #333; flex-shrink: 0; }
+.sales-empty { text-align: center; padding: 48rpx 32rpx; font-size: 26rpx; color: #888; }
+.sales-note { text-align: center; font-size: 20rpx; color: #A8A8A8; padding: 12rpx 0; }
+
 /* ═══ 时间范围 ═══ */
 .range-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
 .range-tab { flex: 1; text-align: center; padding: 16rpx 0; font-size: 26rpx; color: #888;

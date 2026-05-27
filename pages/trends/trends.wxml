@@ -53,6 +53,31 @@
       </view>
     </view>
 
+    <!-- ═══ 近30天楼盘销量排行 ═══ -->
+    <view class="section" wx:if="{{salesRanks.length || salesZones.length}}">
+      <view class="section-head"><text class="section-title">近30天楼盘销量排行</text></view>
+      <scroll-view class="sales-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="sales-tab {{salesZone === '' ? 'on' : ''}}" bindtap="onSalesZoneTap" data-zone="">全市</view>
+        <view class="sales-tab {{salesZone === item ? 'on' : ''}}" wx:for="{{salesZones}}" wx:key="*this" bindtap="onSalesZoneTap" data-zone="{{item}}">{{item}}</view>
+      </scroll-view>
+      <view class="sales-list">
+        <view class="sales-row" wx:for="{{salesRanks}}" wx:key="project_name"
+              data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+              bindtap="onSalesRankTap" hover-class="sales-row-hover">
+          <text class="sr-idx">{{index + 1}}</text>
+          <view class="sr-info">
+            <text class="sr-name">{{item.project_name}}</text>
+            <text class="sr-zone">{{item.zone}}</text>
+          </view>
+          <text class="sr-count">{{item.sold_count}}套</text>
+        </view>
+      </view>
+      <view class="sales-empty" wx:if="{{!salesRanks.length && !salesLoading}}">
+        <text>数据收集中，同步开始后累积成交数据即显示</text>
+      </view>
+      <view class="sales-note">统计周期：近30天网签数据 · 数据来源：深圳市住房和建设局</view>
+    </view>
+
     <!-- ═══ 月度成交走势 ═══ -->
     <view class="section">
       <view class="section-head"><text class="section-title">月度成交走势</text></view>

@@ -59,4 +59,5 @@ module.exports = {
   getMySubscriptions: (openid) => request('/api/my-subscriptions?openid=' + encodeURIComponent(openid)),
   getUserTier: (openid) => request('/api/user-tier?openid=' + encodeURIComponent(openid)),
   incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
+  getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
 };
