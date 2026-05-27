@@ -7,7 +7,7 @@
   <view wx:if="{{summary}}">
     <!-- ═══ 环形图 + 图例 ═══ -->
     <view class="ring-card">
-      <view class="ring-subtitle">本月成交 · 完整度 {{summary.this_month.completeness}}%</view>
+      <view class="ring-subtitle" wx:if="{{summary.latestLabel}}">截止 {{summary.latestLabel}}当月累计成交</view>
       <view class="ring-wrap">
         <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
       </view>
@@ -23,37 +23,6 @@
           <text>二手</text>
           <text class="lnum">{{summary.this_month.used}}</text>
           <text class="lpct">{{summary.usedPct}}%</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- ═══ 成交概况表格 ═══ -->
-    <view class="section">
-      <view class="section-head"><text class="section-title">成交概况</text></view>
-      <view class="data-table">
-        <view class="th-row">
-          <text class="th-label"></text>
-          <text class="th-val">套数</text>
-          <text class="th-val">环比</text>
-          <text class="th-val">同比</text>
-        </view>
-        <view class="td-row">
-          <view class="td-label"><text class="dot new"></text>一手</view>
-          <text class="td-val">{{summary.this_month.new}}</text>
-          <text class="td-val {{summary.new_mom_pct > 0 ? 'up' : 'down'}}">{{summary.new_mom_pct > 0 ? '+' : ''}}{{summary.new_mom_pct}}%</text>
-          <text class="td-val {{summary.new_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.new_yoy_pct > 0 ? '+' : ''}}{{summary.new_yoy_pct}}%</text>
-        </view>
-        <view class="td-row">
-          <view class="td-label"><text class="dot used"></text>二手</view>
-          <text class="td-val">{{summary.this_month.used}}</text>
-          <text class="td-val {{summary.used_mom_pct > 0 ? 'up' : 'down'}}">{{summary.used_mom_pct > 0 ? '+' : ''}}{{summary.used_mom_pct}}%</text>
-          <text class="td-val {{summary.used_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.used_yoy_pct > 0 ? '+' : ''}}{{summary.used_yoy_pct}}%</text>
-        </view>
-        <view class="td-row total">
-          <view class="td-label">合计</view>
-          <text class="td-val">{{summary.this_month.total}}</text>
-          <text class="td-val {{summary.total_mom_pct > 0 ? 'up' : 'down'}}">{{summary.total_mom_pct > 0 ? '+' : ''}}{{summary.total_mom_pct}}%</text>
-          <text class="td-val {{summary.total_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.total_yoy_pct > 0 ? '+' : ''}}{{summary.total_yoy_pct}}%</text>
         </view>
       </view>
     </view>

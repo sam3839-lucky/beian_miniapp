@@ -53,6 +53,13 @@ Page({
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
         s.usedPct = (s.this_month.used / t * 100).toFixed(1);
       }
+      // 格式化最新交易日期 "2026-05-24" → "5月24日"
+      if (s && s.latest_date) {
+        const parts = s.latest_date.split('-');
+        if (parts.length === 3) {
+          s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
+        }
+      }
       this.setData({ summary: s, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
       this.drawDonut(summary);
     } catch (e) {
