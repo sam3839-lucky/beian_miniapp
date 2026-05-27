@@ -244,14 +244,16 @@
   font-size: 26rpx;
   font-weight: 500;
   color: #333;
-  width: 90rpx;
+  width: 80rpx;
+  flex-shrink: 0;
 }
 .zcount {
   font-size: 24rpx;
   color: #07C160;
   font-weight: 600;
-  width: 80rpx;
+  width: 68rpx;
   text-align: right;
+  flex-shrink: 0;
 }
 .zbar-wrap {
   flex: 1;
@@ -266,16 +268,19 @@
   background: #07C160;
 }
 .zprice {
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #888;
-  width: 120rpx;
   text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .zinv {
   font-size: 22rpx;
   color: #A8A8A8;
-  width: 72rpx;
+  width: 60rpx;
   text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* ═══ 排行榜 Tabs ═══ */
