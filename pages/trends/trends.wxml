@@ -7,7 +7,8 @@
   <view wx:if="{{summary}}">
     <!-- ═══ 环形图 + 图例 ═══ -->
     <view class="ring-card">
-      <view class="ring-subtitle" wx:if="{{summary.latestLabel}}">截止 {{summary.latestLabel}}当月累计成交</view>
+      <view class="ring-title" wx:if="{{summary.monthTitle}}">{{summary.monthTitle}}累计成交统计</view>
+      <view class="ring-date" wx:if="{{summary.latestLabel}}">截止到 {{summary.latestLabel}}</view>
       <view class="ring-wrap">
         <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
       </view>

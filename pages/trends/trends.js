@@ -53,7 +53,10 @@ Page({
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
         s.usedPct = (s.this_month.used / t * 100).toFixed(1);
       }
-      // 格式化最新交易日期 "2026-05-24" → "5月24日"
+      // 格式化标题 "5月" + 最新交易日期 "5月24日"
+      if (s && s.this_month) {
+        s.monthTitle = s.this_month.month + '月';
+      }
       if (s && s.latest_date) {
         const parts = s.latest_date.split('-');
         if (parts.length === 3) {

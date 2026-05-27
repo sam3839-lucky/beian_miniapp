@@ -3,7 +3,8 @@
 
 /* ═══ 环形图 ═══ */
 .ring-card { background: #fff; margin: 12rpx 32rpx; border-radius: 8rpx; padding: 28rpx 0 24rpx; text-align: center; }
-.ring-subtitle { font-size: 24rpx; color: #888; margin-bottom: 16rpx; }
+.ring-title { font-size: 28rpx; font-weight: 600; color: #333; margin-bottom: 4rpx; }
+.ring-date { font-size: 22rpx; color: #888; margin-bottom: 16rpx; }
 .ring-wrap { width: 200px; height: 200px; margin: 0 auto; }
 .donut-canvas { width: 200px; height: 200px; }
 .ring-legend { display: flex; justify-content: center; gap: 40rpx; margin-top: 20rpx; }
