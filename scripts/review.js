@@ -57,7 +57,7 @@ async function submit(token, desc) {
 }
 
 async function release(token) {
-  return request('POST', `/wxa/release?access_token=${token}`);
+  return request('POST', `/wxa/release?access_token=${token}`, {});
 }
 
 async function status(token) {
