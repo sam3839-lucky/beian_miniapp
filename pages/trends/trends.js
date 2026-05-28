@@ -12,6 +12,7 @@ Page({
     trends: [],
     districts: null,
     dailyItems: [],
+    trendMax: 1,
     salesRanks: [],
     salesZones: [],
     salesZone: '',
@@ -67,7 +68,8 @@ Page({
           s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
         }
       }
-      this.setData({ summary: s, trends: trendsLabeled, districts, dailyItems: recent.items || [], loading: false });
+      const trendMax = Math.max(...trendsLabeled.map(t => t.total), 1);
+      this.setData({ summary: s, trends: trendsLabeled, districts, trendMax, dailyItems: recent.items || [], loading: false });
       this.drawDonut(summary);
       this.loadSalesRank('');
     } catch (e) {
@@ -84,7 +86,7 @@ Page({
       const [y, m] = t.month.split('-');
       return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
     });
-    this.setData({ trends: labeled });
+    this.setData({ trends: labeled, trendMax: Math.max(...labeled.map(t => t.total), 1) });
   },
 
   drawDonut(s) {
