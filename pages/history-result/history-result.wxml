@@ -1,10 +1,4 @@
 <view class="page">
-  <!-- 小区头部（始终显示） -->
-  <view class="cm-header" wx:if="{{community}}">
-    <text class="cm-name">{{community}}</text>
-    <text class="cm-zone" wx:if="{{zoneName}}">{{zoneName}}</text>
-  </view>
-
   <!-- 加载态 -->
   <view wx:if="{{loading && !community}}" class="loading-skel">
     <view class="skel-bar"></view>

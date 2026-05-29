@@ -51,9 +51,9 @@ Page({
       today
     });
 
-    // 导航栏标题
-    const navTitle = districtName ? community + ' · ' + districtName : community;
-    wx.setNavigationBarTitle({ title: navTitle || '二手房成交' });
+    // 导航栏标题：区 · 小区名 · 成交分析
+    const navTitle = districtName ? districtName + ' · ' + community + ' · 成交分析' : (community ? community + ' · 成交分析' : '二手房成交');
+    wx.setNavigationBarTitle({ title: navTitle });
 
     this.loadDistricts();
     if (community) {
@@ -104,9 +104,9 @@ Page({
       }, () => {
         if (res.trend && res.trend.length) this.drawTrendChart();
       });
-      // 导航栏标题：社区名 · 区域
+      // 导航栏标题：区 · 小区名 · 成交分析
       const zone = res.zone || this.data.zoneName || '';
-      wx.setNavigationBarTitle({ title: zone ? this.data.community + ' · ' + zone : this.data.community });
+      wx.setNavigationBarTitle({ title: zone ? zone + ' · ' + this.data.community + ' · 成交分析' : this.data.community + ' · 成交分析' });
     } catch (e) {
       console.error('loadCommunity error:', e);
       this.setData({ loading: false, error: true });
