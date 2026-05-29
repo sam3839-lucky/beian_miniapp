@@ -64,7 +64,7 @@
   </view>
   <view class="overview" wx:if="{{overview}}">
     <view class="stat-card">
-      <text class="stat-num green">{{overview.unsold}}</text>
+      <text class="stat-num green">{{overview.unsold_w}}万</text>
       <text class="stat-label">可售住宅</text>
     </view>
     <view class="stat-card">
@@ -72,11 +72,11 @@
       <text class="stat-label">住宅均价</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num gray">{{overview.signed}}</text>
+      <text class="stat-num gray">{{overview.signed_w}}万</text>
       <text class="stat-label">已网签</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num blue">{{overview.recent}}</text>
+      <text class="stat-num blue">{{overview.recent_w}}万</text>
       <text class="stat-label">近7日更新</text>
     </view>
   </view>
@@ -110,10 +110,10 @@
     </view>
   </view>
 
-  <!-- ═══ P1: 区域对比 ═══ -->
+  <!-- ═══ P1: 各区新房可售房源 ═══ -->
   <view class="section" wx:if="{{overview && overview.zones.length}}">
     <view class="section-head">
-      <text class="section-title">各区对比</text>
+      <text class="section-title">各区新房可售房源</text>
     </view>
     <view class="zone-compare">
       <view class="zone-row" wx:for="{{overview.zones}}" wx:key="name"
