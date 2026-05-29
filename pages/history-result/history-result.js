@@ -349,14 +349,14 @@ Page({
   onRecordTap(e) {
     if (!this.data.community) return;
     wx.navigateTo({
-      url: '/pages/community-overview/overview?community=' + encodeURIComponent(this.data.community)
+      url: '/pages/community-overview/overview?community=' + encodeURIComponent(this.data.community) + '&zone_name=' + encodeURIComponent(this.data.zoneName || '')
     });
   },
 
   onViewOverview() {
     if (this.data.community) {
       wx.navigateTo({
-        url: '/pages/community-overview/overview?community=' + encodeURIComponent(this.data.community)
+        url: '/pages/community-overview/overview?community=' + encodeURIComponent(this.data.community) + '&zone_name=' + encodeURIComponent(this.data.zoneName || '')
       });
     }
   },

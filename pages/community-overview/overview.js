@@ -3,6 +3,7 @@ const API_BASE = 'https://ruiheqi.cn/api/resale';
 Page({
   data: {
     community: '',
+    zoneName: '',
     stats: {},
     trend: [],
     layouts: [],
@@ -14,8 +15,9 @@ Page({
 
   onLoad(options) {
     const community = decodeURIComponent(options.community || '');
+    const zoneName = decodeURIComponent(options.zone_name || '');
     if (community) {
-      this.setData({ community });
+      this.setData({ community, zoneName });
       wx.setNavigationBarTitle({ title: community });
       this.loadData();
     } else {
@@ -32,6 +34,7 @@ Page({
       const maxCnt = layouts.length ? layouts[0].cnt : 1;
 
       this.setData({
+        zoneName: res.zone || '',
         stats: {
           total: s.total || 0,
           avgPrice: s.avg_price ? s.avg_price + '万' : '--',

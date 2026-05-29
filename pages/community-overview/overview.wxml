@@ -12,6 +12,12 @@
 
   <!-- 正常 -->
   <block wx:else>
+    <!-- 小区名称 + 所在区 -->
+    <view class="cm-header">
+      <text class="cm-name">{{community}}</text>
+      <text class="cm-zone" wx:if="{{zoneName}}">{{zoneName}}</text>
+    </view>
+
     <!-- 基础统计 -->
     <view class="sec">
       <view class="sec-title">基础统计</view>
