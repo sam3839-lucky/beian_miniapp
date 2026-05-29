@@ -70,9 +70,11 @@ Page({
   async loadOverview() {
     try {
       const data = await api.getOverview();
-      // 可售住宅/已网签/近7日更新 转为万单位，保留2位小数
+      // 统计数转为万单位，保留2位小数
       data.unsold_w = (data.unsold / 10000).toFixed(2);
       data.signed_w = (data.signed / 10000).toFixed(2);
+      data.filed_w = (data.filed / 10000).toFixed(2);
+      data.transferred_w = (data.transferred / 10000).toFixed(2);
       data.recent_w = (data.recent / 10000).toFixed(2);
       this.setData({ overview: data, overviewError: false });
     } catch (e) {

@@ -90,10 +90,10 @@
       <view class="bar-seg transferred" style="width:{{overview.transferred / overview.total * 100}}%"></view>
     </view>
     <view class="bar-legend">
-      <text class="dot unsold"></text><text>未售 {{overview.unsold}}</text>
-      <text class="dot signed"></text><text>网签 {{overview.signed}}</text>
-      <text class="dot filed"></text><text>备案 {{overview.filed}}</text>
-      <text class="dot transferred"></text><text>转移 {{overview.transferred}}</text>
+      <text class="dot unsold"></text><text>未售 {{overview.unsold_w}}万</text>
+      <text class="dot signed"></text><text>网签 {{overview.signed_w}}万</text>
+      <text class="dot filed"></text><text>备案 {{overview.filed_w}}万</text>
+      <text class="dot transferred"></text><text>转移 {{overview.transferred_w}}万</text>
     </view>
   </view>
 
