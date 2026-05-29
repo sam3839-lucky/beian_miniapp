@@ -90,7 +90,7 @@ Page({
     this.setData({ trends: labeled, trendMax: Math.max(...labeled.map(t => t.total), 1) });
   },
 
-  drawDonut(s) {
+  drawDonut(s, retry) {
     if (!s || !s.this_month) return;
     const n = s.this_month.new || 0, u = s.this_month.used || 0, t = n + u;
     if (t <= 0) return;
@@ -99,10 +99,14 @@ Page({
     query.select('#donutCanvas')
       .fields({ node: true, size: true })
       .exec((res) => {
-        if (!res[0] || !res[0].node) return;
+        if (!res[0] || !res[0].node) {
+          // canvas DOM 还没就绪，延迟重试一次
+          if (!retry) setTimeout(() => this.drawDonut(s, true), 200);
+          return;
+        }
         const canvas = res[0].node;
         const ctx = canvas.getContext('2d');
-        const dpr = wx.getWindowInfo().pixelRatio;
+        const dpr = wx.getSystemInfoSync().pixelRatio;
         const w = res[0].width;
         const h = res[0].height;
         canvas.width = w * dpr;
