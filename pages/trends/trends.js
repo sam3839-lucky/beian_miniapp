@@ -2,11 +2,12 @@ const api = require('../../utils/api');
 
 Page({
   data: {
-    range: 6,
+    range: 12,
     ranges: [
-      { label: '近3个月', value: 3 },
-      { label: '近6个月', value: 6 },
-      { label: '近12个月', value: 12 }
+      { label: '近1年', value: 12 },
+      { label: '近3年', value: 36 },
+      { label: '近5年', value: 60 },
+      { label: '近10年', value: 120 }
     ],
     summary: null,
     trends: [],
@@ -46,19 +47,12 @@ Page({
         api.getTransactionDistricts(),
         api.getRecentTransactions(14)
       ]);
-      const years = new Set((trends.trends || []).map(t => t.month.split('-')[0]));
-      const crossYear = years.size > 1;
-      const trendsLabeled = (trends.trends || []).map(t => {
-        const [y, m] = t.month.split('-');
-        return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
-      });
       const s = summary;
       if (s && s.this_month) {
         const t = s.this_month.total || 1;
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
         s.usedPct = (s.this_month.used / t * 100).toFixed(1);
       }
-      // 格式化标题 "5月" + 最新交易日期 "5月24日"
       if (s && s.this_month) {
         s.monthTitle = s.this_month.month + '月';
       }
@@ -68,9 +62,10 @@ Page({
           s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
         }
       }
-      const trendMax = Math.max(...trendsLabeled.map(t => t.total), 1);
-      this.setData({ summary: s, trends: trendsLabeled, districts, trendMax, dailyItems: recent.items || [], loading: false }, () => {
+      const rawTrends = trends.trends || [];
+      this.setData({ summary: s, districts, dailyItems: recent.items || [], loading: false }, () => {
         this.drawDonut(s);
+        this.buildAndDrawChart(rawTrends);
       });
       this.loadSalesRank('');
     } catch (e) {
@@ -81,13 +76,45 @@ Page({
   async loadTrends(months) {
     const data = await api.getTransactionTrends(months);
     const raw = data.trends || [];
-    const years = new Set(raw.map(t => t.month.split('-')[0]));
-    const crossYear = years.size > 1;
-    const labeled = raw.map(t => {
-      const [y, m] = t.month.split('-');
-      return { ...t, monthLabel: crossYear ? y.slice(2) + '/' + m : m + '月' };
+    this.buildAndDrawChart(raw);
+  },
+
+  // 按月聚合为 12 个 bucket，每 bucket 取月均值
+  buildAndDrawChart(raw) {
+    const months = this.data.range;
+    const bucketSize = Math.max(1, Math.floor(months / 12));
+    const rawLen = raw.length;
+    if (!rawLen) return;
+
+    // 取最近 N 个月数据
+    const recent = raw.slice(Math.max(0, rawLen - months));
+
+    const buckets = [];
+    for (let i = 0; i < recent.length; i += bucketSize) {
+      const slice = recent.slice(i, Math.min(i + bucketSize, recent.length));
+      const sumNew = slice.reduce((s, t) => s + (t.new || 0), 0);
+      const sumUsed = slice.reduce((s, t) => s + (t.used || 0), 0);
+      const avgNew = Math.round(sumNew / slice.length);
+      const avgUsed = Math.round(sumUsed / slice.length);
+      const first = slice[0].month;
+      const last = slice[slice.length - 1].month;
+      const [y1, m1] = first.split('-');
+      const [y2, m2] = last.split('-');
+      const label = bucketSize === 1
+        ? y1.slice(2) + '/' + m1
+        : y1.slice(2) + '/' + m1 + '-' + (y1 === y2 ? '' : y2.slice(2) + '/') + m2;
+      buckets.push({ label, n: avgNew, u: avgUsed, total: avgNew + avgUsed });
+    }
+
+    // 确保正好 12 个（截断或头部补齐空）
+    const final12 = buckets.slice(-12);
+    while (final12.length < 12) {
+      final12.unshift({ label: '', n: 0, u: 0, total: 0 });
+    }
+
+    this.setData({ trends: final12, trendMax: 1 }, () => {
+      this.drawTrendChart(final12);
     });
-    this.setData({ trends: labeled, trendMax: Math.max(...labeled.map(t => t.total), 1) });
   },
 
   drawDonut(s) {
@@ -131,6 +158,101 @@ Page({
 
       ctx.draw();
     });
+  },
+
+  drawTrendChart(data) {
+    if (!data || !data.length) return;
+    const query = wx.createSelectorQuery().in(this);
+    query.select('.trend-canvas').boundingClientRect().exec(res => {
+      if (!res[0] || !res[0].width) return;
+      const W = res[0].width;
+      const H = 200;
+      const ctx = wx.createCanvasContext('trendChartCanvas', this);
+      const pad = { top: 28, right: 8, bottom: 36, left: 44 };
+      const pw = W - pad.left - pad.right;
+      const ph = H - pad.top - pad.bottom;
+      const maxV = Math.max(...data.map(d => d.n + d.u)) * 1.12 || 1;
+
+      // Y 轴刻度 + 网格
+      ctx.setFillStyle('#999');
+      ctx.setFontSize(10);
+      ctx.setTextAlign('right');
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + ph * (1 - i / 4);
+        ctx.fillText(Math.round(maxV * i / 4) + '', pad.left - 6, y + 3);
+        ctx.setStrokeStyle('#f0f0f0');
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(W - pad.right, y);
+        ctx.stroke();
+      }
+
+      // 坐标轴
+      ctx.setStrokeStyle('#ddd');
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top);
+      ctx.lineTo(pad.left, pad.top + ph);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(pad.left, pad.top + ph);
+      ctx.lineTo(W - pad.right, pad.top + ph);
+      ctx.stroke();
+
+      // 柱子
+      const gap = pw / data.length;
+      const barW = gap * 0.55;
+      data.forEach((d, i) => {
+        const x = pad.left + i * gap + (gap - barW) / 2;
+        const hNew = (d.n / maxV) * ph;
+        const hUsed = (d.u / maxV) * ph;
+        const yBase = pad.top + ph;
+
+        // 一手（绿色底层）
+        ctx.setFillStyle('#07C160');
+        this._fillRect(ctx, x, yBase - hNew, barW, hNew, 3);
+
+        // 二手（橙色上层）
+        ctx.setFillStyle('#FF8C00');
+        this._fillRect(ctx, x, yBase - hNew - hUsed, barW, hUsed, 3);
+
+        // 合计数字
+        const total = d.n + d.u;
+        if (total > 0) {
+          ctx.setFillStyle('#333');
+          ctx.setFontSize(9);
+          ctx.setTextAlign('center');
+          ctx.fillText(total + '', x + barW / 2, yBase - hNew - hUsed - 6);
+        }
+
+        // X 标签（隔一个标一个）
+        if (i % 2 === 0 && d.label) {
+          ctx.setFillStyle('#999');
+          ctx.setFontSize(9);
+          ctx.setTextAlign('center');
+          ctx.fillText(d.label, x + barW / 2, H - 6);
+        }
+      });
+
+      ctx.draw();
+    });
+  },
+
+  _fillRect(ctx, x, y, w, h, r) {
+    if (h <= 0) return;
+    if (r && h > r * 2) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      ctx.fillRect(x, y, w, h);
+    }
   },
 
   onRetry() { this.loadAll(); },

@@ -91,19 +91,14 @@
       <view class="range-bar">
         <view class="range-tab {{range === item.value ? 'on' : ''}}" wx:for="{{ranges}}" wx:key="value" data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
       </view>
-      <view class="trend-chart">
-        <view class="trend-row" wx:for="{{trends}}" wx:key="month">
-          <text class="tr-month">{{item.monthLabel}}</text>
-          <view class="tr-bar-wrap">
-            <view class="tr-bar-new" style="width:{{item.new / trendMax * 100}}%"></view>
-            <view class="tr-bar-used" style="width:{{item.used / trendMax * 100}}%"></view>
-          </view>
-          <text class="tr-count">{{item.total}}套</text>
+      <view class="chart-card">
+        <view class="trend-chart-wrap">
+          <canvas canvas-id="trendChartCanvas" class="trend-canvas"></canvas>
         </view>
-      </view>
-      <view class="trend-legend">
-        <text class="dot new"></text><text>一手</text>
-        <text class="dot used"></text><text>二手</text>
+        <view class="chart-legend">
+          <text class="dot new"></text><text>一手住宅</text>
+          <text class="dot used"></text><text>二手住宅</text>
+        </view>
       </view>
     </view>
 

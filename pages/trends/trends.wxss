@@ -1,12 +1,18 @@
 /* ═══ 成交分析 — WeUI 规范 ═══ */
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
+/* ═══ 搜小区入口 ═══ */
+.history-search-bar { margin: 16rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 0 24rpx; height: 84rpx; display: flex; align-items: center; }
+.hs-icon { font-size: 28rpx; margin-right: 12rpx; flex-shrink: 0; }
+.hs-text { flex: 1; font-size: 26rpx; color: #bbb; }
+.hs-badge { font-size: 20rpx; color: #fff; background: #07C160; padding: 4rpx 14rpx; border-radius: 20rpx; flex-shrink: 0; font-weight: 600; }
+
 /* ═══ 环形图 ═══ */
 .ring-card { background: #fff; margin: 12rpx 32rpx; border-radius: 8rpx; padding: 28rpx 0 24rpx; text-align: center; }
 .ring-title { font-size: 28rpx; font-weight: 600; color: #333; margin-bottom: 4rpx; }
 .ring-date { font-size: 22rpx; color: #888; margin-bottom: 16rpx; }
-.ring-wrap { width: 200px; height: 200px; margin: 0 auto; }
-.donut-canvas { width: 200px; height: 200px; }
+.ring-wrap { width: 400rpx; height: 400rpx; margin: 0 auto; }
+.donut-canvas { width: 400rpx; height: 400rpx; }
 .ring-legend { display: flex; justify-content: center; gap: 40rpx; margin-top: 20rpx; }
 .legend-item { display: flex; align-items: center; gap: 8rpx; font-size: 26rpx; color: #333; }
 .ldot { width: 16rpx; height: 16rpx; border-radius: 50%; }
@@ -75,19 +81,14 @@
   align-items: center; justify-content: center; }
 .range-tab.on { background: #07C160; color: #fff; font-weight: 600; }
 
-/* ═══ 月度走势 ═══ */
-.trend-chart { background: #fff; border-radius: 8rpx; padding: 16rpx 16rpx 4rpx; }
-.trend-row { display: flex; align-items: center; gap: 12rpx; padding: 12rpx 0; min-height: 60rpx; }
-.trend-row + .trend-row { border-top: 1rpx solid #F0F0F0; }
-.tr-month { font-size: 22rpx; color: #888; width: 80rpx; text-align: center; }
-.tr-bar-wrap { flex: 1; height: 20rpx; border-radius: 8rpx; background: #F0F0F0; overflow: hidden; display: flex; }
-.tr-bar-new { height: 100%; background: #07C160; }
-.tr-bar-used { height: 100%; background: #FF8C00; }
-.tr-count { font-size: 24rpx; color: #333; font-weight: 600; width: 100rpx; text-align: right; white-space: nowrap; }
-.trend-legend { display: flex; gap: 20rpx; padding: 12rpx 16rpx 8rpx; font-size: 22rpx; color: #888; align-items: center; }
-.trend-legend .dot { width: 12rpx; height: 12rpx; border-radius: 50%; display: inline-block; margin-right: 4rpx; }
-.trend-legend .dot.new { background: #07C160; }
-.trend-legend .dot.used { background: #FF8C00; }
+/* ═══ 月度走势图 ═══ */
+.chart-card { background: #fff; border-radius: 8rpx; padding: 16rpx 12rpx 8rpx; }
+.trend-chart-wrap { width: 100%; height: 400rpx; }
+.trend-canvas { width: 100%; height: 400rpx; }
+.chart-legend { display: flex; justify-content: center; gap: 24rpx; padding: 8rpx 0 4rpx; font-size: 22rpx; color: #888; align-items: center; }
+.chart-legend .dot { width: 14rpx; height: 14rpx; border-radius: 50%; display: inline-block; margin-right: 6rpx; }
+.chart-legend .dot.new { background: #07C160; }
+.chart-legend .dot.used { background: #FF8C00; }
 
 /* ═══ 日成交 ═══ */
 .tx-list { background: #fff; border-radius: 8rpx; }
