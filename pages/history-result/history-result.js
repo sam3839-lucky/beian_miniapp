@@ -96,6 +96,7 @@ Page({
         },
         trend: res.trend || [],
         zoneName: this.data.zoneName || '',
+        zoneName: res.zone || this.data.zoneName || '',
         loading: false
       }, () => {
         if (res.trend && res.trend.length) this.drawTrendChart();
