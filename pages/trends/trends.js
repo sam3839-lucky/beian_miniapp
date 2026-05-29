@@ -90,56 +90,47 @@ Page({
     this.setData({ trends: labeled, trendMax: Math.max(...labeled.map(t => t.total), 1) });
   },
 
-  drawDonut(s, retry) {
+  drawDonut(s) {
     if (!s || !s.this_month) return;
     const n = s.this_month.new || 0, u = s.this_month.used || 0, t = n + u;
     if (t <= 0) return;
 
     const query = wx.createSelectorQuery().in(this);
-    query.select('#donutCanvas')
-      .fields({ node: true, size: true })
-      .exec((res) => {
-        if (!res[0] || !res[0].node) {
-          // canvas DOM 还没就绪，延迟重试一次
-          if (!retry) setTimeout(() => this.drawDonut(s, true), 200);
-          return;
-        }
-        const canvas = res[0].node;
-        const ctx = canvas.getContext('2d');
-        const dpr = wx.getSystemInfoSync().pixelRatio;
-        const w = res[0].width;
-        const h = res[0].height;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        ctx.scale(dpr, dpr);
+    query.select('.donut-canvas').boundingClientRect().exec(res => {
+      if (!res[0] || !res[0].width) return;
+      const w = res[0].width;
+      const h = res[0].height || w;
 
-        const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35, sw = Math.min(w, h) * 0.11;
+      const ctx = wx.createCanvasContext('donutCanvas', this);
+      const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35, sw = Math.min(w, h) * 0.11;
 
-        // 二手（底层，从12点顺时针）
-        const usedAngle = (u / t) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + usedAngle);
-        ctx.lineWidth = sw;
-        ctx.strokeStyle = '#FF8C00';
-        ctx.stroke();
+      // 二手（橙色，从12点顺时针）
+      const usedAngle = (u / t) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + usedAngle);
+      ctx.setLineWidth(sw);
+      ctx.setStrokeStyle('#FF8C00');
+      ctx.stroke();
 
-        // 一手（上层，接着二手继续）
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, -Math.PI / 2 + usedAngle, Math.PI * 1.5);
-        ctx.lineWidth = sw;
-        ctx.strokeStyle = '#07C160';
-        ctx.stroke();
+      // 一手（绿色，接着二手继续）
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, -Math.PI / 2 + usedAngle, Math.PI * 1.5);
+      ctx.setLineWidth(sw);
+      ctx.setStrokeStyle('#07C160');
+      ctx.stroke();
 
-        // 中心文字
-        ctx.fillStyle = '#333';
-        ctx.font = `bold ${Math.round(w * 0.09)}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(t + '', cx, cy - Math.round(h * 0.04));
-        ctx.fillStyle = '#888';
-        ctx.font = `${Math.round(w * 0.06)}px sans-serif`;
-        ctx.fillText('总套数', cx, cy + Math.round(h * 0.10));
-      });
+      // 中心文字
+      ctx.setFillStyle('#333');
+      ctx.setFontSize(Math.round(w * 0.09));
+      ctx.setTextAlign('center');
+      ctx.setTextBaseline('middle');
+      ctx.fillText(t + '', cx, cy - Math.round(h * 0.04));
+      ctx.setFillStyle('#888');
+      ctx.setFontSize(Math.round(w * 0.06));
+      ctx.fillText('总套数', cx, cy + Math.round(h * 0.10));
+
+      ctx.draw();
+    });
   },
 
   onRetry() { this.loadAll(); },

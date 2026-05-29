@@ -1,4 +1,11 @@
 <view class="page">
+  <!-- 搜小区，查历史成交价 -->
+  <view class="history-search-bar" bindtap="onHistorySearchTap">
+    <text class="hs-icon">🔍</text>
+    <text class="hs-text">搜小区，查历史成交价</text>
+    <text class="hs-badge">13.9万条</text>
+  </view>
+
   <view wx:if="{{loading && !summary}}" class="state-msg">加载中...</view>
   <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
     <text class="err-icon">!</text><text>加载失败，点击重试</text>
@@ -10,7 +17,7 @@
       <view class="ring-title" wx:if="{{summary.monthTitle}}">{{summary.monthTitle}}累计成交统计</view>
       <view class="ring-date" wx:if="{{summary.latestLabel}}">截止到 {{summary.latestLabel}}</view>
       <view class="ring-wrap">
-        <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
+        <canvas canvas-id="donutCanvas" class="donut-canvas"></canvas>
       </view>
       <view class="ring-legend">
         <view class="legend-item">
