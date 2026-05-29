@@ -1,0 +1,141 @@
+<view class="page">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-skel">
+    <view class="skel-bar"></view>
+    <view class="skel-chart"></view>
+    <view class="skel-row" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <!-- 错误态 -->
+  <view wx:elif="{{error}}" class="err-block" bindtap="onRetry">
+    <text class="err-icon">⚠️</text>
+    <text>加载失败，点击重试</text>
+  </view>
+
+  <!-- 正常内容 -->
+  <block wx:else>
+    <!-- 小区头部 + 年份选择 -->
+    <view class="cm-header">
+      <view class="cm-header-row">
+        <view class="cm-header-left">
+          <text class="cm-name">{{community}}</text>
+          <text class="cm-zone" wx:if="{{zoneName}}">{{zoneName}}</text>
+        </view>
+        <view class="year-tabs">
+          <text class="year-tab {{trendYears == 1 ? 'on' : ''}}" bindtap="onTrendYears" data-years="1">1年</text>
+          <text class="year-tab {{trendYears == 3 ? 'on' : ''}}" bindtap="onTrendYears" data-years="3">3年</text>
+          <text class="year-tab {{trendYears == 5 ? 'on' : ''}}" bindtap="onTrendYears" data-years="5">5年</text>
+          <text class="year-tab {{trendYears == 10 ? 'on' : ''}}" bindtap="onTrendYears" data-years="10">10年</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计摘要 -->
+    <view class="stat-row" wx:if="{{summary}}">
+      <view class="stat-item">
+        <text class="sv">{{summary.total || 0}}<text class="su">套</text></text>
+        <text class="sl">历史成交</text>
+      </view>
+      <view class="stat-item">
+        <text class="sv">{{summary.max_price || '--'}}</text>
+        <text class="sl">最高单价{{summary.max_price_date ? '(' + summary.max_price_date + ')' : ''}}</text>
+      </view>
+      <view class="stat-item">
+        <text class="sv">{{summary.min_price || '--'}}</text>
+        <text class="sl">最低单价{{summary.min_price_date ? '(' + summary.min_price_date + ')' : ''}}</text>
+      </view>
+    </view>
+
+    <!-- 走势图 -->
+    <view class="chart-card" wx:if="{{trend.length}}">
+      <view class="chart-title">📈 成交价走势</view>
+      <canvas canvas-id="trendCanvas" class="trend-canvas"></canvas>
+    </view>
+    <view class="chart-card" wx:elif="{{!loading}}">
+      <view class="chart-title">成交价走势</view>
+      <view class="no-data">暂无趋势数据</view>
+    </view>
+
+    <!-- 筛选栏 -->
+    <view class="filter-bar">
+      <view class="f-row">
+        <picker mode="date" fields="month" value="{{minDate}}"
+                end="{{maxDate || today}}" bindchange="onMinDateChange">
+          <view class="picker-val {{minDate ? 'on' : ''}}">
+            {{minDate || '▾ 起始日期'}}
+          </view>
+        </picker>
+        <picker mode="date" fields="month" value="{{maxDate}}"
+                start="{{minDate}}" end="{{today}}" bindchange="onMaxDateChange">
+          <view class="picker-val {{maxDate ? 'on' : ''}}">
+            {{maxDate || '▾ 截止日期'}}
+          </view>
+        </picker>
+      </view>
+      <view class="f-row">
+        <input class="f-input" placeholder="最低总价(万)" type="digit"
+               value="{{minPrice}}" bindinput="onMinPriceInput"/>
+        <text class="f-dash">—</text>
+        <input class="f-input" placeholder="最高总价(万)" type="digit"
+               value="{{maxPrice}}" bindinput="onMaxPriceInput"/>
+        <input class="f-input" placeholder="最小面积(㎡)" type="digit"
+               value="{{minArea}}" bindinput="onMinAreaInput"/>
+        <text class="f-dash">—</text>
+        <input class="f-input" placeholder="最大面积(㎡)" type="digit"
+               value="{{maxArea}}" bindinput="onMaxAreaInput"/>
+      </view>
+      <view class="f-row">
+        <view class="sort-tabs">
+          <view class="sort-tab {{sortBy === 'date' ? 'on' : ''}}" bindtap="onSortTap" data-sort="date">最新</view>
+          <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="asc">总价↑</view>
+          <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="desc">总价↓</view>
+          <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="asc">单价↑</view>
+          <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="desc">单价↓</view>
+        </view>
+        <view class="filter-clear" bindtap="onClearFilters" wx:if="{{hasFilters}}">清除筛选</view>
+      </view>
+    </view>
+
+    <!-- 结果信息 -->
+    <view class="result-info" wx:if="{{!loading}}">
+      <text>共 {{total}} 条，第 {{page}} / {{totalPages}} 页</text>
+      <text class="view-overview" bindtap="onViewOverview">查看小区全景 →</text>
+    </view>
+
+    <!-- 空态 -->
+    <view wx:if="{{records.length === 0 && !loading}}" class="empty-block">
+      <text class="empty-icon">📭</text>
+      <text>没有找到匹配的成交记录</text>
+      <text class="empty-hint">试试放宽筛选条件或换个小区</text>
+      <view class="clear-btn" bindtap="onClearFilters">清除所有筛选</view>
+    </view>
+
+    <!-- 成交列表 -->
+    <view class="tx-list" wx:if="{{records.length > 0}}">
+      <view class="tx-card" wx:for="{{records}}" wx:key="index"
+            data-index="{{index}}" bindtap="onRecordTap">
+        <view class="tr-line">
+          <text class="tr-left">{{item.layout || '--'}}</text>
+          <text class="tr-right tr-price">{{item.total_price}}<text class="tr-punit">万</text></text>
+        </view>
+        <view class="tr-line">
+          <text class="tr-left">{{item.area ? item.area + '㎡' : ''}}</text>
+          <text class="tr-right">{{item.unit_price ? item.unit_price + '元/㎡' : ''}}</text>
+        </view>
+        <view class="tr-line">
+          <text class="tr-left tr-meta">{{item.floor || ''}}{{item.orientation ? ' · ' + item.orientation : ''}}{{item.building_type ? ' · ' + item.building_type : ''}}</text>
+          <text class="tr-right tr-meta">{{item.date || ''}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分页 -->
+    <view class="pagination" wx:if="{{totalPages > 1}}">
+      <view class="pg-btn {{page <= 1 ? 'disabled' : ''}}" bindtap="onPrevPage">‹</view>
+      <view class="pg-btn {{num === page ? 'on' : ''}}" wx:for="{{pageNums}}" wx:key="*this"
+            wx:if="{{num > 0}}" bindtap="onGoPage" data-page="{{num}}">{{num}}</view>
+      <view class="pg-ellipsis" wx:if="{{showEndEllipsis}}">...</view>
+      <view class="pg-btn {{page >= totalPages ? 'disabled' : ''}}" bindtap="onNextPage">›</view>
+    </view>
+  </block>
+</view>

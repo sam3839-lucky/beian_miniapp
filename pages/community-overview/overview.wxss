@@ -30,12 +30,14 @@
 .l-info { font-size: 24rpx; color: #888; white-space: nowrap; }
 
 /* 最近成交 */
-.trade-row { display: flex; align-items: center; padding: 16rpx 24rpx; border-bottom: 1rpx solid #F0F0F0; gap: 12rpx; }
+/* 成交记录卡片 */
+.trade-row { padding: 20rpx 24rpx; border-bottom: 1rpx solid #F0F0F0; }
 .trade-row:last-of-type { border-bottom: none; }
-.t-info { flex: 1; }
-.t-price { font-size: 30rpx; font-weight: 700; color: #FF4D4F; }
-.t-detail { font-size: 24rpx; color: #333; margin-left: 8rpx; }
-.t-meta { font-size: 22rpx; color: #888; white-space: nowrap; }
+.tr-line { display: flex; justify-content: space-between; align-items: baseline; padding: 4rpx 0; }
+.tr-left { font-size: 26rpx; color: #333; }
+.tr-right { font-size: 26rpx; color: #333; text-align: right; }
+.tr-price { font-size: 30rpx; font-weight: 700; color: #FF4D4F; }
+.tr-meta { font-size: 22rpx; color: #888; }
 .view-all-row { text-align: center; padding: 18rpx; color: #07C160; font-size: 26rpx; }
 
 /* 骨架 */
