@@ -196,57 +196,62 @@ Page({
     const raw = this.data.trend;
     if (!raw.length) return;
 
-    // 12-bucket grouping
-    const step = this.data.trendYears;
+    // 12-bucket grouping: raw data → always 12 points
+    const months = Math.max(raw.length, 12);
+    const bucketSize = Math.max(1, Math.floor(months / 12));
     const buckets = [];
-    for (let i = 0; i < raw.length; i += step) {
-      const slice = raw.slice(i, Math.min(i + step, raw.length));
+    for (let i = 0; i < raw.length; i += bucketSize) {
+      const slice = raw.slice(i, Math.min(i + bucketSize, raw.length));
       const sumPrice = slice.reduce((s, t) => s + (parseFloat(t.avg_price) || 0), 0);
-      const sumCnt = slice.reduce((s, t) => s + (t.cnt || 0), 0);
       buckets.push({
         month: slice[0].month,
-        avg_price: sumCnt > 0 ? Math.round(sumPrice / slice.length) : 0,
-        cnt: sumCnt
+        avg_price: sumPrice > 0 ? Math.round(sumPrice / slice.length) : 0,
+        cnt: slice.reduce((s, t) => s + (t.cnt || 0), 0)
       });
     }
     const trend = buckets.slice(-12);
+    while (trend.length < 12) trend.unshift({ month: '', avg_price: 0, cnt: 0 });
     if (!trend.length) return;
 
-    // Read actual canvas size for accurate rendering on all devices
     const that = this;
     const q = wx.createSelectorQuery().in(this);
     q.select('.trend-canvas').boundingClientRect().exec(res => {
       if (!res || !res[0] || !res[0].width) return;
       const w = res[0].width;
-      const h = res[0].height || 160;
+      const h = res[0].height || 180;
 
     const ctx = wx.createCanvasContext('trendCanvas', that);
 
-    const pad = { top: 20, right: 12, bottom: 28, left: 40 };
+    const pad = { top: 28, right: 8, bottom: 32, left: 44 };
     const pw = w - pad.left - pad.right;
     const ph = h - pad.top - pad.bottom;
 
     const prices = trend.map(t => t.avg_price).filter(p => p > 0);
-    if (!prices.length) return;
+    if (!prices.length) { ctx.draw(); return; }
 
     const maxP = Math.max(...prices) * 1.1;
     const minP = Math.min(...prices) * 0.9;
     const range = maxP - minP || 1;
 
-    // grid
+    // Y axis + grid
     ctx.setFillStyle('#999');
     ctx.setFontSize(9);
     ctx.setTextAlign('right');
     for (let i = 0; i <= 3; i++) {
       const y = pad.top + ph * (i / 3);
-      const val = maxP - range * (i / 3);
-      ctx.fillText(Math.round(val / 1000) + 'k', pad.left - 4, y + 3);
+      const val = Math.round((maxP - range * (i / 3)) / 1000) + 'k';
+      ctx.fillText(val, pad.left - 4, y + 3);
       ctx.setStrokeStyle('#f0f0f0');
       ctx.beginPath();
       ctx.moveTo(pad.left, y);
       ctx.lineTo(w - pad.right, y);
       ctx.stroke();
     }
+
+    // axis lines
+    ctx.setStrokeStyle('#ddd');
+    ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(w - pad.right, pad.top + ph); ctx.stroke();
 
     // line
     const stepX = pw / Math.max(trend.length - 1, 1);
@@ -255,6 +260,7 @@ Page({
     ctx.setLineWidth(2);
     let first = true;
     trend.forEach((t, i) => {
+      if (t.avg_price <= 0) return;
       const x = pad.left + i * stepX;
       const y = pad.top + ph * (1 - (t.avg_price - minP) / range);
       if (first) { ctx.moveTo(x, y); first = false; }
@@ -262,27 +268,25 @@ Page({
     });
     ctx.stroke();
 
-    // dots + labels
-    ctx.setFontSize(9);
-    ctx.setTextAlign('center');
-    // Show fewer labels on narrow screens (< 320px)
-    const labelStep = w < 320 ? 3 : 2;
+    // dots + price labels (every point) + month labels (alternating)
     trend.forEach((t, i) => {
+      if (t.avg_price <= 0) return;
       const x = pad.left + i * stepX;
       const y = pad.top + ph * (1 - (t.avg_price - minP) / range);
       // dot
       ctx.beginPath();
-      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      ctx.arc(x, y, 3, 0, Math.PI * 2);
       ctx.setFillStyle('#FF8C00');
       ctx.fill();
-      // price label (every point)
-      const priceWan = (t.avg_price / 10000).toFixed(2);
+      // price label on every dot
       ctx.setFillStyle('#FF4D4F');
-      ctx.fillText(priceWan + '万', x, y - 8);
-      // month label (sparse)
-      if (i % labelStep === 0) {
+      ctx.setFontSize(9);
+      ctx.setTextAlign('center');
+      ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
+      // month label every other point
+      if (i % 2 === 0 && t.month) {
         ctx.setFillStyle('#999');
-        ctx.fillText(t.month || '', x, h - 4);
+        ctx.fillText(t.month, x, h - 6);
       }
     });
 
