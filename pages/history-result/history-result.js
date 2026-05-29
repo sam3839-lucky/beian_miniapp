@@ -1,5 +1,11 @@
 const API_BASE = 'https://ruiheqi.cn/api/resale';
 
+function formatMonth(m) {
+  if (!m) return '';
+  const parts = m.split('-');
+  return parts.length >= 2 ? parts[0].slice(2) + '/' + parts[1] : m;
+}
+
 Page({
   data: {
     community: '',
@@ -196,21 +202,27 @@ Page({
     const raw = this.data.trend;
     if (!raw.length) return;
 
-    // 12-bucket grouping: raw data → always 12 points
-    const months = Math.max(raw.length, 12);
-    const bucketSize = Math.max(1, Math.floor(months / 12));
-    const buckets = [];
-    for (let i = 0; i < raw.length; i += bucketSize) {
-      const slice = raw.slice(i, Math.min(i + bucketSize, raw.length));
+    // 始终产生 12 个 bucket
+    const n = raw.length;
+    const bucketSize = n / 12;
+    const trend = [];
+    for (let i = 0; i < 12; i++) {
+      const start = Math.floor(i * bucketSize);
+      const end = Math.floor((i + 1) * bucketSize);
+      const slice = raw.slice(start, Math.min(end, n));
+      if (!slice.length) { trend.push({ month: '', avg_price: 0, cnt: 0 }); continue; }
+      // 均价 = 总成交额 / 总面积
       const sumPrice = slice.reduce((s, t) => s + (parseFloat(t.avg_price) || 0), 0);
-      buckets.push({
-        month: slice[0].month,
+      const first = slice[0].month;
+      const last = slice[slice.length - 1].month;
+      const label = bucketSize <= 1.2 ? formatMonth(first)
+        : formatMonth(first) + '-' + formatMonth(last);
+      trend.push({
+        month: label,
         avg_price: sumPrice > 0 ? Math.round(sumPrice / slice.length) : 0,
         cnt: slice.reduce((s, t) => s + (t.cnt || 0), 0)
       });
     }
-    const trend = buckets.slice(-12);
-    while (trend.length < 12) trend.unshift({ month: '', avg_price: 0, cnt: 0 });
     if (!trend.length) return;
 
     const that = this;
