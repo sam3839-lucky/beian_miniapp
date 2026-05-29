@@ -90,10 +90,22 @@
       <view class="bar-seg transferred" style="width:{{overview.transferred / overview.total * 100}}%"></view>
     </view>
     <view class="bar-legend">
-      <text class="dot unsold"></text><text>未售 {{overview.unsold_w}}万</text>
-      <text class="dot signed"></text><text>网签 {{overview.signed_w}}万</text>
-      <text class="dot filed"></text><text>备案 {{overview.filed_w}}万</text>
-      <text class="dot transferred"></text><text>转移 {{overview.transferred_w}}万</text>
+      <view class="legend-item">
+        <text class="dot unsold"></text><text class="legend-label">未售</text>
+        <text class="legend-val">{{overview.unsold_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot signed"></text><text class="legend-label">网签</text>
+        <text class="legend-val">{{overview.signed_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot filed"></text><text class="legend-label">备案</text>
+        <text class="legend-val">{{overview.filed_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot transferred"></text><text class="legend-label">转移</text>
+        <text class="legend-val">{{overview.transferred_w}}万</text>
+      </view>
     </view>
   </view>
 
