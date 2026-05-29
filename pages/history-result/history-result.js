@@ -51,6 +51,10 @@ Page({
       today
     });
 
+    // 导航栏标题
+    const navTitle = districtName ? community + ' · ' + districtName : community;
+    wx.setNavigationBarTitle({ title: navTitle || '二手房成交' });
+
     this.loadDistricts();
     if (community) {
       this.loadCommunity();
@@ -95,12 +99,14 @@ Page({
           min_price_date: fmt(s.min_price_date)
         },
         trend: res.trend || [],
-        zoneName: this.data.zoneName || '',
         zoneName: res.zone || this.data.zoneName || '',
         loading: false
       }, () => {
         if (res.trend && res.trend.length) this.drawTrendChart();
       });
+      // 导航栏标题：社区名 · 区域
+      const zone = res.zone || this.data.zoneName || '';
+      wx.setNavigationBarTitle({ title: zone ? this.data.community + ' · ' + zone : this.data.community });
     } catch (e) {
       console.error('loadCommunity error:', e);
       this.setData({ loading: false, error: true });
