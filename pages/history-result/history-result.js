@@ -52,7 +52,7 @@ Page({
     });
 
     // 导航栏标题：区 · 小区名 · 成交分析
-    const navTitle = districtName ? districtName + ' · ' + community + ' · 成交分析' : (community ? community + ' · 成交分析' : '二手房成交');
+    const navTitle = districtName ? districtName + ' · ' + community + ' · 成交分析' : (community ? community + ' · 成交分析' : '二手房查询');
     wx.setNavigationBarTitle({ title: navTitle });
 
     this.loadDistricts();
