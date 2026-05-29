@@ -1,6 +1,12 @@
 <view class="page">
+  <!-- 小区头部（始终显示） -->
+  <view class="cm-header" wx:if="{{community}}">
+    <text class="cm-name">{{community}}</text>
+    <text class="cm-zone" wx:if="{{zoneName}}">{{zoneName}}</text>
+  </view>
+
   <!-- 加载态 -->
-  <view wx:if="{{loading}}" class="loading-skel">
+  <view wx:if="{{loading && !community}}" class="loading-skel">
     <view class="skel-bar"></view>
     <view class="skel-chart"></view>
     <view class="skel-row" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
@@ -14,19 +20,13 @@
 
   <!-- 正常内容 -->
   <block wx:else>
-    <!-- 小区头部 + 年份选择 -->
-    <view class="cm-header">
-      <view class="cm-header-row">
-        <view class="cm-header-left">
-          <text class="cm-name">{{community}}</text>
-          <text class="cm-zone" wx:if="{{zoneName}}">{{zoneName}}</text>
-        </view>
-        <view class="year-tabs">
-          <text class="year-tab {{trendYears == 1 ? 'on' : ''}}" bindtap="onTrendYears" data-years="1">1年</text>
-          <text class="year-tab {{trendYears == 3 ? 'on' : ''}}" bindtap="onTrendYears" data-years="3">3年</text>
-          <text class="year-tab {{trendYears == 5 ? 'on' : ''}}" bindtap="onTrendYears" data-years="5">5年</text>
-          <text class="year-tab {{trendYears == 10 ? 'on' : ''}}" bindtap="onTrendYears" data-years="10">10年</text>
-        </view>
+    <!-- 走势年份选择 -->
+    <view class="year-tabs-bar">
+      <view class="year-tabs">
+        <text class="year-tab {{trendYears == 1 ? 'on' : ''}}" bindtap="onTrendYears" data-years="1">1年</text>
+        <text class="year-tab {{trendYears == 3 ? 'on' : ''}}" bindtap="onTrendYears" data-years="3">3年</text>
+        <text class="year-tab {{trendYears == 5 ? 'on' : ''}}" bindtap="onTrendYears" data-years="5">5年</text>
+        <text class="year-tab {{trendYears == 10 ? 'on' : ''}}" bindtap="onTrendYears" data-years="10">10年</text>
       </view>
     </view>
 
@@ -110,8 +110,7 @@
       <view class="clear-btn" bindtap="onClearFilters">清除所有筛选</view>
     </view>
 
-    <!-- 成交列表 NEW LAYOUT v2 -->
-    <view style="background:#FFF7E6;padding:8rpx 32rpx;font-size:22rpx;color:#FAAD14;">▼ 新版卡片布局（看到这行说明编译生效了）</view>
+    <!-- 成交列表 -->
     <view class="tx-list" wx:if="{{records.length > 0}}">
       <view class="tx-card" wx:for="{{records}}" wx:key="index"
             data-index="{{index}}" bindtap="onRecordTap">

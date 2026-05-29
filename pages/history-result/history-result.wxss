@@ -1,12 +1,18 @@
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
 /* 小区头部 */
-.cm-header { background: #fff; padding: 16rpx 32rpx; display: flex; align-items: baseline; gap: 12rpx; }
+.cm-header { background: #fff; padding: 20rpx 32rpx; display: flex; align-items: baseline; gap: 12rpx; }
 .cm-name { font-size: 36rpx; font-weight: 700; color: #333; }
 .cm-zone { font-size: 24rpx; color: #07C160; background: rgba(7,193,96,0.08); padding: 4rpx 14rpx; border-radius: 4rpx; }
 
+/* 走势年份 */
+.year-tabs-bar { background: #fff; padding: 0 32rpx 12rpx; }
+.year-tabs { display: flex; gap: 8rpx; }
+.year-tab { font-size: 22rpx; color: #888; padding: 4rpx 12rpx; border-radius: 6rpx; background: #f5f5f5; }
+.year-tab.on { background: #07C160; color: #fff; font-weight: 600; }
+
 /* 统计摘要 */
-.stat-row { display: flex; gap: 1rpx; margin: 12rpx 32rpx; background: #E5E5E5; border-radius: 8rpx; overflow: hidden; }
+.stat-row { display: flex; gap: 1rpx; margin: 0 32rpx 12rpx; background: #E5E5E5; border-radius: 8rpx; overflow: hidden; }
 .stat-item { flex: 1; background: #fff; text-align: center; padding: 16rpx 8rpx; }
 .sv { font-size: 32rpx; font-weight: 700; color: #FF8C00; display: block; }
 .sl { font-size: 20rpx; color: #888; margin-top: 2rpx; }
@@ -14,10 +20,6 @@
 /* 走势图 */
 .chart-card { background: #fff; margin: 0 32rpx 12rpx; border-radius: 8rpx; padding: 16rpx 20rpx; }
 .chart-title { font-size: 26rpx; font-weight: 600; color: #333; margin-bottom: 8rpx; }
-.cm-header-row { display: flex; justify-content: space-between; align-items: center; }
-.cm-header-left { display: flex; align-items: baseline; gap: 12rpx; }
-.year-tabs { display: flex; gap: 8rpx; flex-shrink: 0; }
-.year-tab { font-size: 22rpx; color: #888; padding: 4rpx 12rpx; border-radius: 6rpx; background: #f5f5f5; }
 .year-tab.on { color: #fff; background: #07C160; }
 .stat-item .su { font-size: 24rpx; font-weight: 400; }
 .trend-canvas { width: 100%; height: 320rpx; }
