@@ -110,7 +110,8 @@
       <view class="clear-btn" bindtap="onClearFilters">清除所有筛选</view>
     </view>
 
-    <!-- 成交列表 -->
+    <!-- 成交列表 NEW LAYOUT v2 -->
+    <view style="background:#FFF7E6;padding:8rpx 32rpx;font-size:22rpx;color:#FAAD14;">▼ 新版卡片布局（看到这行说明编译生效了）</view>
     <view class="tx-list" wx:if="{{records.length > 0}}">
       <view class="tx-card" wx:for="{{records}}" wx:key="index"
             data-index="{{index}}" bindtap="onRecordTap">
