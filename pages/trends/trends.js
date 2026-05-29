@@ -69,8 +69,9 @@ Page({
         }
       }
       const trendMax = Math.max(...trendsLabeled.map(t => t.total), 1);
-      this.setData({ summary: s, trends: trendsLabeled, districts, trendMax, dailyItems: recent.items || [], loading: false });
-      this.drawDonut(summary);
+      this.setData({ summary: s, trends: trendsLabeled, districts, trendMax, dailyItems: recent.items || [], loading: false }, () => {
+        this.drawDonut(s);
+      });
       this.loadSalesRank('');
     } catch (e) {
       console.error(e); this.setData({ loading: false, error: true });
@@ -91,47 +92,50 @@ Page({
 
   drawDonut(s) {
     if (!s || !s.this_month) return;
-    const q = wx.createSelectorQuery();
-    q.select('#donutCanvas').fields({ node: true, size: true }).exec(res => {
-      if (!res[0] || !res[0].node) return;
-      const canvas = res[0].node;
-      const ctx = canvas.getContext('2d');
-      const dpr = wx.getSystemInfoSync().pixelRatio;
-      const w = 200;
-      canvas.width = w * dpr;
-      canvas.height = w * dpr;
-      ctx.scale(dpr, dpr);
+    const n = s.this_month.new || 0, u = s.this_month.used || 0, t = n + u;
+    if (t <= 0) return;
 
-      const cx = 100, cy = 100, r = 70, sw = 22;
-      const n = s.this_month.new || 0, u = s.this_month.used || 0, t = n + u;
-      if (t <= 0) return;
-      ctx.clearRect(0, 0, w, w);
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#donutCanvas')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        if (!res[0] || !res[0].node) return;
+        const canvas = res[0].node;
+        const ctx = canvas.getContext('2d');
+        const dpr = wx.getWindowInfo().pixelRatio;
+        const w = res[0].width;
+        const h = res[0].height;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
 
-      // 二手（底层，从12点顺时针）
-      const usedAngle = (u / t) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + usedAngle);
-      ctx.lineWidth = sw;
-      ctx.strokeStyle = '#FF8C00';
-      ctx.stroke();
+        const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35, sw = Math.min(w, h) * 0.11;
 
-      // 一手（上层，接着二手继续）
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, -Math.PI / 2 + usedAngle, Math.PI * 1.5);
-      ctx.lineWidth = sw;
-      ctx.strokeStyle = '#07C160';
-      ctx.stroke();
+        // 二手（底层，从12点顺时针）
+        const usedAngle = (u / t) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + usedAngle);
+        ctx.lineWidth = sw;
+        ctx.strokeStyle = '#FF8C00';
+        ctx.stroke();
 
-      // 中心文字
-      ctx.fillStyle = '#333';
-      ctx.font = 'bold 36px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(t + '', cx, cy - 8);
-      ctx.fillStyle = '#888';
-      ctx.font = '14px sans-serif';
-      ctx.fillText('总套数', cx, cy + 20);
-    });
+        // 一手（上层，接着二手继续）
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, -Math.PI / 2 + usedAngle, Math.PI * 1.5);
+        ctx.lineWidth = sw;
+        ctx.strokeStyle = '#07C160';
+        ctx.stroke();
+
+        // 中心文字
+        ctx.fillStyle = '#333';
+        ctx.font = `bold ${Math.round(w * 0.09)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(t + '', cx, cy - Math.round(h * 0.04));
+        ctx.fillStyle = '#888';
+        ctx.font = `${Math.round(w * 0.06)}px sans-serif`;
+        ctx.fillText('总套数', cx, cy + Math.round(h * 0.10));
+      });
   },
 
   onRetry() { this.loadAll(); },
@@ -162,5 +166,9 @@ Page({
     const app = getApp();
     app.globalData.filterParams = { project, zone };
     wx.switchTab({ url: '/pages/index/index' });
+  },
+
+  onHistorySearchTap() {
+    wx.navigateTo({ url: '/pages/history-search/history-search' });
   }
 });
