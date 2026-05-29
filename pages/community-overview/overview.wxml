@@ -1,0 +1,70 @@
+<view class="page">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-skel">
+    <view class="skel-row" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this"></view>
+  </view>
+
+  <!-- 错误态 -->
+  <view wx:elif="{{error}}" class="err-block" bindtap="onRetry">
+    <text class="err-icon">⚠️</text>
+    <text>加载失败，点击重试</text>
+  </view>
+
+  <!-- 正常 -->
+  <block wx:else>
+    <!-- 基础统计 -->
+    <view class="sec">
+      <view class="sec-title">基础统计</view>
+      <view class="stats-grid">
+        <view class="stat"><text class="sv">{{stats.total || 0}}</text><text class="sl">历史成交</text></view>
+        <view class="stat"><text class="sv">{{stats.avgPrice || '--'}}</text><text class="sl">平均总价</text></view>
+        <view class="stat"><text class="sv">{{stats.avgUnit || '--'}}</text><text class="sl">均价 元/㎡</text></view>
+        <view class="stat"><text class="sv">{{stats.avgArea || '--'}}</text><text class="sl">平均面积</text></view>
+        <view class="stat"><text class="sv">{{stats.earliest || '--'}}</text><text class="sl">最早成交</text></view>
+        <view class="stat"><text class="sv">{{stats.latest || '--'}}</text><text class="sl">最近成交</text></view>
+      </view>
+    </view>
+
+    <!-- 走势图 -->
+    <view class="sec">
+      <view class="sec-title">成交价走势（近12个月）</view>
+      <view class="card" wx:if="{{trend.length}}">
+        <canvas canvas-id="overviewCanvas" class="chart-canvas"></canvas>
+      </view>
+      <view class="card" wx:else>
+        <view class="no-data">暂无趋势数据</view>
+      </view>
+    </view>
+
+    <!-- 户型分布 -->
+    <view class="sec" wx:if="{{layouts.length}}">
+      <view class="sec-title">户型分布</view>
+      <view class="card">
+        <view class="layout-row" wx:for="{{layouts}}" wx:key="layout">
+          <text class="l-name">{{item.layout || '未知'}}</text>
+          <view class="l-bar-wrap">
+            <view class="l-bar" style="width:{{item.cnt / maxLayoutCnt * 100}}%"></view>
+          </view>
+          <text class="l-info">{{item.cnt}}套 · 均价{{item.avg_price}}万</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最近成交 -->
+    <view class="sec" wx:if="{{recent.length}}">
+      <view class="sec-title">最近成交</view>
+      <view class="card no-pad">
+        <view class="trade-row" wx:for="{{recent}}" wx:key="index">
+          <view class="t-info">
+            <text class="t-price">{{item.total_price}}万</text>
+            <text class="t-detail">{{item.layout || ''}} {{item.area ? item.area + '㎡' : ''}} {{item.orientation || ''}}</text>
+          </view>
+          <text class="t-meta">{{item.date || ''}} · {{item.source || ''}}</text>
+        </view>
+        <view class="view-all-row" bindtap="onViewAll">
+          <text>查看全部 {{stats.total || 0}} 条成交记录 →</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

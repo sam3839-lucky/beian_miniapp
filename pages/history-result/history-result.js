@@ -208,7 +208,7 @@ Page({
     // Read actual canvas size for accurate rendering on all devices
     const that = this;
     const q = wx.createSelectorQuery().in(this);
-    q.select('#trendCanvas').boundingClientRect().exec(res => {
+    q.select('.trend-canvas').boundingClientRect().exec(res => {
       if (!res || !res[0] || !res[0].width) return;
       const w = res[0].width;
       const h = res[0].height || 160;
