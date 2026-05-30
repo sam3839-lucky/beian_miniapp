@@ -207,7 +207,10 @@ Page({
   },
 
   onChartTab(e) {
-    this.setData({ chartTab: e.currentTarget.dataset.tab });
+    const tab = e.currentTarget.dataset.tab;
+    this.setData({ chartTab: tab }, () => {
+      if (tab === 'trend') this.drawTrendChart();
+    });
   },
 
   onTrendYears(e) {
