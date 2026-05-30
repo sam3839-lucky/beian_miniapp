@@ -6,6 +6,11 @@ function formatMonth(m) {
   return parts.length >= 2 ? parts[0].slice(2) + '/' + parts[1] : m;
 }
 
+function layoutSort(name) {
+  const m = name.match(/(\d+)室(\d+)厅/);
+  return m ? parseInt(m[1]) * 10 + parseInt(m[2]) : 999;
+}
+
 Page({
   data: {
     community: '',
@@ -110,7 +115,10 @@ Page({
         },
         trend: res.trend || [],
         zoneName: res.zone || this.data.zoneName || '',
-        layoutOptions: [{ name: '▾ 户型' }].concat((res.layouts || []).map(l => ({ name: l.layout }))),
+        layoutOptions: [{ name: '▾ 户型' }].concat(
+          (res.layouts || []).map(l => ({ name: l.layout }))
+            .sort((a, b) => layoutSort(a.name) - layoutSort(b.name))
+        ),
         loading: false
       }, () => {
         if (res.trend && res.trend.length) this.drawTrendChart();
@@ -196,9 +204,9 @@ Page({
     const d = new Date();
     d.setFullYear(d.getFullYear() - years);
     d.setDate(1);
-    const minDate = d.toISOString().slice(0, 10);
-    const today = new Date().toISOString().slice(0, 10);
-    this.setData({ trendYears: years, minDate, maxDate: '', page: 1 });
+    const minDate = d.toISOString().slice(0, 7);
+    const today = new Date().toISOString().slice(0, 7);
+    this.setData({ trendYears: years, minDate, maxDate: today, page: 1 });
     this.loadCommunity();
     this.loadSearch();
   },
