@@ -151,8 +151,8 @@ Page({
       if (this.data.maxPrice) params.push('max_price=' + this.data.maxPrice);
       if (this.data.minArea) params.push('min_area=' + this.data.minArea);
       if (this.data.maxArea) params.push('max_area=' + this.data.maxArea);
-      if (this.data.minDate) params.push('min_date=' + this.data.minDate);
-      if (this.data.maxDate) params.push('max_date=' + this.data.maxDate);
+      if (this.data.minDate) params.push('min_date=' + this.data.minDate + '-01');
+      if (this.data.maxDate) params.push('max_date=' + this.data.maxDate + '-01');
       const layout = this.data.layoutIdx > 0 ? this.data.layoutOptions[this.data.layoutIdx].name : '';
       if (layout) params.push('layout=' + encodeURIComponent(layout));
       params.push('sort_by=' + this.data.sortBy);
@@ -184,17 +184,15 @@ Page({
 
   buildPageNums(page, total) {
     if (total <= 7) {
-      const nums = [];
-      for (let i = 1; i <= total; i++) nums.push(i);
-      return nums;
+      return Array.from({ length: total }, (_, i) => ({ n: i + 1, k: 'p' + (i + 1) }));
     }
-    const nums = [1];
+    const nums = [{ n: 1, k: 'p1' }];
     const start = Math.max(2, page - 1);
     const end = Math.min(total - 1, page + 1);
-    if (start > 2) nums.push(-1); // ellipsis marker
-    for (let i = start; i <= end; i++) nums.push(i);
-    if (end < total - 1) nums.push(-1);
-    nums.push(total);
+    if (start > 2) nums.push({ n: -1, k: 'e1' });
+    for (let i = start; i <= end; i++) nums.push({ n: i, k: 'p' + i });
+    if (end < total - 1) nums.push({ n: -1, k: 'e2' });
+    nums.push({ n: total, k: 'p' + total });
     return nums;
   },
 

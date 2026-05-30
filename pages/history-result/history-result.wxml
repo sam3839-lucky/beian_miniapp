@@ -152,9 +152,9 @@
     <!-- 分页 -->
     <view class="pagination" wx:if="{{totalPages > 1}}">
       <view class="pg-btn {{page <= 1 ? 'disabled' : ''}}" bindtap="onPrevPage">‹</view>
-      <block wx:for="{{pageNums}}" wx:key="*this">
-        <view class="pg-btn {{item === page ? 'on' : ''}}" wx:if="{{item > 0}}" bindtap="onGoPage" data-page="{{item}}">{{item}}</view>
-        <text class="pg-ellipsis" wx:elif="{{item < 0}}">...</text>
+      <block wx:for="{{pageNums}}" wx:key="k">
+        <view class="pg-btn {{item.n === page ? 'on' : ''}}" wx:if="{{item.n > 0}}" bindtap="onGoPage" data-page="{{item.n}}">{{item.n}}</view>
+        <text class="pg-ellipsis" wx:else>...</text>
       </block>
       <view class="pg-btn {{page >= totalPages ? 'disabled' : ''}}" bindtap="onNextPage">›</view>
     </view>
