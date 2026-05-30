@@ -96,12 +96,14 @@ Page({
       const res = await this.request('/community/' + encodeURIComponent(this.data.community) + '?years=' + this.data.trendYears);
       const s = res.stats || {};
       const fmt = (d) => d ? String(d).slice(0,10) : '';
+      const fmtPrice = (v) => v ? (v / 10000).toFixed(1) + '万/㎡' : '--';
       this.setData({
         summary: {
           total: s.total || 0,
-          max_price: s.max_price ? (s.max_price / 10000).toFixed(1) + '万/㎡' : '--',
+          avgUnit: s.avg_unit ? fmtPrice(s.avg_unit) : '--',
+          maxPrice: fmtPrice(s.max_price),
+          minPrice: fmtPrice(s.min_price),
           max_price_date: fmt(s.max_price_date),
-          min_price: s.min_price ? (s.min_price / 10000).toFixed(1) + '万/㎡' : '--',
           min_price_date: fmt(s.min_price_date)
         },
         trend: res.trend || [],

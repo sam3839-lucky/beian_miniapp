@@ -13,8 +13,8 @@
 
 /* 统计摘要 */
 .stat-row { display: flex; gap: 1rpx; margin: 0 32rpx 12rpx; background: #E5E5E5; border-radius: 8rpx; overflow: hidden; }
-.stat-item { flex: 1; background: #fff; text-align: center; padding: 16rpx 8rpx; }
-.sv { font-size: 32rpx; font-weight: 700; color: #FF8C00; display: block; }
+.stat-item { flex: 1; background: #fff; text-align: center; padding: 14rpx 4rpx; }
+.sv { font-size: 28rpx; font-weight: 700; color: #FF8C00; display: block; }
 .sl { font-size: 20rpx; color: #888; margin-top: 2rpx; }
 
 /* 走势图 */

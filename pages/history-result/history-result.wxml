@@ -31,12 +31,16 @@
         <text class="sl">历史成交</text>
       </view>
       <view class="stat-item">
-        <text class="sv">{{summary.max_price || '--'}}</text>
-        <text class="sl">最高单价{{summary.max_price_date ? '(' + summary.max_price_date + ')' : ''}}</text>
+        <text class="sv">{{summary.avgUnit || '--'}}</text>
+        <text class="sl">成交均价</text>
       </view>
       <view class="stat-item">
-        <text class="sv">{{summary.min_price || '--'}}</text>
-        <text class="sl">最低单价{{summary.min_price_date ? '(' + summary.min_price_date + ')' : ''}}</text>
+        <text class="sv">{{summary.maxPrice || '--'}}</text>
+        <text class="sl">最高单价</text>
+      </view>
+      <view class="stat-item">
+        <text class="sv">{{summary.minPrice || '--'}}</text>
+        <text class="sl">最低单价</text>
       </view>
     </view>
 
