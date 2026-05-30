@@ -122,7 +122,7 @@ Page({
           layout: l.layout,
           cnt: l.cnt,
           avgPrice: l.avg_price ? (l.avg_price / 10000).toFixed(1) + '万/㎡' : '--'
-        })),
+        })).sort((a, b) => layoutSort(a.layout) - layoutSort(b.layout)),
         maxLayoutCnt: Math.max(...(res.layouts || []).map(l => l.cnt), 1),
         layoutOptions: [{ name: '▾ 户型' }].concat(
           (res.layouts || []).map(l => ({ name: l.layout }))
