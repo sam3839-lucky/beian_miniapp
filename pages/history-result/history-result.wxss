@@ -38,6 +38,10 @@
 .sort-tab.on { background: #FF8C00; color: #fff; }
 .filter-clear { font-size: 22rpx; color: #FF4D4F; padding: 8rpx 12rpx; flex-shrink: 0; }
 
+/* 分区标题 */
+.section-title-bar { padding: 8rpx 32rpx 4rpx; }
+.section-title { font-size: 30rpx; font-weight: 700; color: #333; }
+
 /* 排序栏 */
 .sort-bar { display: flex; align-items: center; gap: 8rpx; padding: 4rpx 32rpx 8rpx; }
 

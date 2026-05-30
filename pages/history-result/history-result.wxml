@@ -84,6 +84,11 @@
       <view class="no-data">暂无趋势数据</view>
     </view>
 
+    <!-- 成交记录 -->
+    <view class="section-title-bar">
+      <text class="section-title">成交记录</text>
+    </view>
+
     <!-- 排序 -->
     <view class="sort-bar">
       <view class="sort-tabs">
