@@ -263,7 +263,7 @@ Page({
 
     const ctx = wx.createCanvasContext('trendCanvas', that);
 
-    const pad = { top: 28, right: 8, bottom: 32, left: 44 };
+    const pad = { top: 28, right: 8, bottom: 44, left: 44 };
     const pw = w - pad.left - pad.right;
     const ph = h - pad.top - pad.bottom;
 
@@ -324,10 +324,17 @@ Page({
       ctx.setFontSize(9);
       ctx.setTextAlign('center');
       ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
-      // month label every other point
+      // month label every other point, rotated 45°
       if (i % 2 === 0 && t.month) {
+        ctx.save();
+        ctx.translate(x, h - 8);
+        ctx.rotate(Math.PI / 4);
         ctx.setFillStyle('#999');
-        ctx.fillText(t.month, x, h - 6);
+        ctx.setFontSize(9);
+        ctx.setTextAlign('left');
+        ctx.setTextBaseline('middle');
+        ctx.fillText(t.month, 0, 0);
+        ctx.restore();
       }
     });
 
