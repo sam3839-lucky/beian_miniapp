@@ -132,8 +132,7 @@
 
     <!-- 成交列表 -->
     <view class="tx-list" wx:if="{{records.length > 0}}">
-      <view class="tx-card" wx:for="{{records}}" wx:key="index"
-            data-index="{{index}}" bindtap="onRecordTap">
+      <view class="tx-card" wx:for="{{records}}" wx:key="index">
         <view class="tr-line">
           <text class="tr-left">{{item.layout || '--'}}</text>
           <text class="tr-right tr-price">{{item.total_price}}<text class="tr-punit">万</text></text>
