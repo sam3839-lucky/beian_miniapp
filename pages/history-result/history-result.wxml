@@ -74,14 +74,29 @@
       </view>
     </view>
 
-    <!-- 走势图 -->
-    <view class="chart-card" wx:if="{{trend.length}}">
-      <view class="chart-title">📈 成交价走势</view>
-      <canvas canvas-id="trendCanvas" class="trend-canvas"></canvas>
-    </view>
-    <view class="chart-card" wx:elif="{{!loading}}">
-      <view class="chart-title">成交价走势</view>
-      <view class="no-data">暂无趋势数据</view>
+    <!-- 走势 / 户型分布 -->
+    <view class="chart-card">
+      <view class="chart-head">
+        <text class="chart-tab {{chartTab === 'trend' ? 'on' : ''}}" bindtap="onChartTab" data-tab="trend">价格走势</text>
+        <text class="chart-tab {{chartTab === 'layout' ? 'on' : ''}}" bindtap="onChartTab" data-tab="layout">户型分布</text>
+      </view>
+      <!-- 价格走势 -->
+      <view wx:if="{{chartTab === 'trend'}}">
+        <canvas canvas-id="trendCanvas" class="trend-canvas" wx:if="{{trend.length}}"></canvas>
+        <view class="no-data" wx:else>暂无趋势数据</view>
+      </view>
+      <!-- 户型分布 -->
+      <view wx:if="{{chartTab === 'layout'}}" class="layout-list">
+        <view class="layout-row" wx:for="{{layouts}}" wx:key="layout">
+          <text class="lr-name">{{item.layout}}</text>
+          <view class="lr-bar-wrap">
+            <view class="lr-bar" style="width:{{item.cnt / maxLayoutCnt * 100}}%"></view>
+          </view>
+          <text class="lr-cnt">{{item.cnt}}套</text>
+          <text class="lr-price">{{item.avgPrice || '--'}}</text>
+        </view>
+        <view class="no-data" wx:if="{{!layouts.length}}">暂无户型数据</view>
+      </view>
     </view>
 
     <!-- 成交记录 -->

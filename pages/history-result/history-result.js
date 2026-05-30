@@ -18,7 +18,10 @@ Page({
     districtId: '',
     summary: null,
     trend: [],
+    layouts: [],
+    maxLayoutCnt: 1,
     trendYears: 1,
+    chartTab: 'trend',
     records: [],
     total: 0,
     page: 1,
@@ -115,6 +118,12 @@ Page({
         },
         trend: res.trend || [],
         zoneName: res.zone || this.data.zoneName || '',
+        layouts: (res.layouts || []).map(l => ({
+          layout: l.layout,
+          cnt: l.cnt,
+          avgPrice: l.avg_price ? (l.avg_price / 10000).toFixed(1) + '万/㎡' : '--'
+        })),
+        maxLayoutCnt: Math.max(...(res.layouts || []).map(l => l.cnt), 1),
         layoutOptions: [{ name: '▾ 户型' }].concat(
           (res.layouts || []).map(l => ({ name: l.layout }))
             .sort((a, b) => layoutSort(a.name) - layoutSort(b.name))
@@ -197,6 +206,10 @@ Page({
         fail: reject
       });
     });
+  },
+
+  onChartTab(e) {
+    this.setData({ chartTab: e.currentTarget.dataset.tab });
   },
 
   onTrendYears(e) {
