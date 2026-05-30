@@ -263,7 +263,7 @@ Page({
 
     const ctx = wx.createCanvasContext('trendCanvas', that);
 
-    const pad = { top: 28, right: 8, bottom: 32, left: 44 };
+    const pad = { top: 28, right: 8, bottom: 32, left: 50 };
     const pw = w - pad.left - pad.right;
     const ph = h - pad.top - pad.bottom;
 
@@ -280,7 +280,7 @@ Page({
     ctx.setTextAlign('right');
     for (let i = 0; i <= 3; i++) {
       const y = pad.top + ph * (i / 3);
-      const val = Math.round((maxP - range * (i / 3)) / 1000) + 'k';
+      const val = ((maxP - range * (i / 3)) / 10000).toFixed(1) + '万';
       ctx.fillText(val, pad.left - 4, y + 3);
       ctx.setStrokeStyle('#f0f0f0');
       ctx.beginPath();
