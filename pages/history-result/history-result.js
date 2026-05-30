@@ -324,8 +324,8 @@ Page({
       ctx.setFontSize(9);
       ctx.setTextAlign('center');
       ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
-      // month label every 3rd point to avoid crowding
-      if (i % 3 === 0 && t.month) {
+      // month label every other point (6 of 12)
+      if (i % 2 === 0 && t.month) {
         ctx.setFillStyle('#999');
         ctx.setFontSize(9);
         ctx.setTextAlign('center');

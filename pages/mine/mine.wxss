@@ -31,3 +31,7 @@
 
 .ops-entry { margin-top: 32rpx; }
 .ops-text { color: #A8A8A8; font-size: 24rpx; }
+
+/* 免责声明 */
+.disclaimer { margin: 32rpx 48rpx; text-align: justify; }
+.disclaimer text { font-size: 22rpx; color: #A8A8A8; line-height: 1.8; text-indent: 2em; display: block; }

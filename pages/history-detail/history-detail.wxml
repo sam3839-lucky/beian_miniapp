@@ -1,0 +1,71 @@
+<view class="page">
+  <!-- 加载态 -->
+  <view wx:if="{{loading}}" class="loading-skel">
+    <view class="skel-price"></view>
+    <view class="skel-card"></view>
+    <view class="skel-card"></view>
+  </view>
+
+  <!-- 不存在 -->
+  <view wx:elif="{{notFound}}" class="err-block">
+    <text class="err-icon">📭</text>
+    <text>该记录不存在或已被移除</text>
+    <text class="back-link" bindtap="onBack">返回</text>
+  </view>
+
+  <!-- 错误 -->
+  <view wx:elif="{{error}}" class="err-block" bindtap="onRetry">
+    <text class="err-icon">⚠️</text>
+    <text>加载失败，点击重试</text>
+  </view>
+
+  <!-- 正常 -->
+  <block wx:elif="{{detail}}">
+    <!-- 价格头部 -->
+    <view class="price-header">
+      <text class="ph-total" wx:if="{{detail.total_price_wan > 0}}">{{detail.total_price_wan}}<text class="ph-wan">万</text></text>
+      <text class="ph-total na" wx:else>暂无价格</text>
+      <text class="ph-unit" wx:if="{{detail.unit_price > 0}}">{{detail.unit_price}} 元/㎡</text>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="card">
+      <view class="card-title">基本信息</view>
+      <view class="info-row"><text class="ilabel">小区名称</text><text class="ivalue">{{detail.project_name}}</text></view>
+      <view class="info-row"><text class="ilabel">所在区域</text><text class="ivalue">{{detail.zone}}</text></view>
+      <view class="info-row"><text class="ilabel">楼栋-房号</text><text class="ivalue">{{detail.building}}-{{detail.unit_no}}</text></view>
+      <view class="info-row"><text class="ilabel">建筑面积</text><text class="ivalue">{{detail.area}} ㎡</text></view>
+      <view class="info-row"><text class="ilabel">房屋用途</text><text class="ivalue">{{detail.usage || '--'}}</text></view>
+      <view class="info-row"><text class="ilabel">房屋属性</text><text class="ivalue">{{detail.attr || '--'}}</text></view>
+    </view>
+
+    <!-- 交易信息 -->
+    <view class="card">
+      <view class="card-title">交易信息</view>
+      <view class="info-row"><text class="ilabel">成交单价</text><text class="ivalue price">{{detail.unit_price > 0 ? detail.unit_price + ' 元/㎡' : '暂无'}}</text></view>
+      <view class="info-row"><text class="ilabel">成交总价</text><text class="ivalue price">{{detail.total_price_wan > 0 ? detail.total_price_wan + ' 万' : '暂无'}}</text></view>
+      <view class="info-row"><text class="ilabel">备案日期</text><text class="ivalue">{{detail.date}}</text></view>
+      <view class="info-row"><text class="ilabel">当前状态</text><text class="ivalue">{{detail.status || '--'}}</text></view>
+      <view class="info-row" wx:if="{{detail.permit_no}}"><text class="ilabel">预售证号</text><text class="ivalue">{{detail.permit_no}}</text></view>
+      <view class="info-row" wx:if="{{detail.parcel_no}}"><text class="ilabel">宗地号</text><text class="ivalue">{{detail.parcel_no}}</text></view>
+    </view>
+
+    <!-- 近期成交 -->
+    <view class="card" wx:if="{{recent.length > 0}}">
+      <view class="card-title">该小区近期成交</view>
+      <view class="recent-row" wx:for="{{recent}}" wx:key="id">
+        <text class="r-date">{{item.date}}</text>
+        <text class="r-info">{{item.building}}-{{item.unit_no}} · {{item.area}}㎡</text>
+        <text class="r-price" wx:if="{{item.unit_price > 0}}">{{item.unit_price}}</text>
+        <text class="r-price na" wx:else>--</text>
+        <text class="r-total">{{item.total_price_wan > 0 ? item.total_price_wan + '万' : '--'}}</text>
+      </view>
+      <view class="view-all" bindtap="onViewAll">查看全部成交记录 →</view>
+    </view>
+
+    <!-- 小区全景入口 -->
+    <view class="overview-entry" wx:if="{{detail && detail.project_name}}" bindtap="onViewOverview">
+      <text class="oe-text">查看「{{detail.project_name}}」小区全景 →</text>
+    </view>
+  </block>
+</view>

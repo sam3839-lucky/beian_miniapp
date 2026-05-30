@@ -60,4 +60,22 @@ module.exports = {
   getUserTier: (openid) => request('/api/user-tier?openid=' + encodeURIComponent(openid)),
   incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
   getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
+
+  // ── 小区历史成交价查询 ──
+  getProjectHistoryMeta: () => request('/api/project-history-search-meta'),
+  searchProjectHistory: (q, zone) => {
+    let url = '/api/project-history-search?q=' + encodeURIComponent(q || '');
+    if (zone) url += '&zone=' + encodeURIComponent(zone);
+    return request(url);
+  },
+  getProjectHistory: (project, opts = {}) => {
+    let url = '/api/project-history?project=' + encodeURIComponent(project);
+    if (opts.years) url += '&years=' + encodeURIComponent(opts.years);
+    if (opts.building) url += '&building=' + encodeURIComponent(opts.building);
+    if (opts.sort) url += '&sort=' + opts.sort;
+    if (opts.offset != null) url += '&offset=' + opts.offset;
+    if (opts.limit != null) url += '&limit=' + opts.limit;
+    return request(url);
+  },
+  getProjectHistoryDetail: (id) => request('/api/project-history-detail?id=' + id),
 };

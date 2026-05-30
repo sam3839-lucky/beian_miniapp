@@ -8,7 +8,11 @@
     "pages/subscriptions/subscriptions",
     "pages/pay/pay",
     "pages/member/member",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/history-search/history-search",
+    "pages/history-result/history-result",
+    "pages/history-detail/history-detail",
+    "pages/community-overview/overview"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",
@@ -42,7 +46,9 @@
       },
       {
         "pagePath": "pages/mine/mine",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/tabbar/mine.png",
+        "selectedIconPath": "assets/tabbar/mine-active.png"
       }
     ]
   },
