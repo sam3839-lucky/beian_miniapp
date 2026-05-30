@@ -31,6 +31,8 @@ Page({
     maxArea: '',
     minDate: '',
     maxDate: '',
+    layoutOptions: [{ name: '▾ 户型' }],
+    layoutIdx: 0,
     today: '',
 
     // district picker
@@ -108,6 +110,7 @@ Page({
         },
         trend: res.trend || [],
         zoneName: res.zone || this.data.zoneName || '',
+        layoutOptions: [{ name: '▾ 户型' }].concat((res.layouts || []).map(l => ({ name: l.layout }))),
         loading: false
       }, () => {
         if (res.trend && res.trend.length) this.drawTrendChart();
@@ -133,6 +136,8 @@ Page({
       if (this.data.maxArea) params.push('max_area=' + this.data.maxArea);
       if (this.data.minDate) params.push('min_date=' + this.data.minDate);
       if (this.data.maxDate) params.push('max_date=' + this.data.maxDate);
+      const layout = this.data.layoutIdx > 0 ? this.data.layoutOptions[this.data.layoutIdx].name : '';
+      if (layout) params.push('layout=' + encodeURIComponent(layout));
       params.push('sort_by=' + this.data.sortBy);
       params.push('sort_order=' + this.data.sortOrder);
       params.push('page=' + this.data.page);
@@ -324,6 +329,12 @@ Page({
 
   onMinDateChange(e) { this.setData({ minDate: e.detail.value, page: 1 }); this.loadSearch(); },
   onMaxDateChange(e) { this.setData({ maxDate: e.detail.value, page: 1 }); this.loadSearch(); },
+  onLayoutChange(e) {
+    const idx = parseInt(e.detail.value);
+    const layout = idx > 0 ? this.data.layoutOptions[idx].name : '';
+    this.setData({ layoutIdx: idx, page: 1 });
+    this.loadSearch();
+  },
 
   onMinPriceInput(e) { this.setData({ minPrice: e.detail.value }); this._debounceFilter(); },
   onMaxPriceInput(e) { this.setData({ maxPrice: e.detail.value }); this._debounceFilter(); },
@@ -349,7 +360,7 @@ Page({
     this.setData({
       districtId: '', districtIdx: 0, zoneName: '',
       minPrice: '', maxPrice: '', minArea: '', maxArea: '',
-      minDate: '', maxDate: '',
+      minDate: '', maxDate: '', layoutIdx: 0,
       sortBy: 'date', sortOrder: 'desc',
       page: 1, hasFilters: false
     });

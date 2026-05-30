@@ -38,6 +38,9 @@
 .sort-tab.on { background: #FF8C00; color: #fff; }
 .filter-clear { font-size: 22rpx; color: #FF4D4F; padding: 8rpx 12rpx; flex-shrink: 0; }
 
+/* 排序栏 */
+.sort-bar { display: flex; align-items: center; gap: 8rpx; padding: 4rpx 32rpx 8rpx; }
+
 /* 结果信息 */
 .result-info { display: flex; justify-content: space-between; align-items: center; padding: 4rpx 32rpx 8rpx; font-size: 24rpx; color: #888; }
 .view-overview { color: #07C160; }

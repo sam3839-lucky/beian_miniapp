@@ -24,6 +24,36 @@
       </view>
     </view>
 
+    <!-- 筛选条件 -->
+    <view class="filter-bar">
+      <view class="f-row">
+        <picker mode="date" fields="month" value="{{minDate}}"
+                end="{{maxDate || today}}" bindchange="onMinDateChange">
+          <view class="picker-val {{minDate ? 'on' : ''}}">
+            {{minDate || '▾ 开始月份'}}
+          </view>
+        </picker>
+        <picker mode="date" fields="month" value="{{maxDate}}"
+                start="{{minDate}}" end="{{today}}" bindchange="onMaxDateChange">
+          <view class="picker-val {{maxDate ? 'on' : ''}}">
+            {{maxDate || '▾ 截止月份'}}
+          </view>
+        </picker>
+      </view>
+      <view class="f-row">
+        <picker mode="selector" range="{{layoutOptions}}" range-key="name"
+                value="{{layoutIdx}}" bindchange="onLayoutChange">
+          <view class="picker-val {{layoutIdx > 0 ? 'on' : ''}}">
+            {{layoutOptions[layoutIdx].name || '▾ 户型'}}
+          </view>
+        </picker>
+        <input class="f-input" placeholder="最小面积(㎡)" type="digit"
+               value="{{minArea}}" bindinput="onMinAreaInput"/>
+        <input class="f-input" placeholder="最大面积(㎡)" type="digit"
+               value="{{maxArea}}" bindinput="onMaxAreaInput"/>
+      </view>
+    </view>
+
     <!-- 统计摘要 -->
     <view class="stat-row" wx:if="{{summary}}">
       <view class="stat-item">
@@ -54,44 +84,16 @@
       <view class="no-data">暂无趋势数据</view>
     </view>
 
-    <!-- 筛选栏 -->
-    <view class="filter-bar">
-      <view class="f-row">
-        <picker mode="date" fields="month" value="{{minDate}}"
-                end="{{maxDate || today}}" bindchange="onMinDateChange">
-          <view class="picker-val {{minDate ? 'on' : ''}}">
-            {{minDate || '▾ 起始日期'}}
-          </view>
-        </picker>
-        <picker mode="date" fields="month" value="{{maxDate}}"
-                start="{{minDate}}" end="{{today}}" bindchange="onMaxDateChange">
-          <view class="picker-val {{maxDate ? 'on' : ''}}">
-            {{maxDate || '▾ 截止日期'}}
-          </view>
-        </picker>
+    <!-- 排序 -->
+    <view class="sort-bar">
+      <view class="sort-tabs">
+        <view class="sort-tab {{sortBy === 'date' ? 'on' : ''}}" bindtap="onSortTap" data-sort="date">最新</view>
+        <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="asc">总价↑</view>
+        <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="desc">总价↓</view>
+        <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="asc">单价↑</view>
+        <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="desc">单价↓</view>
       </view>
-      <view class="f-row">
-        <input class="f-input" placeholder="最低总价(万)" type="digit"
-               value="{{minPrice}}" bindinput="onMinPriceInput"/>
-        <text class="f-dash">—</text>
-        <input class="f-input" placeholder="最高总价(万)" type="digit"
-               value="{{maxPrice}}" bindinput="onMaxPriceInput"/>
-        <input class="f-input" placeholder="最小面积(㎡)" type="digit"
-               value="{{minArea}}" bindinput="onMinAreaInput"/>
-        <text class="f-dash">—</text>
-        <input class="f-input" placeholder="最大面积(㎡)" type="digit"
-               value="{{maxArea}}" bindinput="onMaxAreaInput"/>
-      </view>
-      <view class="f-row">
-        <view class="sort-tabs">
-          <view class="sort-tab {{sortBy === 'date' ? 'on' : ''}}" bindtap="onSortTap" data-sort="date">最新</view>
-          <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="asc">总价↑</view>
-          <view class="sort-tab {{sortBy === 'total_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="total_price" data-order="desc">总价↓</view>
-          <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'asc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="asc">单价↑</view>
-          <view class="sort-tab {{sortBy === 'unit_price' && sortOrder === 'desc' ? 'on' : ''}}" bindtap="onSortTap" data-sort="unit_price" data-order="desc">单价↓</view>
-        </view>
-        <view class="filter-clear" bindtap="onClearFilters" wx:if="{{hasFilters}}">清除筛选</view>
-      </view>
+      <view class="filter-clear" bindtap="onClearFilters" wx:if="{{hasFilters}}">清除筛选</view>
     </view>
 
     <!-- 结果信息 -->
