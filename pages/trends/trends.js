@@ -162,12 +162,12 @@ Page({
       }
       // 二手标签（环的中间偏左，深橙色）
       const uMid = -Math.PI / 2 + usedAngle / 2;
-      ctx.setTextAlign(uMid > 0 ? 'right' : 'left');
+      ctx.setTextAlign('center');
       ctx.setFillStyle('#CC6600');
       boldText(ctx, u + '套 ' + usedPct + '%', cx + labelR * Math.cos(uMid), cy + labelR * Math.sin(uMid));
       // 一手标签（环的中间偏右，深绿色）
       const nMid = -Math.PI / 2 + usedAngle + (Math.PI * 2 - usedAngle) / 2;
-      ctx.setTextAlign(nMid < Math.PI ? 'left' : 'right');
+      ctx.setTextAlign('center');
       ctx.setFillStyle('#059048');
       boldText(ctx, n + '套 ' + newPct + '%', cx + labelR * Math.cos(nMid), cy + labelR * Math.sin(nMid));
 
