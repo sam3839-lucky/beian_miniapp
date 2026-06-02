@@ -148,20 +148,28 @@ Page({
       ctx.setStrokeStyle('#07C160');
       ctx.stroke();
 
-      // 环上标注：套数+占比
+      // 环上标注：套数+占比（加粗=重复绘制偏移1px模拟）
       const labelR = r;
-      ctx.setFontSize(Math.round(w * 0.055));
+      const fs = Math.round(w * 0.11);
+      ctx.setFontSize(fs);
       ctx.setTextBaseline('middle');
+      function boldText(ctx, text, x, y) {
+        ctx.fillText(text, x - 0.5, y);
+        ctx.fillText(text, x + 0.5, y);
+        ctx.fillText(text, x, y - 0.5);
+        ctx.fillText(text, x, y + 0.5);
+        ctx.fillText(text, x, y);
+      }
       // 二手标签（环的中间偏左，深橙色）
       const uMid = -Math.PI / 2 + usedAngle / 2;
       ctx.setTextAlign(uMid > 0 ? 'right' : 'left');
       ctx.setFillStyle('#CC6600');
-      ctx.fillText(u + '套 ' + usedPct + '%', cx + labelR * Math.cos(uMid), cy + labelR * Math.sin(uMid));
+      boldText(ctx, u + '套 ' + usedPct + '%', cx + labelR * Math.cos(uMid), cy + labelR * Math.sin(uMid));
       // 一手标签（环的中间偏右，深绿色）
       const nMid = -Math.PI / 2 + usedAngle + (Math.PI * 2 - usedAngle) / 2;
       ctx.setTextAlign(nMid < Math.PI ? 'left' : 'right');
       ctx.setFillStyle('#059048');
-      ctx.fillText(n + '套 ' + newPct + '%', cx + labelR * Math.cos(nMid), cy + labelR * Math.sin(nMid));
+      boldText(ctx, n + '套 ' + newPct + '%', cx + labelR * Math.cos(nMid), cy + labelR * Math.sin(nMid));
 
       // 中心文字
       ctx.setFillStyle('#333');
