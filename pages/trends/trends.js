@@ -133,6 +133,7 @@ Page({
 
       // 二手（橙色，从12点顺时针）
       const usedAngle = (u / t) * Math.PI * 2;
+      const usedPct = (u / t * 100).toFixed(1);
       ctx.beginPath();
       ctx.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + usedAngle);
       ctx.setLineWidth(sw);
@@ -140,11 +141,26 @@ Page({
       ctx.stroke();
 
       // 一手（绿色，接着二手继续）
+      const newPct = (n / t * 100).toFixed(1);
       ctx.beginPath();
       ctx.arc(cx, cy, r, -Math.PI / 2 + usedAngle, Math.PI * 1.5);
       ctx.setLineWidth(sw);
       ctx.setStrokeStyle('#07C160');
       ctx.stroke();
+
+      // 环上标注：套数+占比
+      const labelR = r;
+      ctx.setFontSize(Math.round(w * 0.055));
+      ctx.setTextBaseline('middle');
+      // 二手标签（环的中间偏左）
+      const uMid = -Math.PI / 2 + usedAngle / 2;
+      ctx.setTextAlign(uMid > 0 ? 'right' : 'left');
+      ctx.setFillStyle('#fff');
+      ctx.fillText(u + '套 ' + usedPct + '%', cx + labelR * Math.cos(uMid), cy + labelR * Math.sin(uMid));
+      // 一手标签（环的中间偏右）
+      const nMid = -Math.PI / 2 + usedAngle + (Math.PI * 2 - usedAngle) / 2;
+      ctx.setTextAlign(nMid < Math.PI ? 'left' : 'right');
+      ctx.fillText(n + '套 ' + newPct + '%', cx + labelR * Math.cos(nMid), cy + labelR * Math.sin(nMid));
 
       // 中心文字
       ctx.setFillStyle('#333');
