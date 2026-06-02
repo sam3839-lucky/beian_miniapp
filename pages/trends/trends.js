@@ -129,7 +129,7 @@ Page({
       const h = res[0].height || w;
 
       const ctx = wx.createCanvasContext('donutCanvas', this);
-      const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35, sw = Math.min(w, h) * 0.11;
+      const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.35, sw = Math.min(w, h) * 0.22;
 
       // 二手（橙色，从12点顺时针）
       const usedAngle = (u / t) * Math.PI * 2;
