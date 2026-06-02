@@ -163,6 +163,7 @@ Page({
       const res = await this.request('/search?' + params.join('&'));
       const records = (res.data || []).map(r => ({
         ...r,
+        date: (r.date || '').slice(0, 7),
         total_price: r.total_price || 0,
         unit_price: r.unit_price ? Math.round(r.unit_price) : null
       }));
