@@ -4,7 +4,6 @@
     "pages/index/index",
     "pages/trends/trends",
     "pages/detail/detail",
-    "pages/ops/ops",
     "pages/mine/mine",
     "pages/history-search/history-search",
     "pages/history-result/history-result",
