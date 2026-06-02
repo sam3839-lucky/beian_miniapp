@@ -310,27 +310,27 @@ Page({
     });
     ctx.stroke();
 
-    // dots + price labels (every point) + month labels (alternating)
+    // dots + labels: show on 6 of 12 points (every other)
     trend.forEach((t, i) => {
       if (t.avg_price <= 0) return;
       const x = pad.left + i * stepX;
       const y = pad.top + ph * (1 - (t.avg_price - minP) / range);
-      // dot
-      ctx.beginPath();
-      ctx.arc(x, y, 3, 0, Math.PI * 2);
-      ctx.setFillStyle('#FF8C00');
-      ctx.fill();
-      // price label on every dot
-      ctx.setFillStyle('#FF4D4F');
-      ctx.setFontSize(9);
-      ctx.setTextAlign('center');
-      ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
-      // month label every other point (6 of 12)
-      if (i % 2 === 0 && t.month) {
-        ctx.setFillStyle('#999');
+      if (i % 2 === 0) {
+        // dot
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.setFillStyle('#FF8C00');
+        ctx.fill();
+        // price label
+        ctx.setFillStyle('#FF4D4F');
         ctx.setFontSize(9);
         ctx.setTextAlign('center');
-        ctx.fillText(t.month, x, h - 6);
+        ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
+        // month label
+        if (t.month) {
+          ctx.setFillStyle('#999');
+          ctx.fillText(t.month, x, h - 6);
+        }
       }
     });
 
