@@ -150,7 +150,7 @@ Page({
 
       // 环上标注：套数+占比（加粗=重复绘制偏移1px模拟）
       const labelR = r;
-      const fs = Math.round(w * 0.079);
+      const fs = Math.round(w * 0.071);
       ctx.setFontSize(fs);
       ctx.setTextBaseline('middle');
       function boldText(ctx, text, x, y) {
