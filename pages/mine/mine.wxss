@@ -1,5 +1,9 @@
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
+.about-section { margin: 24rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 32rpx 28rpx; text-align: center; }
+.about-title { font-size: 32rpx; font-weight: 700; color: #333; margin-bottom: 12rpx; }
+.about-desc { font-size: 26rpx; color: #888; line-height: 1.6; }
+
 /* 会员卡片 */
 .member-card { margin: 12rpx 32rpx; background: #fff; border-radius: 12rpx; padding: 40rpx 32rpx; text-align: center; position: relative; }
 .member-card.pro { background: linear-gradient(135deg, #07C160 0%, #05A050 100%); }

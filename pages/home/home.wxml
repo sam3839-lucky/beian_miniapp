@@ -51,7 +51,6 @@
   </view>
 
   <!-- ═══ 用量提示 ═══ -->
-  <usage-badge used="{{searchUsed}}" max="{{searchMax}}" show="{{showUsageBadge && searchResults.length}}" label="搜索" />
 
   <!-- ═══ P0: 市场概览卡片 ═══ -->
   <view class="overview-skel" wx:if="{{!overview && !overviewError}}">
