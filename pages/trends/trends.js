@@ -152,14 +152,15 @@ Page({
       const labelR = r;
       ctx.setFontSize(Math.round(w * 0.055));
       ctx.setTextBaseline('middle');
-      // 二手标签（环的中间偏左）
+      // 二手标签（环的中间偏左，深橙色）
       const uMid = -Math.PI / 2 + usedAngle / 2;
       ctx.setTextAlign(uMid > 0 ? 'right' : 'left');
-      ctx.setFillStyle('#fff');
+      ctx.setFillStyle('#CC6600');
       ctx.fillText(u + '套 ' + usedPct + '%', cx + labelR * Math.cos(uMid), cy + labelR * Math.sin(uMid));
-      // 一手标签（环的中间偏右）
+      // 一手标签（环的中间偏右，深绿色）
       const nMid = -Math.PI / 2 + usedAngle + (Math.PI * 2 - usedAngle) / 2;
       ctx.setTextAlign(nMid < Math.PI ? 'left' : 'right');
+      ctx.setFillStyle('#059048');
       ctx.fillText(n + '套 ' + newPct + '%', cx + labelR * Math.cos(nMid), cy + labelR * Math.sin(nMid));
 
       // 中心文字
