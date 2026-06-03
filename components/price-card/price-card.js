@@ -12,7 +12,7 @@ Component({
       const price = u.total_price > 0 ? u.total_price.toFixed(1) + '万' : '-';
       const area = u.built_area || '-';
       const up = u.unit_price ? (u.unit_price / 10000).toFixed(2) + '万/㎡' : '-';
-      const date = u.check_date || '';
+      const date = u.permit_date || '';
       const bldg = (u.building_name || '').replace(this.properties.project, '');
       
       this.setData({
