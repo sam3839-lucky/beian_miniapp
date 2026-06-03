@@ -177,18 +177,31 @@ Page({
       projects: [{name: '选择小区', value: ''}], buildings: ['全部楼栋'],
       projectName: '', buildingName: '',
       units: [], floors: [], groups: {}, stats: null });
+    const zone = idx === 0 ? '' : this.data.zones[idx];
+    const cacheKey = 'projects_' + (zone || 'all');
+
+    // 先读缓存，即时展示
     try {
-      // idx === 0: 全深圳，加载所有项目
-      const zone = idx === 0 ? '' : this.data.zones[idx];
+      const cached = wx.getStorageSync(cacheKey);
+      if (cached && cached.length) {
+        this.setData({ projects: cached });
+      }
+    } catch (e) { /* ignore */ }
+
+    try {
       const projectsData = await api.getProjects(zone);
       const items = [{name: '选择小区', value: ''}].concat(
         projectsData.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
       );
+      // 写入缓存
+      try { wx.setStorageSync(cacheKey, items); } catch (e) { /* ignore */ }
+      this.setData({ projects: items });
+
       let statsData = null;
       if (idx > 0) {
         try { statsData = await api.getZoneStats(zone, this.data.priceFilter, this.data.areaFilter); } catch(e) {}
       }
-      this.setData({ projects: items, stats: statsData });
+      this.setData({ stats: statsData });
     } catch (e) {
       wx.showToast({ title: '加载小区失败', icon: 'none' });
     }
