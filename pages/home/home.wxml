@@ -75,8 +75,7 @@
       <text class="stat-label">已网签</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num blue">{{overview.recent_n}}</text>
-      <text class="stat-unit">套</text>
+      <text class="stat-num blue">{{overview.recent_n}}<text class="stat-unit-inline">套</text></text>
       <text class="stat-label">近1月新证</text>
     </view>
   </view>

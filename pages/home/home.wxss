@@ -151,9 +151,9 @@
   color: #888;
 }
 
-.stat-unit {
-  font-size: 22rpx;
-  color: #A8A8A8;
+.stat-unit-inline {
+  font-size: 60%;
+  color: #576B95;
 }
 
 /* ═══ 状态占比条 ═══ */
