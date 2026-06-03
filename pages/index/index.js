@@ -26,6 +26,12 @@ Page({
     quickSearch: '',
     searchResults: [],
     searchTapped: false,
+    visibleFloors: [],
+    hasMore: false,
+  },
+
+  onShowAll() {
+    this.setData({ visibleFloors: this.data.floors, hasMore: false });
   },
 
   onLoad() {
@@ -215,7 +221,9 @@ Page({
 
   onSearchInput(e) {
     this.setData({ search: e.detail.value });
-    if (this.data.projectName) this.loadUnits();
+    if (this._searchTimer) clearTimeout(this._searchTimer);
+    if (!this.data.projectName) return;
+    this._searchTimer = setTimeout(() => this.loadUnits(), 300);
   },
 
   onPriceFilter(e) {
@@ -250,7 +258,7 @@ Page({
         api.getUnits(pn, buildingName, search, priceFilter, areaFilter),
         api.getStats(pn, buildingName, priceFilter, areaFilter)
       ]);
-      this.setData({ allUnits: unitData.units, stats: statsData, loading: false });
+      this.setData({ stats: statsData, loading: false });
       this.groupAndRender(unitData.units);
     } catch (e) {
       this.setData({ loading: false });
@@ -266,7 +274,8 @@ Page({
       groups[f].push(u);
     });
     const floors = Object.keys(groups).sort((a, b) => (b === '?' ? -1 : Number(b)) - (a === '?' ? -1 : Number(a)));
-    this.setData({ units, floors, groups });
+    const visibleFloors = floors.slice(0, 3);
+    this.setData({ units, floors, groups, visibleFloors, hasMore: floors.length > 3 });
   },
 
   onCardTap(e) {
@@ -342,5 +351,16 @@ Page({
     }
     // 区域加载完毕后再选项目
     this._selectProject(project);
-  }
+  },
+
+  onShareAppMessage() {
+    const pn = this.data.projectName;
+    const path = pn
+      ? '/pages/index/index?project=' + encodeURIComponent(pn)
+      : '/pages/index/index';
+    return {
+      title: pn ? '看看' + pn + '的备案价' : '深圳新房备案价查询',
+      path
+    };
+  },
 });

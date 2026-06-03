@@ -139,7 +139,7 @@
         </view>
         <view class="tr-line">
           <text class="tr-left">{{item.area ? item.area + '㎡' : ''}}</text>
-          <text class="tr-right">{{item.unit_price ? item.unit_price + '元/㎡' : ''}}</text>
+          <text class="tr-right">{{item.unit_price ? item.unit_price + '万/㎡' : ''}}</text>
         </view>
         <view class="tr-line">
           <text class="tr-left tr-meta">{{item.floor || ''}}{{item.orientation ? ' · ' + item.orientation : ''}}{{item.building_type ? ' · ' + item.building_type : ''}}</text>

@@ -177,5 +177,25 @@ Page({
         }
       });
     }
-  }
+  },
+
+  onShareAppMessage() {
+    const u = this.data.unit;
+    const pn = this.data.project;
+    const title = pn
+      ? pn + ' ' + (u.unit_no || '') + ' - 备案价' + this.data.totalPrice
+      : '深圳备案价详情';
+    const path = [
+      'unit_no=' + encodeURIComponent(u.unit_no || ''),
+      'area=' + (u.built_area || 0),
+      'up=' + (u.unit_price || 0),
+      'tp=' + (u.total_price || 0),
+      'status=' + encodeURIComponent(u.status || '未售'),
+      'project=' + encodeURIComponent(pn),
+      'building=' + encodeURIComponent(this.data.building || '')].join('&');
+    return {
+      title,
+      path: '/pages/detail/detail?' + path
+    };
+  },
 });

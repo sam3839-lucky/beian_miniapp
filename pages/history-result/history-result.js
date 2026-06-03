@@ -6,6 +6,15 @@ function formatMonth(m) {
   return parts.length >= 2 ? parts[0].slice(2) + '/' + parts[1] : m;
 }
 
+function formatLabel(first, last) {
+  // 同一个桶的起止月份 → 紧凑格式，同年时缩略年份
+  if (!first || !last || first === last) return formatMonth(first);
+  const [fy, fm] = first.split('-');
+  const [ly, lm] = last.split('-');
+  if (fy === ly) return fy.slice(2) + '/' + fm + '-' + lm;
+  return fy.slice(2) + '/' + fm + '-' + ly.slice(2) + '/' + lm;
+}
+
 function layoutSort(name) {
   const m = name.match(/(\d+)室(\d+)厅/);
   return m ? parseInt(m[1]) * 10 + parseInt(m[2]) : 999;
@@ -82,19 +91,28 @@ Page({
   },
 
   async loadDistricts() {
+    // 优先读本地缓存（区域列表很少变化）
+    try {
+      const cached = wx.getStorageSync('resale_districts');
+      if (cached && cached.length) {
+        this.setData({ districtOptions: cached });
+        return;
+      }
+    } catch (e) { /* ignore */ }
     try {
       const res = await this.request('/districts');
       const options = [{ id: '', name: '▾ 区域' }];
       (res.districts || []).forEach(d => {
         options.push({ id: d.id, name: d.name });
       });
-      // set district picker index if we have a districtId
       let idx = 0;
       if (this.data.districtId) {
         idx = options.findIndex(o => String(o.id) === String(this.data.districtId));
         if (idx < 0) idx = 0;
       }
       this.setData({ districtOptions: options, districtIdx: idx });
+      // 写入本地缓存
+      try { wx.setStorageSync('resale_districts', options); } catch (e) { /* ignore */ }
     } catch (e) {
       console.error('loadDistricts error:', e);
     }
@@ -106,7 +124,7 @@ Page({
       const res = await this.request('/community/' + encodeURIComponent(this.data.community) + '?years=' + this.data.trendYears);
       const s = res.stats || {};
       const fmt = (d) => d ? String(d).slice(0,10) : '';
-      const fmtPrice = (v) => v ? (v / 10000).toFixed(1) + '万/㎡' : '--';
+      const fmtPrice = (v) => v ? (v / 10000).toFixed(2) + '万/㎡' : '--';
       this.setData({
         summary: {
           total: s.total || 0,
@@ -121,7 +139,7 @@ Page({
         layouts: (res.layouts || []).map(l => ({
           layout: l.layout,
           cnt: l.cnt,
-          avgPrice: l.avg_price ? (l.avg_price / 10000).toFixed(1) + '万/㎡' : '--'
+          avgPrice: l.avg_price ? (l.avg_price / 10000).toFixed(2) + '万/㎡' : '--'
         })).sort((a, b) => layoutSort(a.layout) - layoutSort(b.layout)),
         maxLayoutCnt: Math.max(...(res.layouts || []).map(l => l.cnt), 1),
         layoutOptions: [{ name: '▾ 户型' }].concat(
@@ -139,7 +157,7 @@ Page({
       console.error('loadCommunity error:', e);
       this.setData({ loading: false, error: true });
     }
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
   async loadSearch() {
@@ -164,8 +182,8 @@ Page({
       const records = (res.data || []).map(r => ({
         ...r,
         date: (r.date || '').slice(0, 7),
-        total_price: r.total_price || 0,
-        unit_price: r.unit_price ? Math.round(r.unit_price) : null
+        total_price: r.total_price ? Number(r.total_price).toFixed(0) : 0,
+        unit_price: r.unit_price ? (r.unit_price / 10000).toFixed(2) : null
       }));
       const totalPages = Math.ceil(res.total / this.data.limit);
 
@@ -221,9 +239,10 @@ Page({
     d.setDate(1);
     const minDate = d.toISOString().slice(0, 7);
     const today = new Date().toISOString().slice(0, 7);
+    this._skipSearch = true;
     this.setData({ trendYears: years, minDate, maxDate: today, page: 1 });
     this.loadCommunity();
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
   // ── chart ──
@@ -241,15 +260,15 @@ Page({
       const end = Math.floor((i + 1) * bucketSize);
       const slice = raw.slice(start, Math.min(end, n));
       if (!slice.length) { trend.push({ month: '', avg_price: 0, cnt: 0 }); continue; }
-      // 均价 = 总成交额 / 总面积
-      const sumPrice = slice.reduce((s, t) => s + (parseFloat(t.avg_price) || 0), 0);
+      // 桶内均价 = Σ(月总价×10000) / Σ(月总面积) （加权平均，元/㎡）
+      const sumTotalPrice = slice.reduce((s, t) => s + (parseFloat(t.total_price_sum) || 0), 0);
+      const sumArea = slice.reduce((s, t) => s + (parseFloat(t.total_area) || 0), 0);
       const first = slice[0].month;
       const last = slice[slice.length - 1].month;
-      const label = bucketSize <= 1.2 ? formatMonth(first)
-        : formatMonth(first) + '-' + formatMonth(last);
+      const label = formatLabel(first, last);
       trend.push({
         month: label,
-        avg_price: sumPrice > 0 ? Math.round(sumPrice / slice.length) : 0,
+        avg_price: (sumTotalPrice > 0 && sumArea > 0) ? Math.round(sumTotalPrice * 10000 / sumArea) : 0,
         cnt: slice.reduce((s, t) => s + (t.cnt || 0), 0)
       });
     }
@@ -281,7 +300,7 @@ Page({
     ctx.setTextAlign('right');
     for (let i = 0; i <= 3; i++) {
       const y = pad.top + ph * (i / 3);
-      const val = ((maxP - range * (i / 3)) / 10000).toFixed(1) + '万';
+      const val = ((maxP - range * (i / 3)) / 10000).toFixed(1) + '万/㎡';
       ctx.fillText(val, pad.left - 4, y + 3);
       ctx.setStrokeStyle('#f0f0f0');
       ctx.beginPath();
@@ -325,7 +344,7 @@ Page({
         ctx.setFillStyle('#FF4D4F');
         ctx.setFontSize(9);
         ctx.setTextAlign('center');
-        ctx.fillText((t.avg_price / 10000).toFixed(2) + '万', x, y - 10);
+        ctx.fillText((t.avg_price / 10000).toFixed(2) + '万/㎡', x, y - 10);
         // month label
         if (t.month) {
           ctx.setFillStyle('#999');
@@ -349,16 +368,16 @@ Page({
       zoneName: opt.name !== '▾ 区域' ? opt.name : '',
       page: 1
     });
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
-  onMinDateChange(e) { this.setData({ minDate: e.detail.value, page: 1 }); this.loadSearch(); },
-  onMaxDateChange(e) { this.setData({ maxDate: e.detail.value, page: 1 }); this.loadSearch(); },
+  onMinDateChange(e) { this.setData({ minDate: e.detail.value, page: 1 }); if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); } },
+  onMaxDateChange(e) { this.setData({ maxDate: e.detail.value, page: 1 }); if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); } },
   onLayoutChange(e) {
     const idx = parseInt(e.detail.value);
     const layout = idx > 0 ? this.data.layoutOptions[idx].name : '';
     this.setData({ layoutIdx: idx, page: 1 });
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
   onMinPriceInput(e) { this.setData({ minPrice: e.detail.value }); this._debounceFilter(); },
@@ -370,7 +389,7 @@ Page({
     if (this._filterTimer) clearTimeout(this._filterTimer);
     this._filterTimer = setTimeout(() => {
       this.setData({ page: 1 });
-      this.loadSearch();
+      if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
     }, 600);
   },
 
@@ -378,7 +397,7 @@ Page({
     const sort = e.currentTarget.dataset.sort;
     const order = e.currentTarget.dataset.order || 'desc';
     this.setData({ sortBy: sort, sortOrder: order, page: 1 });
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
   onClearFilters() {
@@ -389,19 +408,19 @@ Page({
       sortBy: 'date', sortOrder: 'desc',
       page: 1, hasFilters: false
     });
-    this.loadSearch();
+    if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
   },
 
   // ── pagination ──
 
-  onPrevPage() { if (this.data.page > 1) { this.setData({ page: this.data.page - 1 }); this.loadSearch(); } },
-  onNextPage() { if (this.data.page < this.data.totalPages) { this.setData({ page: this.data.page + 1 }); this.loadSearch(); } },
+  onPrevPage() { if (this.data.page > 1) { this.setData({ page: this.data.page - 1 }); if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); } } },
+  onNextPage() { if (this.data.page < this.data.totalPages) { this.setData({ page: this.data.page + 1 }); if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); } } },
 
   onGoPage(e) {
     const p = parseInt(e.currentTarget.dataset.page);
     if (p > 0 && p <= this.data.totalPages && p !== this.data.page) {
       this.setData({ page: p });
-      this.loadSearch();
+      if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
     }
   },
 
@@ -426,7 +445,21 @@ Page({
     if (this.data.community) {
       this.loadCommunity();
     } else {
-      this.loadSearch();
+      if (this._skipSearch) { this._skipSearch = false; } else { this.loadSearch(); }
     }
-  }
+  },
+
+  onShareAppMessage() {
+    const cm = this.data.community;
+    const zone = this.data.zoneName;
+    let path = '/pages/history-result/history-result';
+    const params = [];
+    if (cm) params.push('community=' + encodeURIComponent(cm));
+    if (zone && !cm) params.push('district_id=' + encodeURIComponent(this.data.districtId || '') + '&district_name=' + encodeURIComponent(zone));
+    if (params.length) path += '?' + params.join('&');
+    const title = cm
+      ? (zone ? zone + ' · ' + cm : cm) + ' - 成交分析'
+      : (zone ? zone + ' - 二手房成交' : '深圳二手房成交数据');
+    return { title, path };
+  },
 });

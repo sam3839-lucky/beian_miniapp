@@ -120,5 +120,12 @@ Page({
     wx.navigateTo({
       url: '/pages/history-result/history-result?district_id=' + zoneId + '&district_name=' + encodeURIComponent(zoneName)
     });
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳二手房成交查询 - 查小区历史成交价',
+      path: '/pages/history-search/history-search'
+    };
+  },
 });

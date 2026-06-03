@@ -37,15 +37,18 @@ Page({
         zoneName: res.zone || '',
         stats: {
           total: s.total || 0,
-          avgPrice: s.avg_price ? s.avg_price + '万' : '--',
-          avgUnit: s.avg_unit ? (s.avg_unit / 10000).toFixed(1) + '万' : '--',
+          avgPrice: s.avg_price ? Number(s.avg_price).toFixed(1) + '万' : '--',
+          avgUnit: s.avg_unit ? (s.avg_unit / 10000).toFixed(2) + '万/㎡' : '--',
           avgArea: s.avg_area ? s.avg_area + '㎡' : '--',
           earliest: s.earliest ? s.earliest.substring(0, 10) : '--',
           latest: s.latest ? s.latest.substring(0, 10) : '--'
         },
         trend: res.trend || [],
-        layouts,
-        recent: (res.recent || []).slice(0, 10),
+        layouts: layouts.map(l => ({
+          ...l,
+          avg_price: l.avg_price ? (l.avg_price / 10000).toFixed(2) : null
+        })),
+        recent: (res.recent || []).slice(0, 10).map(r => ({ ...r, total_price: r.total_price ? Number(r.total_price).toFixed(0) : 0, unit_price: r.unit_price ? (r.unit_price / 10000).toFixed(2) : null })),
         maxLayoutCnt: maxCnt,
         loading: false
       }, () => {
@@ -77,7 +80,7 @@ Page({
       const h = 200;
 
       const ctx = wx.createCanvasContext('overviewCanvas', this);
-      const pad = { top: 16, right: 16, bottom: 32, left: 44 };
+      const pad = { top: 16, right: 16, bottom: 32, left: 52 };
       const pw = w - pad.left - pad.right;
       const ph = h - pad.top - pad.bottom;
 
@@ -88,14 +91,14 @@ Page({
       const minP = Math.min(...prices) * 0.9;
       const range = maxP - minP || 1;
 
-      // grid
+      // grid + Y axis
       ctx.setFillStyle('#999');
       ctx.setFontSize(9);
       ctx.setTextAlign('right');
       for (let i = 0; i <= 3; i++) {
         const y = pad.top + ph * (i / 3);
         const val = maxP - range * (i / 3);
-        ctx.fillText(Math.round(val / 1000) + 'k', pad.left - 4, y + 3);
+        ctx.fillText((val / 10000).toFixed(1) + '万/㎡', pad.left - 4, y + 3);
         ctx.setStrokeStyle('#f0f0f0');
         ctx.beginPath();
         ctx.moveTo(pad.left, y);
@@ -138,6 +141,14 @@ Page({
         ctx.fill();
 
         if (i % 2 === 0) {
+          // price label
+          const price = parseFloat(trend[i].avg_price);
+          if (price > 0) {
+            ctx.setFillStyle('#FF4D4F');
+            ctx.setFontSize(9);
+            ctx.fillText((price / 10000).toFixed(1) + '万/㎡', p.x, p.y - 10);
+          }
+          // month label
           ctx.setFillStyle('#999');
           ctx.setFontSize(9);
           ctx.fillText(p.month || '', p.x, h - 6);
@@ -156,5 +167,13 @@ Page({
 
   onRetry() {
     this.loadData();
-  }
+  },
+
+  onShareAppMessage() {
+    const cm = this.data.community;
+    return {
+      title: cm ? cm + ' - 小区成交概览' : '深圳二手房小区概览',
+      path: '/pages/community-overview/overview?community=' + encodeURIComponent(cm || '') + '&zone_name=' + encodeURIComponent(this.data.zoneName || '')
+    };
+  },
 });

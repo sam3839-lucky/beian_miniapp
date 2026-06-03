@@ -25,7 +25,7 @@
     <view class="price-header">
       <text class="ph-total" wx:if="{{detail.total_price_wan > 0}}">{{detail.total_price_wan}}<text class="ph-wan">万</text></text>
       <text class="ph-total na" wx:else>暂无价格</text>
-      <text class="ph-unit" wx:if="{{detail.unit_price > 0}}">{{detail.unit_price}} 元/㎡</text>
+      <text class="ph-unit" wx:if="{{detail._unitPriceWan}}">{{detail._unitPriceWan}} 万/㎡</text>
     </view>
 
     <!-- 基本信息 -->
@@ -42,7 +42,7 @@
     <!-- 交易信息 -->
     <view class="card">
       <view class="card-title">交易信息</view>
-      <view class="info-row"><text class="ilabel">成交单价</text><text class="ivalue price">{{detail.unit_price > 0 ? detail.unit_price + ' 元/㎡' : '暂无'}}</text></view>
+      <view class="info-row"><text class="ilabel">成交单价</text><text class="ivalue price">{{detail._unitPriceWan ? detail._unitPriceWan + ' 万/㎡' : '暂无'}}</text></view>
       <view class="info-row"><text class="ilabel">成交总价</text><text class="ivalue price">{{detail.total_price_wan > 0 ? detail.total_price_wan + ' 万' : '暂无'}}</text></view>
       <view class="info-row"><text class="ilabel">备案日期</text><text class="ivalue">{{detail.date}}</text></view>
       <view class="info-row"><text class="ilabel">当前状态</text><text class="ivalue">{{detail.status || '--'}}</text></view>
@@ -56,7 +56,7 @@
       <view class="recent-row" wx:for="{{recent}}" wx:key="id">
         <text class="r-date">{{item.date}}</text>
         <text class="r-info">{{item.building}}-{{item.unit_no}} · {{item.area}}㎡</text>
-        <text class="r-price" wx:if="{{item.unit_price > 0}}">{{item.unit_price}}</text>
+        <text class="r-price" wx:if="{{item._unitPriceWan}}">{{item._unitPriceWan}} 万/㎡</text>
         <text class="r-price na" wx:else>--</text>
         <text class="r-total">{{item.total_price_wan > 0 ? item.total_price_wan + '万' : '--'}}</text>
       </view>

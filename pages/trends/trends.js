@@ -41,13 +41,8 @@ Page({
   async loadAll() {
     this.setData({ loading: true, error: false });
     try {
-      const [summary, trends, districts, recent] = await Promise.all([
-        api.getTransactionSummary(),
-        api.getTransactionTrends(this.data.range),
-        api.getTransactionDistricts(),
-        api.getRecentTransactions(14)
-      ]);
-      const s = summary;
+      const d = await api.getDashboard(this.data.range);
+      const s = d.summary;
       if (s && s.this_month) {
         const t = s.this_month.total || 1;
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
@@ -62,12 +57,15 @@ Page({
           s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
         }
       }
-      const rawTrends = trends.trends || [];
-      this.setData({ summary: s, districts, dailyItems: recent.items || [], loading: false }, () => {
+      const rawTrends = d.trends || [];
+      this.setData({
+        summary: s, districts: d.districts, dailyItems: d.dailyItems || [],
+        salesRanks: d.salesRanks || [], salesZones: d.salesZones || [], salesLoading: false,
+        loading: false,
+      }, () => {
         this.drawDonut(s);
         this.buildAndDrawChart(rawTrends);
       });
-      this.loadSalesRank('');
     } catch (e) {
       console.error(e); this.setData({ loading: false, error: true });
     }
@@ -312,5 +310,14 @@ Page({
 
   onHistorySearchTap() {
     wx.navigateTo({ url: '/pages/history-search/history-search' });
-  }
+  },
+
+  onShareAppMessage() {
+    const range = this.data.range;
+    const label = range <= 12 ? '近1年' : range <= 36 ? '近3年' : range <= 60 ? '近5年' : '近10年';
+    return {
+      title: '深圳二手房成交数据（' + label + '）',
+      path: '/pages/trends/trends'
+    };
+  },
 });

@@ -53,6 +53,7 @@ module.exports = {
   getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
   getRecentTransactions: (days = 30) => request('/api/transactions/recent?days=' + days),
   getTransactionDistricts: () => request('/api/transactions/districts'),
+  getDashboard: (months = 12) => request('/api/dashboard?months=' + months + '&days=14'),
   quickSearch: (q) => request('/api/quick-search?q=' + encodeURIComponent(q)),
   subscribe: (openid, project) => request('/api/subscribe', 'POST', { openid, project }),
   unsubscribe: (openid, project) => request('/api/unsubscribe', 'POST', { openid, project }),

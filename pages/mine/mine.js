@@ -63,5 +63,12 @@ Page({
 
   onOpenOps() {
     wx.navigateTo({ url: '/pages/ops/ops' });
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 查备案价、看成交数据',
+      path: '/pages/home/home'
+    };
+  },
 });

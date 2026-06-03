@@ -19,9 +19,17 @@ Page({
     this.setData({ loading: true, error: false });
     try {
       const data = await api.getProjectHistoryDetail(id);
+      const d = data.detail || {};
+      if (d.unit_price) d._unitPriceWan = (d.unit_price / 10000).toFixed(2);
+      if (d.total_price_wan === undefined && d.total_price != null) d.total_price_wan = Number(d.total_price).toFixed(0);
+      const recent = (data.recent || []).map(r => ({
+        ...r,
+        _unitPriceWan: r.unit_price ? (r.unit_price / 10000).toFixed(2) : null,
+        total_price_wan: r.total_price_wan || (r.total_price != null ? Number(r.total_price).toFixed(0) : 0)
+      }));
       this.setData({
-        detail: data.detail,
-        recent: data.recent || [],
+        detail: d,
+        recent,
         loading: false
       });
     } catch (e) {
@@ -55,5 +63,17 @@ Page({
 
   onBack() {
     wx.navigateBack();
-  }
+  },
+
+  onShareAppMessage() {
+    const d = this.data.detail;
+    const title = d && d.project_name
+      ? d.project_name + ' - 成交详情'
+      : '深圳二手房成交详情';
+    const id = d ? d.id : 0;
+    return {
+      title,
+      path: '/pages/history-detail/history-detail?id=' + id
+    };
+  },
 });

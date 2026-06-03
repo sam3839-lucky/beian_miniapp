@@ -95,21 +95,24 @@
     </block>
 
     <block wx:else>
-      <block wx:for="{{floors}}" wx:for-item="floor" wx:key="*this">
+      <block wx:for="{{visibleFloors}}" wx:for-item="floor" wx:key="*this">
         <view class="floor-sep">
           <view class="line"></view>
           <text class="num">{{floor}}F</text>
           <view class="line"></view>
         </view>
-        <price-card 
-          wx:for="{{groups[floor]}}" 
-          wx:for-item="unit" 
+        <price-card
+          wx:for="{{groups[floor]}}"
+          wx:for-item="unit"
           wx:key="unit_no"
           unit="{{unit}}"
           project="{{projectName}}"
           bind:tap="onCardTap"
         />
       </block>
+      <view class="show-more" wx:if="{{hasMore}}" bindtap="onShowAll">
+        <text>展开全部 {{floors.length}} 层楼栋 →</text>
+      </view>
     </block>
 
     <view style="height: 32px;"></view>

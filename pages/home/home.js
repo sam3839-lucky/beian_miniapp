@@ -290,4 +290,11 @@ Page({
     this._navToFilter({ price_min: r.totalLow, price_max: r.affordMax });
   },
 
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 新房备案价一目了然',
+      path: '/pages/home/home'
+    };
+  },
 });

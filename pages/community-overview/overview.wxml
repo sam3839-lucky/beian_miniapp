@@ -24,7 +24,7 @@
       <view class="stats-grid">
         <view class="stat"><text class="sv">{{stats.total || 0}}</text><text class="sl">历史成交</text></view>
         <view class="stat"><text class="sv">{{stats.avgPrice || '--'}}</text><text class="sl">平均总价</text></view>
-        <view class="stat"><text class="sv">{{stats.avgUnit || '--'}}</text><text class="sl">均价 元/㎡</text></view>
+        <view class="stat"><text class="sv">{{stats.avgUnit || '--'}}</text><text class="sl">均价 万元/㎡</text></view>
         <view class="stat"><text class="sv">{{stats.avgArea || '--'}}</text><text class="sl">平均面积</text></view>
         <view class="stat"><text class="sv">{{stats.earliest || '--'}}</text><text class="sl">最早成交</text></view>
         <view class="stat"><text class="sv">{{stats.latest || '--'}}</text><text class="sl">最近成交</text></view>
@@ -51,7 +51,7 @@
           <view class="l-bar-wrap">
             <view class="l-bar" style="width:{{item.cnt / maxLayoutCnt * 100}}%"></view>
           </view>
-          <text class="l-info">{{item.cnt}}套 · 均价{{item.avg_price}}万</text>
+          <text class="l-info">{{item.cnt}}套 · 均价{{item.avg_price}}万/㎡</text>
         </view>
       </view>
     </view>
@@ -67,7 +67,7 @@
           </view>
           <view class="tr-line">
             <text class="tr-left">{{item.area ? item.area + '㎡' : ''}}</text>
-            <text class="tr-right">{{item.unit_price ? item.unit_price + '元/㎡' : ''}}</text>
+            <text class="tr-right">{{item.unit_price ? item.unit_price + '万/㎡' : ''}}</text>
           </view>
           <view class="tr-line">
             <text class="tr-left tr-meta">{{item.floor || ''}}{{item.orientation ? ' · ' + item.orientation : ''}}{{item.building_type ? ' · ' + item.building_type : ''}}</text>
