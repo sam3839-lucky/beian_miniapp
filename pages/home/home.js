@@ -75,7 +75,7 @@ Page({
       data.signed_w = (data.signed / 10000).toFixed(2);
       data.filed_w = (data.filed / 10000).toFixed(2);
       data.transferred_w = (data.transferred / 10000).toFixed(2);
-      data.recent_w = (data.recent / 10000).toFixed(2);
+      data.recent_n = data.recent || 0;
       this.setData({ overview: data, overviewError: false });
     } catch (e) {
       console.error('overview load failed', e);
