@@ -104,10 +104,10 @@ Page({
       buckets.push({ label, n: avgNew, u: avgUsed, total: avgNew + avgUsed });
     }
 
-    // 确保正好 12 个（截断或头部补齐空）
-    const final12 = buckets.slice(-12);
+    // 确保正好 12 个（截断或头部补齐空），反转使横轴从左到右为旧→新
+    const final12 = buckets.slice(-12).reverse();
     while (final12.length < 12) {
-      final12.unshift({ label: '', n: 0, u: 0, total: 0 });
+      final12.push({ label: '', n: 0, u: 0, total: 0 });
     }
 
     this.setData({ trends: final12, trendMax: 1 }, () => {
