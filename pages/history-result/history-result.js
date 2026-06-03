@@ -261,14 +261,23 @@ Page({
       const slice = raw.slice(start, Math.min(end, n));
       if (!slice.length) { trend.push({ month: '', avg_price: 0, cnt: 0 }); continue; }
       // 桶内均价 = Σ(月总价×10000) / Σ(月总面积) （加权平均，元/㎡）
-      const sumTotalPrice = slice.reduce((s, t) => s + (parseFloat(t.total_price_sum) || 0), 0);
-      const sumArea = slice.reduce((s, t) => s + (parseFloat(t.total_area) || 0), 0);
+      // 兜底：字段缺失时回退到简单平均
+      const hasFields = slice[0] && slice[0].total_price_sum !== undefined;
+      let bucketAvg;
+      if (hasFields) {
+        const sumTotalPrice = slice.reduce((s, t) => s + (parseFloat(t.total_price_sum) || 0), 0);
+        const sumArea = slice.reduce((s, t) => s + (parseFloat(t.total_area) || 0), 0);
+        bucketAvg = (sumTotalPrice > 0 && sumArea > 0) ? Math.round(sumTotalPrice * 10000 / sumArea) : 0;
+      } else {
+        const sumPrice = slice.reduce((s, t) => s + (parseFloat(t.avg_price) || 0), 0);
+        bucketAvg = sumPrice > 0 ? Math.round(sumPrice / slice.length) : 0;
+      }
       const first = slice[0].month;
       const last = slice[slice.length - 1].month;
       const label = formatLabel(first, last);
       trend.push({
         month: label,
-        avg_price: (sumTotalPrice > 0 && sumArea > 0) ? Math.round(sumTotalPrice * 10000 / sumArea) : 0,
+        avg_price: bucketAvg,
         cnt: slice.reduce((s, t) => s + (t.cnt || 0), 0)
       });
     }
