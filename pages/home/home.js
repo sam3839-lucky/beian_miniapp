@@ -72,6 +72,8 @@ Page({
       const data = await api.getOverview();
       // 统计数转为万单位，保留2位小数
       data.unsold_w = (data.unsold / 10000).toFixed(2);
+      data.presale_w = (data.presale / 10000).toFixed(2);
+      data.spot_sale_n = data.spot_sale || 0;
       data.signed_w = (data.signed / 10000).toFixed(2);
       data.filed_w = (data.filed / 10000).toFixed(2);
       data.transferred_w = (data.transferred / 10000).toFixed(2);
