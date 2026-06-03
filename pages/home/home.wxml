@@ -76,7 +76,7 @@
     </view>
     <view class="stat-card">
       <text class="stat-num blue">{{overview.recent_w}}万</text>
-      <text class="stat-label">近7日更新</text>
+      <text class="stat-label">近1月新证</text>
     </view>
   </view>
 
