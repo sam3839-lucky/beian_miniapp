@@ -73,12 +73,12 @@
     />
 
     <!-- 统计栏（跟随所有筛选） -->
-    <view class="stat-bar" wx:if="{{stats}}">
-      <view class="item"><text class="val t">{{stats.total}}</text><text class="lbl">总套数</text></view>
+    <view class="stat-bar" wx:if="{{stats && !stats.sold_out}}">
+      <view class="item"><text class="val t">{{stats.unsold}}</text><text class="lbl">总可售</text></view>
       <view class="sep"></view>
-      <view class="item"><text class="val s">{{stats.sold}}</text><text class="lbl">已售</text><text class="pct">{{stats.sold_pct}}%</text></view>
+      <view class="item"><text class="val s">{{stats.presale}}</text><text class="lbl">预售</text></view>
       <view class="sep"></view>
-      <view class="item"><text class="val u">{{stats.unsold}}</text><text class="lbl">可售</text><text class="pct">{{stats.unsold_pct}}%</text></view>
+      <view class="item"><text class="val u">{{stats.spot_sale}}</text><text class="lbl">现售</text></view>
     </view>
   </view>
 
