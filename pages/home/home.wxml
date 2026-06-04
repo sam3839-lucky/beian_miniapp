@@ -127,8 +127,8 @@
           <text class="zrank">#{{index + 1}}</text>
         </view>
         <view class="zbar-wrap">
-          <view class="zbar-presale" style="width:{{item.presale / item.count * 100}}%"></view>
-          <view class="zbar-spot" style="width:{{item.spot_sale / item.count * 100}}%"></view>
+          <view class="zbar-presale" style="width:{{item.presale / overview.zones[0].count * 100}}%"></view>
+          <view class="zbar-spot" style="width:{{item.spot_sale / overview.zones[0].count * 100}}%"></view>
         </view>
         <view class="z-foot">
           <view class="z-tag tag-presale">期房 {{item.presale}}</view>
