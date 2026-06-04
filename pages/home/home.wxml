@@ -77,9 +77,8 @@
       <text class="stat-sub">现房</text>
     </view>
     <view class="stat-card stat-card-price">
-      <text class="stat-num price">{{overview.avg_total}}<text class="stat-unit">万</text></text>
+      <text class="stat-num price">{{overview.avg_unit_price_w}}<text class="stat-unit">万/㎡</text></text>
       <text class="stat-label">住宅均价</text>
-      <text class="stat-sub">元/㎡</text>
     </view>
   </view>
 

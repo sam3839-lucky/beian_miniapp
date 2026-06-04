@@ -80,6 +80,7 @@ Page({
       data.signed_w = (data.signed / 10000).toFixed(2);
       data.filed_w = (data.filed / 10000).toFixed(2);
       data.transferred_w = (data.transferred / 10000).toFixed(2);
+      data.avg_unit_price_w = data.avg_unit_price ? (data.avg_unit_price / 10000).toFixed(2) : '--';
       data.recent_n = data.recent || 0;
       this.setData({ overview: data, overviewError: false });
       try { wx.setStorageSync('overview_cache', data); } catch (e) { /* ignore */ }
