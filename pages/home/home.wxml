@@ -63,7 +63,7 @@
   </view>
   <view class="overview" wx:if="{{overview}}">
     <view class="stat-card">
-      <text class="stat-num green">{{overview.presale_w}}万</text>
+      <text class="stat-num green">{{overview.presale_n}}套</text>
       <text class="stat-label">预售住房</text>
     </view>
     <view class="stat-card">
