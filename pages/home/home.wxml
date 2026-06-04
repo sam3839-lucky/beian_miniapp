@@ -63,7 +63,7 @@
   </view>
   <view class="overview" wx:if="{{overview}}">
     <view class="stat-card">
-      <text class="stat-num green">{{overview.unsold_w}}万</text>
+      <text class="stat-num green">{{overview.unsold_n}}套</text>
       <text class="stat-label">总套数</text>
     </view>
     <view class="stat-card">

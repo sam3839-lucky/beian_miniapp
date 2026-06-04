@@ -70,6 +70,7 @@ Page({
       const data = await api.getOverview();
       // 统计数转为万单位，保留2位小数
       data.unsold_w = (data.unsold / 10000).toFixed(2);
+      data.unsold_n = data.unsold || 0;
       data.presale_n = data.presale || 0;
       data.spot_sale_n = data.spot_sale || 0;
       data.signed_w = (data.signed / 10000).toFixed(2);
