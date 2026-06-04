@@ -125,30 +125,49 @@
 /* ═══ 概览卡片 ═══ */
 .overview {
   display: flex;
-  padding: 24rpx 32rpx;
-  gap: 16rpx;
+  padding: 20rpx 24rpx;
+  gap: 12rpx;
 }
 .stat-card {
   flex: 1;
   background: #fff;
-  border-radius: 8rpx;
-  padding: 24rpx 8rpx;
+  border-radius: 12rpx;
+  padding: 20rpx 6rpx 16rpx;
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 8rpx;
+  align-items: center;
+  gap: 4rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.stat-card-primary {
+  background: linear-gradient(180deg, #F0FAF3 0%, #fff 100%);
+}
+.stat-card-price {
+  background: linear-gradient(180deg, #FFF5F5 0%, #fff 100%);
 }
 .stat-num {
-  font-size: 44rpx;
+  font-size: 40rpx;
   font-weight: 700;
+  color: #333;
+  line-height: 1.2;
 }
-.stat-num.green { color: #07C160; }
-.stat-num.red   { color: #FF4D4F; }
-.stat-num.gray  { color: #333; }
-.stat-num.blue  { color: #576B95; }
+.stat-num.presale { color: #576B95; }
+.stat-num.spot   { color: #FF8C00; }
+.stat-num.price  { color: #FF4D4F; }
+.stat-unit {
+  font-size: 24rpx;
+  font-weight: 500;
+  margin-left: 2rpx;
+}
 .stat-label {
   font-size: 22rpx;
-  color: #888;
+  color: #333;
+  font-weight: 500;
+}
+.stat-sub {
+  font-size: 18rpx;
+  color: #A8A8A8;
 }
 
 /* ═══ 状态占比条 ═══ */

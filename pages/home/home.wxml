@@ -62,21 +62,24 @@
     <text>数据加载失败，点击重试</text>
   </view>
   <view class="overview" wx:if="{{overview}}">
-    <view class="stat-card">
-      <text class="stat-num green">{{overview.unsold_n}}套</text>
-      <text class="stat-label">总套数</text>
+    <view class="stat-card stat-card-primary">
+      <text class="stat-num">{{overview.unsold_n}}<text class="stat-unit">套</text></text>
+      <text class="stat-label">总可售</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num green">{{overview.presale_n}}套</text>
+      <text class="stat-num presale">{{overview.presale_n}}<text class="stat-unit">套</text></text>
       <text class="stat-label">预售</text>
+      <text class="stat-sub">期房</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num gray">{{overview.spot_sale_n}}套</text>
+      <text class="stat-num spot">{{overview.spot_sale_n}}<text class="stat-unit">套</text></text>
       <text class="stat-label">现售</text>
+      <text class="stat-sub">现房</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-num red">{{overview.avg_total}}万</text>
+    <view class="stat-card stat-card-price">
+      <text class="stat-num price">{{overview.avg_total}}<text class="stat-unit">万</text></text>
       <text class="stat-label">住宅均价</text>
+      <text class="stat-sub">元/㎡</text>
     </view>
   </view>
 
