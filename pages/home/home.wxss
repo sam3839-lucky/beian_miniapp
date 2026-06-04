@@ -239,53 +239,58 @@
 .zone-compare {
   background: #fff;
   border-radius: 8rpx;
-  padding: 16rpx 28rpx;
+  padding: 8rpx 28rpx;
 }
 .zone-row {
-  display: flex;
-  align-items: center;
-  gap: 20rpx;
-  padding: 14rpx 0;
-  min-height: 88rpx;
+  padding: 16rpx 0;
 }
 .zone-row + .zone-row {
   border-top: 1rpx solid #E5E5E5;
 }
+.z-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  margin-bottom: 10rpx;
+}
 .zname {
-  font-size: 26rpx;
-  font-weight: 500;
+  font-size: 28rpx;
+  font-weight: 600;
   color: #333;
-  width: 80rpx;
-  flex-shrink: 0;
 }
 .zcount {
-  font-size: 24rpx;
+  font-size: 28rpx;
   color: #07C160;
-  font-weight: 600;
-  text-align: right;
-  flex-shrink: 0;
+  font-weight: 700;
+}
+.zavg {
+  font-size: 22rpx;
+  color: #888;
+  margin-left: auto;
   white-space: nowrap;
 }
 .zbar-wrap {
-  flex: 1;
-  height: 12rpx;
-  border-radius: 6rpx;
+  height: 10rpx;
+  border-radius: 5rpx;
   background: #F0F0F0;
   overflow: hidden;
+  margin-bottom: 10rpx;
 }
 .zbar {
   height: 100%;
-  border-radius: 6rpx;
-  background: #07C160;
+  border-radius: 5rpx;
+  background: linear-gradient(90deg, #07C160, #4CD964);
 }
-.zprice {
+.z-bot {
+  display: flex;
+}
+.zsplit {
   font-size: 22rpx;
-  color: #888;
-  text-align: right;
-  white-space: nowrap;
-  flex-shrink: 0;
+  color: #A8A8A8;
 }
-.zinv {
+.zsplit-dot {
+  color: #D8D8D8;
+}
   font-size: 22rpx;
   color: #A8A8A8;
   width: 60rpx;
