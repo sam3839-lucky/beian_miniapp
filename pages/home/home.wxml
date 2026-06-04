@@ -67,7 +67,7 @@
       <text class="stat-label">预售住房</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num gray">{{overview.spot_sale_n}}<text class="stat-unit-inline">套</text></text>
+      <text class="stat-num gray">{{overview.spot_sale_n}}套</text>
       <text class="stat-label">现售住房</text>
     </view>
     <view class="stat-card">
@@ -75,7 +75,7 @@
       <text class="stat-label">住宅均价</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num blue">{{overview.recent_n}}<text class="stat-unit-inline">套</text></text>
+      <text class="stat-num blue">{{overview.recent_n}}套</text>
       <text class="stat-label">近1月新证</text>
     </view>
   </view>

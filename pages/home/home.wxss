@@ -151,11 +151,6 @@
   color: #888;
 }
 
-.stat-unit-inline {
-  font-size: 60%;
-  color: #576B95;
-}
-
 /* ═══ 状态占比条 ═══ */
 .status-bar {
   margin: 0 32rpx 32rpx;
