@@ -130,12 +130,13 @@
       <view class="zone-row" wx:for="{{overview.zones}}" wx:key="name"
             data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-row-hover">
         <text class="zname">{{item.name}}</text>
-        <text class="zcount">{{item.count}}套<text class="zsplit"> · 预售{{item.presale}}/现售{{item.spot_sale}}</text></text>
+        <text class="zcount">{{item.count}}套</text>
         <view class="zbar-wrap">
           <view class="zbar" style="width:{{item.count / overview.zones[0].count * 100}}%"></view>
         </view>
         <text class="zprice">套均 {{item.avg_total}} 万</text>
         <text class="zinv">{{item.inventory_months}} 月</text>
+        <text class="zsplit">预售{{item.presale}}/现售{{item.spot_sale}}</text>
       </view>
     </view>
   </view>
