@@ -59,16 +59,20 @@ Page({
   },
 
   async loadAll() {
-    // 榜单+预售证先显示（~0.4s），概览卡片异步加载（~1.5s）
-    await Promise.all([this.loadRankings(), this.loadPermits()]);
-    this.loadOverview();
+    // 三请求并行加载
+    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits()]);
   },
 
   // ── P0: 市场概览 ──
   async loadOverview() {
+    // 优先展示本地缓存，同时后台刷新
+    try {
+      const cached = wx.getStorageSync('overview_cache');
+      if (cached) this.setData({ overview: cached, overviewError: false });
+    } catch (e) { /* ignore */ }
+
     try {
       const data = await api.getOverview();
-      // 统计数转为万单位，保留2位小数
       data.unsold_w = (data.unsold / 10000).toFixed(2);
       data.unsold_n = data.unsold || 0;
       data.presale_n = data.presale || 0;
@@ -78,6 +82,7 @@ Page({
       data.transferred_w = (data.transferred / 10000).toFixed(2);
       data.recent_n = data.recent || 0;
       this.setData({ overview: data, overviewError: false });
+      try { wx.setStorageSync('overview_cache', data); } catch (e) { /* ignore */ }
     } catch (e) {
       console.error('overview load failed', e);
       this.setData({ overviewError: true });
