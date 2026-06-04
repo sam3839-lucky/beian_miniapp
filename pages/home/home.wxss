@@ -291,9 +291,6 @@
 .zsplit-dot {
   color: #D8D8D8;
 }
-  white-space: nowrap;
-  flex-shrink: 0;
-}
 
 /* ═══ 排行榜 Tabs ═══ */
 .rank-tabs {
