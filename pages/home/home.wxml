@@ -132,16 +132,19 @@
     <view class="zone-compare">
       <view class="zone-row" wx:for="{{overview.zones}}" wx:key="name"
             data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-row-hover">
-        <view class="z-top">
+        <view class="z-head">
           <text class="zname">{{item.name}}</text>
-          <text class="zcount">{{item.count}}套</text>
-          <text class="zavg">套均{{item.avg_total}}万</text>
+          <text class="zcount">{{item.count}}<text class="zunit">套</text></text>
+          <text class="zavg">{{item.avg_total}}<text class="zunit">万/套</text></text>
+          <text class="zrank">#{{index + 1}}</text>
         </view>
         <view class="zbar-wrap">
-          <view class="zbar" style="width:{{item.count / overview.zones[0].count * 100}}%"></view>
+          <view class="zbar-presale" style="width:{{item.presale / item.count * 100}}%"></view>
+          <view class="zbar-spot" style="width:{{item.spot_sale / item.count * 100}}%"></view>
         </view>
-        <view class="z-bot">
-          <text class="zsplit">预售 {{item.presale}}<text class="zsplit-dot"> · </text>现售 {{item.spot_sale}}</text>
+        <view class="z-foot">
+          <view class="z-tag tag-presale">期房 {{item.presale}}</view>
+          <view class="z-tag tag-spot">现房 {{item.spot_sale}}</view>
         </view>
       </view>
     </view>
