@@ -232,21 +232,72 @@
 }
 
 /* ═══ 区域快捷标签 ═══ */
-.zone-chips {
+.hot-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 16rpx;
+  gap: 12rpx;
+  margin: 0 24rpx;
 }
-.zone-chip {
-  padding: 16rpx 28rpx;
+.hot-card {
+  width: calc(50% - 6rpx);
   background: #fff;
-  border-radius: 8rpx;
+  border-radius: 12rpx;
+  padding: 20rpx 20rpx 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.03);
+}
+.hot-rank {
+  font-size: 20rpx;
+  color: #D0D0D0;
+  font-weight: 600;
+  margin-bottom: 4rpx;
+  display: block;
+}
+.hot-name {
   font-size: 26rpx;
+  font-weight: 600;
   color: #333;
-  line-height: 1.4;
-  min-height: 88rpx;
+  display: block;
+  margin-bottom: 6rpx;
+}
+.hot-count {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+.hot-unit {
+  font-size: 22rpx;
+  font-weight: 400;
+  color: #A8A8A8;
+  margin-left: 4rpx;
+}
+.hot-bar-wrap {
   display: flex;
-  align-items: center;
+  height: 6rpx;
+  border-radius: 3rpx;
+  overflow: hidden;
+  background: #F0F0F0;
+  margin-bottom: 8rpx;
+}
+.hot-bar-presale {
+  height: 100%;
+  background: #576B95;
+}
+.hot-bar-spot {
+  height: 100%;
+  background: #FF8C00;
+}
+.hot-tags {
+  display: flex;
+  gap: 8rpx;
+  font-size: 18rpx;
+}
+.hot-tag-pre {
+  color: #576B95;
+}
+.hot-tag-spot {
+  color: #FF8C00;
 }
 
 /* ═══ 区域对比 ═══ */
@@ -557,7 +608,7 @@
 }
 
 /* ═══ hover 态（微信原生反馈） ═══ */
-.zone-chip-hover { background: #E8F8EF; }
+.hot-card-hover { opacity: 0.85; }
 .zone-row-hover  { background: #F7F7F7; }
 .rank-item-hover { background: #F7F7F7; }
 .rank-tap-active { opacity: 0.7; }

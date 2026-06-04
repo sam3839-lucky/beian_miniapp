@@ -111,15 +111,25 @@
     </view>
   </view>
 
-  <!-- ═══ P0: 区域快捷入口 ═══ -->
+  <!-- ═══ P0: 热门区域（库存前6） ═══ -->
   <view class="section" wx:if="{{overview}}">
     <view class="section-head">
       <text class="section-title">热门区域</text>
     </view>
-    <view class="zone-chips">
-      <view class="zone-chip" wx:for="{{overview.zones}}" wx:key="name"
-            data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-chip-hover">
-        {{item.name}} {{item.count}}套
+    <view class="hot-grid">
+      <view class="hot-card" wx:for="{{overview.zones}}" wx:key="name" wx:if="{{index < 6}}"
+            data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="hot-card-hover">
+        <text class="hot-rank">{{index + 1}}</text>
+        <text class="hot-name">{{item.name}}</text>
+        <text class="hot-count">{{item.count}}<text class="hot-unit">套</text></text>
+        <view class="hot-bar-wrap">
+          <view class="hot-bar-presale" style="width:{{item.presale / item.count * 100}}%"></view>
+          <view class="hot-bar-spot" style="width:{{item.spot_sale / item.count * 100}}%"></view>
+        </view>
+        <view class="hot-tags">
+          <text class="hot-tag-pre">期{{item.presale}}</text>
+          <text class="hot-tag-spot">现{{item.spot_sale}}</text>
+        </view>
       </view>
     </view>
   </view>
