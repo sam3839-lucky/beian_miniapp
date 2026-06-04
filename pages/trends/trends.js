@@ -41,8 +41,9 @@ Page({
   async loadAll() {
     this.setData({ loading: true, error: false });
     try {
-      const d = await api.getDashboard(this.data.range);
-      const s = d.summary;
+      // 第1阶段：环形图数据（~75ms），先渲染
+      const summary = await api.getTransactionSummary();
+      const s = summary;
       if (s && s.this_month) {
         const t = s.this_month.total || 1;
         s.newPct = (s.this_month.new / t * 100).toFixed(1);
@@ -57,13 +58,17 @@ Page({
           s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
         }
       }
+      this.setData({ summary: s, loading: false }, () => {
+        this.drawDonut(s);
+      });
+
+      // 第2阶段：走势图+详情（~700ms），并行加载
+      const d = await api.getDashboard(this.data.range);
       const rawTrends = d.trends || [];
       this.setData({
-        summary: s, districts: d.districts, dailyItems: d.dailyItems || [],
+        districts: d.districts, dailyItems: d.dailyItems || [],
         salesRanks: d.salesRanks || [], salesZones: d.salesZones || [], salesLoading: false,
-        loading: false,
       }, () => {
-        this.drawDonut(s);
         this.buildAndDrawChart(rawTrends);
       });
     } catch (e) {
