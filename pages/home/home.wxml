@@ -135,7 +135,6 @@
           <view class="zbar" style="width:{{item.count / overview.zones[0].count * 100}}%"></view>
         </view>
         <text class="zprice">套均 {{item.avg_total}} 万</text>
-        <text class="zinv">{{item.inventory_months}} 月</text>
         <text class="zsplit">预售{{item.presale}}/现售{{item.spot_sale}}</text>
       </view>
     </view>
