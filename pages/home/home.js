@@ -59,11 +59,9 @@ Page({
   },
 
   async loadAll() {
-    await Promise.all([
-      this.loadOverview(),
-      this.loadRankings(),
-      this.loadPermits()
-    ]);
+    // 榜单+预售证先显示（~0.4s），概览卡片异步加载（~1.5s）
+    await Promise.all([this.loadRankings(), this.loadPermits()]);
+    this.loadOverview();
   },
 
   // ── P0: 市场概览 ──
