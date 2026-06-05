@@ -78,7 +78,7 @@
       <view class="sep"></view>
       <view class="item"><text class="val s">{{stats.sold}}</text><text class="lbl">已售</text></view>
       <view class="sep"></view>
-      <view class="item"><text class="val u">{{stats.unsold}}</text><text class="lbl">未售</text></view>
+      <view class="item"><text class="val u">{{stats.unsold}}</text><text class="lbl">可售</text></view>
     </view>
   </view>
 
