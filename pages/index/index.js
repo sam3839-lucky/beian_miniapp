@@ -197,10 +197,9 @@ Page({
       try { wx.setStorageSync(cacheKey, items); } catch (e) { /* ignore */ }
       this.setData({ projects: items });
 
+      // 全深圳也拉统计
       let statsData = null;
-      if (idx > 0) {
-        try { statsData = await api.getZoneStats(zone, this.data.priceFilter, this.data.areaFilter); } catch(e) {}
-      }
+      try { statsData = await api.getZoneStats(zone, this.data.priceFilter, this.data.areaFilter); } catch(e) { /* ignore */ }
       this.setData({ stats: statsData });
     } catch (e) {
       wx.showToast({ title: '加载小区失败', icon: 'none' });
