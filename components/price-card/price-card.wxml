@@ -11,6 +11,7 @@
     <view class="col col-right">
       <text class="price">{{priceText}}</text>
       <text class="sub">{{unitPriceText}}</text>
+      <text class="sale-tag {{isPresale ? 'tag-pre' : 'tag-spot'}}" wx:if="{{saleType}}">{{saleType}}</text>
     </view>
   </view>
 </view>

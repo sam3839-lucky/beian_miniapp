@@ -50,3 +50,17 @@
   white-space: nowrap;
   max-width: 100%;
 }
+.sale-tag {
+  font-size: 20rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 4rpx;
+  margin-top: 2rpx;
+}
+.tag-pre {
+  color: #576B95;
+  background: #EEF1F6;
+}
+.tag-spot {
+  color: #FF8C00;
+  background: #FFF5EB;
+}

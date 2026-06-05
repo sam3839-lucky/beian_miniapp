@@ -15,12 +15,17 @@ Component({
       const date = u.permit_date || '';
       const bldg = (u.building_name || '').replace(this.properties.project, '');
       
+      const saleType = u.sale_type || '';
+      const isPresale = saleType === '预售';
+
       this.setData({
         priceText: price,
         areaText: area,
         unitPriceText: up,
         dateText: date,
-        bldgName: bldg
+        bldgName: bldg,
+        saleType,
+        isPresale
       });
     }
   },
