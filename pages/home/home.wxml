@@ -149,7 +149,7 @@
     </view>
     <view class="rank-list">
       <block wx:if="{{rankList.length}}">
-        <view class="rank-item" wx:for="{{rankList}}" wx:key="unit_no"
+        <view class="rank-item" wx:for="{{rankList}}" wx:key="unit_api_id"
               data-item="{{item}}" bindtap="onRankItemTap" hover-class="rank-item-hover">
           <text class="rank-idx">{{index + 1}}</text>
           <view class="rank-info">

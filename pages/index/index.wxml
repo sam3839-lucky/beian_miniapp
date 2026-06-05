@@ -104,7 +104,7 @@
         <price-card
           wx:for="{{groups[floor]}}"
           wx:for-item="unit"
-          wx:key="unit_no"
+          wx:key="unit_api_id"
           unit="{{unit}}"
           project="{{projectName}}"
           bind:tap="onCardTap"
