@@ -31,7 +31,7 @@ Page({
       built_area:  parseFloat(opts.area) || 0,
       unit_price:  parseFloat(opts.up) || 0,
       total_price: parseFloat(opts.tp) || 0,
-      status:      decodeURIComponent(opts.status || '未售'),
+      status:      decodeURIComponent(opts.status || '期房待售'),
     };
     const project  = decodeURIComponent(opts.project || '');
     const building = decodeURIComponent(opts.building || '');
@@ -42,10 +42,19 @@ Page({
     const tp = tw > 0 ? tw.toFixed(1) + '万' : '-';
 
     const statusMap = {
-      '未售':   { text: '可售',     color: '#07C160' },
-      '已网签': { text: '已网签',   color: '#FAAD14' },
-      '已备案': { text: '已备案',   color: '#FF8C00' },
-      '已转移登记': { text: '已转移登记', color: '#D9D9D9' }
+      '期房待售':  { text: '可售',       color: '#07C160' },
+      '在建抵押':   { text: '可售(抵押)',  color: '#FF9800' },
+      '已签认购书': { text: '已认购',     color: '#1890FF' },
+      '已签合同':   { text: '已签合同',    color: '#FAAD14' },
+      '已录入合同': { text: '已签合同',    color: '#FAAD14' },
+      '已备案':    { text: '已备案',      color: '#FF8C00' },
+      '首次登记':   { text: '已登记',      color: '#722ED1' },
+      '安居房':    { text: '安居房',      color: '#52C41A' },
+      '共有产权房': { text: '共有产权',    color: '#13C2C2' },
+      '自动锁定':   { text: '锁定',       color: '#FF4D4F' },
+      '区局锁定':   { text: '锁定',       color: '#FF4D4F' },
+      '市局锁定':   { text: '锁定',       color: '#FF4D4F' },
+      '司法查封':   { text: '查封',       color: '#FF4D4F' },
     };
     const sm = statusMap[unit.status] || { text: unit.status, color: '#888' };
     const rate = getApp().globalData.mortgageRate || 0.0305;
