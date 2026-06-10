@@ -32,35 +32,59 @@ Page({
   async loadData() {
     this.setData({ loading: true, error: false });
     try {
-      const [dash, ov] = await Promise.all([
+      const today = new Date();
+      const todayStr = today.toISOString().slice(0, 10);
+      const yestStr = new Date(today - 86400000).toISOString().slice(0, 10);
+      // 本月/今年起始
+      const thisMonthStart = todayStr.slice(0, 7) + '-01';
+      const thisYearStart = todayStr.slice(0, 4) + '-01-01';
+      // 上月同期
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      const lastMonthStart = lastMonthEnd.toISOString().slice(0, 8) + '01';
+      const lastMonthDay = Math.min(today.getDate(), lastMonthEnd.getDate());
+      const lastMonthSame = lastMonthStart.slice(0, 8) + String(lastMonthDay).padStart(2, '0');
+      // 去年今天
+      const lastYearToday = (today.getFullYear() - 1) + todayStr.slice(4);
+      const lastYearStart = (today.getFullYear() - 1) + '-01-01';
+
+      const [dash, ov, todayData, monthData, yearData, lastMonthData, lastYearData] = await Promise.all([
         api.getDashboard(24),
-        api.getOverview()
+        api.getOverview(),
+        api.getDailyStats(todayStr, todayStr),
+        api.getDailyStats(thisMonthStart, todayStr),
+        api.getDailyStats(thisYearStart, todayStr),
+        api.getDailyStats(lastMonthStart, lastMonthSame),
+        api.getDailyStats(lastYearStart, lastYearToday)
       ]);
 
       // --- 今日/昨日 ---
       const daily = dash.dailyItems || [];
-      const today = daily[0] || {};
+      const td = (todayData.items || [])[0] || {};
+      const todayNew = td.new || 0, todayUsed = td.used || 0;
       const yesterday = daily[1] || {};
 
-      // --- 本月/上月 ---
-      const sm = dash.summary || {};
-      const tm = sm.this_month || {};
-      const lm = sm.last_month || {};
+      // --- 本月累计 ---
+      const monthItems = monthData.items || [];
+      const monthNew = monthItems.reduce((s, t) => s + (t.new || 0), 0);
+      const monthUsed = monthItems.reduce((s, t) => s + (t.used || 0), 0);
 
-      // --- 本年/去年 (从trends按年份累加) ---
-      const nowYear = new Date().getFullYear();
-      const allTrends = dash.trends || [];
-      let thisYearNew = 0, thisYearUsed = 0;
-      let lastYearNew = 0, lastYearUsed = 0;
-      allTrends.forEach(t => {
-        const y = parseInt((t.month || '').split('-')[0]);
-        if (y === nowYear) { thisYearNew += t.new || 0; thisYearUsed += t.used || 0; }
-        else if (y === nowYear - 1) { lastYearNew += t.new || 0; lastYearUsed += t.used || 0; }
-      });
+      // --- 今年累计 ---
+      const yearItems = yearData.items || [];
+      const yearNew = yearItems.reduce((s, t) => s + (t.new || 0), 0);
+      const yearUsed = yearItems.reduce((s, t) => s + (t.used || 0), 0);
+
+      // --- 上月同期 ---
+      const lmItems = lastMonthData.items || [];
+      const lmNew = lmItems.reduce((s, t) => s + (t.new || 0), 0);
+      const lmUsed = lmItems.reduce((s, t) => s + (t.used || 0), 0);
+
+      // --- 去年截至今天 ---
+      const lyItems = lastYearData.items || [];
+      const lyNew = lyItems.reduce((s, t) => s + (t.new || 0), 0);
+      const lyUsed = lyItems.reduce((s, t) => s + (t.used || 0), 0);
 
       // --- 日走势数据(最近14天) ---
       const dailyTrends = (dash.dailyItems || []).slice(0, 14).reverse();
-      // 30日均 = 新房和二手分别算
       const all30 = (dash.dailyItems || []).slice(0, 30);
       const avg30New = all30.length ? Math.round(all30.reduce((s, t) => s + (t.new || 0), 0) / all30.length) : 0;
       const avg30Used = all30.length ? Math.round(all30.reduce((s, t) => s + (t.used || 0), 0) / all30.length) : 0;
@@ -89,15 +113,15 @@ Page({
 
       this.setData({
         updateTime,
-        today: { date: today.date, new: today.new || 0, used: today.used || 0 },
-        yesterday: { date: yesterday.date, new: yesterday.new || 0, used: yesterday.used || 0 },
-        thisMonth: { month: tm.month, new: tm.new || 0, used: tm.used || 0 },
-        lastMonth: { new: lm.new || 0, used: lm.used || 0 },
-        thisYear: { new: thisYearNew, used: thisYearUsed },
-        lastYear: { new: lastYearNew || '/', used: lastYearUsed || '/' },
-        tn_t: trend(today.new, yesterday.new), tn_u: trend(today.used, yesterday.used),
-        tm_t: trend(tm.new, lm.new), tm_u: trend(tm.used, lm.used),
-        ty_t: trend(thisYearNew, lastYearNew), ty_u: trend(thisYearUsed, lastYearUsed),
+        today: { new: todayNew, used: todayUsed },
+        yesterday: { new: yesterday.new || 0, used: yesterday.used || 0 },
+        thisMonth: { month: thisMonthStart.slice(0, 7), new: monthNew, used: monthUsed },
+        lastMonth: { new: lmNew, used: lmUsed },
+        thisYear: { new: yearNew, used: yearUsed },
+        lastYear: { new: lyNew, used: lyUsed },
+        tn_t: trend(todayNew, yesterday.new), tn_u: trend(todayUsed, yesterday.used),
+        tm_t: trend(monthNew, lmNew), tm_u: trend(monthUsed, lmUsed),
+        ty_t: trend(yearNew, lyNew), ty_u: trend(yearUsed, lyUsed),
         dailyTrends, avg30New, avg30Used,
         avgPrice,
         topDistricts: zones,
