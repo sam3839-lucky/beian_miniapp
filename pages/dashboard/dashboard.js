@@ -15,7 +15,8 @@ Page({
     today: {}, yesterday: {},
     thisMonth: {}, lastMonth: {},
     thisYear: {}, lastYear: {},
-    trends: [],
+    dailyTrends: [],
+    avg30: 0,
     avgPrice: '--',
     topDistricts: [],
     loading: true,
@@ -45,9 +46,9 @@ Page({
       const lm = sm.last_month || {};
 
       // --- 本年/去年 (从trends累加) ---
-      const trends = (dash.trends || []).slice(0, 12);
+      const monthTrends = (dash.trends || []).slice(0, 12);
       let thisYearNew = 0, thisYearUsed = 0;
-      trends.forEach(t => {
+      monthTrends.forEach(t => {
         thisYearNew += t.new || 0;
         thisYearUsed += t.used || 0;
       });
@@ -60,6 +61,12 @@ Page({
         lastYearNew += t.new || 0;
         lastYearUsed += t.used || 0;
       });
+
+      // --- 日走势数据(最近14天) ---
+      const dailyTrends = (dash.dailyItems || []).slice(0, 14).reverse();
+      // 30日均值 = 近30天日均成交
+      const all30 = (dash.dailyItems || []).slice(0, 30);
+      const avg30 = all30.length ? Math.round(all30.reduce((s, t) => s + (t.new || 0) + (t.used || 0), 0) / all30.length) : 0;
 
       // --- 均价 ---
       const avgPrice = ov.avg_unit_price ? (ov.avg_unit_price / 10000).toFixed(2) : '--';
@@ -77,7 +84,7 @@ Page({
         lastMonth: { new: lm.new || 0, used: lm.used || 0 },
         thisYear: { new: thisYearNew, used: thisYearUsed },
         lastYear: { new: lastYearNew || '/', used: lastYearUsed || '/' },
-        trends: trends.reverse(),
+        dailyTrends, avg30,
         avgPrice,
         topDistricts: zones,
         loading: false
@@ -89,24 +96,22 @@ Page({
   },
 
   drawChart() {
-    const trends = this.data.trends;
-    if (!trends.length) return;
+    const trends = this.data.dailyTrends;
+    const avg30 = this.data.avg30;
+    if (!trends || !trends.length) return;
     const query = wx.createSelectorQuery().in(this);
     query.select('#trendCanvas').boundingClientRect().exec(res => {
       if (!res[0] || !res[0].width) return;
       const w = res[0].width;
       const h = res[0].height || 200;
       const ctx = wx.createCanvasContext('trendCanvas', this);
-      const pad = { top: 20, right: 8, bottom: 28, left: 40 };
+      const pad = { top: 20, right: 8, bottom: 28, left: 38 };
       const pw = w - pad.left - pad.right;
       const ph = h - pad.top - pad.bottom;
-      const maxV = Math.max(...trends.map(t => (t.new || 0) + (t.used || 0))) * 1.15 || 1;
+      const vals = trends.map(t => (t.new || 0) + (t.used || 0));
+      const maxV = Math.max(...vals, avg30) * 1.2 || 1;
       const gap = pw / trends.length;
-      const barW = gap * 0.6;
-
-      // 30日均线
-      const avg30 = trends.reduce((s, t) => s + (t.new || 0) + (t.used || 0), 0) / trends.length;
-      const avgY = pad.top + ph * (1 - avg30 / maxV);
+      const barW = gap * 0.7;
 
       // Y轴
       ctx.setFillStyle('#999'); ctx.setFontSize(9); ctx.setTextAlign('right');
@@ -122,27 +127,27 @@ Page({
         const x = pad.left + i * gap + (gap - barW) / 2;
         const hNew = (t.new || 0) / maxV * ph;
         const hUsed = (t.used || 0) / maxV * ph;
-        // 新房柱
         ctx.setFillStyle('#7EB8E0');
-        ctx.fillRect(x, pad.top + ph - hNew, barW / 2, hNew);
-        // 二手柱
+        ctx.fillRect(x, pad.top + ph - hNew, barW / 2, Math.max(hNew, 1));
         ctx.setFillStyle('#0066B3');
-        ctx.fillRect(x + barW / 2, pad.top + ph - hUsed, barW / 2, hUsed);
-        // 日期
-        if (i % 2 === 0 && t.month) {
+        ctx.fillRect(x + barW / 2, pad.top + ph - hUsed, barW / 2, Math.max(hUsed, 1));
+        // 日期标签(每2天)
+        if (i % 2 === 0 && t.date) {
           ctx.setFillStyle('#999'); ctx.setFontSize(8); ctx.setTextAlign('center');
-          const m = t.month.slice(5);
-          ctx.fillText(m, x + barW / 2, h - 4);
+          ctx.fillText(t.date.slice(5), x + barW / 2, h - 4);
         }
       });
 
       // 30日均线
-      ctx.setStrokeStyle('#E53935'); ctx.setLineWidth(1);
-      ctx.setLineDash([4, 3]); ctx.beginPath();
-      ctx.moveTo(pad.left, avgY); ctx.lineTo(w - pad.right, avgY); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.setFillStyle('#E53935'); ctx.setFontSize(9); ctx.setTextAlign('right');
-      ctx.fillText('30日均', w - pad.right, avgY - 4);
+      if (avg30 > 0) {
+        const avgY = pad.top + ph * (1 - avg30 / maxV);
+        ctx.setStrokeStyle('#E53935'); ctx.setLineWidth(1.5);
+        ctx.setLineDash([4, 3]); ctx.beginPath();
+        ctx.moveTo(pad.left, avgY); ctx.lineTo(w - pad.right, avgY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.setFillStyle('#E53935'); ctx.setFontSize(9); ctx.setTextAlign('right');
+        ctx.fillText(avg30 + '', pad.left - 4, avgY - 2);
+      }
 
       ctx.draw();
     });
