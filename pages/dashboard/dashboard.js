@@ -147,6 +147,8 @@ Page({
         ctx.setLineDash([4, 3]); ctx.beginPath();
         ctx.moveTo(pad.left, yN); ctx.lineTo(w - pad.right, yN); ctx.stroke();
         ctx.setLineDash([]);
+        ctx.setFillStyle('#7EB8E0'); ctx.setFontSize(9); ctx.setTextAlign('right');
+        ctx.fillText('新房均' + avgN, w - pad.right, yN - 4);
       }
       // 二手30日均线(深蓝虚线)
       if (avgU > 0) {
@@ -155,6 +157,8 @@ Page({
         ctx.setLineDash([4, 3]); ctx.beginPath();
         ctx.moveTo(pad.left, yU); ctx.lineTo(w - pad.right, yU); ctx.stroke();
         ctx.setLineDash([]);
+        ctx.setFillStyle('#0066B3'); ctx.setFontSize(9); ctx.setTextAlign('right');
+        ctx.fillText('二手均' + avgU, w - pad.right, yU - 4);
       }
 
       ctx.draw();
