@@ -47,21 +47,15 @@ Page({
       const tm = sm.this_month || {};
       const lm = sm.last_month || {};
 
-      // --- 本年/去年 (从trends累加) ---
-      const monthTrends = (dash.trends || []).slice(0, 12);
-      let thisYearNew = 0, thisYearUsed = 0;
-      monthTrends.forEach(t => {
-        thisYearNew += t.new || 0;
-        thisYearUsed += t.used || 0;
-      });
-
-      // --- 去年 (trends里往前12个月) ---
+      // --- 本年/去年 (从trends按年份累加) ---
+      const nowYear = new Date().getFullYear();
       const allTrends = dash.trends || [];
-      const lastYearTrends = allTrends.slice(12, 24);
+      let thisYearNew = 0, thisYearUsed = 0;
       let lastYearNew = 0, lastYearUsed = 0;
-      lastYearTrends.forEach(t => {
-        lastYearNew += t.new || 0;
-        lastYearUsed += t.used || 0;
+      allTrends.forEach(t => {
+        const y = parseInt((t.month || '').split('-')[0]);
+        if (y === nowYear) { thisYearNew += t.new || 0; thisYearUsed += t.used || 0; }
+        else if (y === nowYear - 1) { lastYearNew += t.new || 0; lastYearUsed += t.used || 0; }
       });
 
       // --- 日走势数据(最近14天) ---
