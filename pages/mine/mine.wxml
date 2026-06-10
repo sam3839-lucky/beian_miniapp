@@ -1,4 +1,13 @@
 <view class="page">
+  <!-- 成交概览 -->
+  <view class="section menu-section" bindtap="onOpenDashboard">
+    <view class="menu-item">
+      <text class="menu-icon">📊</text>
+      <text class="menu-label">成交概览</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
   <!-- 关于 -->
   <view class="section about-section">
     <view class="about-title">关于备案价查询</view>

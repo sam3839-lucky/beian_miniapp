@@ -1,0 +1,88 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+  <view wx:elif="{{error}}" class="err-block" bindtap="onRetry">
+    <text>加载失败，点击重试</text>
+  </view>
+
+  <block wx:else>
+    <!-- 头部 -->
+    <view class="header">
+      <text class="title">深圳楼市成交概览</text>
+      <text class="subtitle">数据来源：深圳市住房和建设局官方平台</text>
+      <view class="divider"></view>
+    </view>
+
+    <!-- 6张数据卡 -->
+    <view class="cards-grid">
+      <view class="card card-new">
+        <text class="card-label">今日新房成交</text>
+        <text class="card-value">{{today.new}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">昨日 {{yesterday.new}}套</text>
+      </view>
+      <view class="card card-new">
+        <text class="card-label">本月新房成交</text>
+        <text class="card-value">{{thisMonth.new}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">上月 {{lastMonth.new}}套</text>
+      </view>
+      <view class="card card-new">
+        <text class="card-label">今年新房成交</text>
+        <text class="card-value">{{thisYear.new}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">去年 {{lastYear.new}}套</text>
+      </view>
+      <view class="card card-used">
+        <text class="card-label">今日二手房成交</text>
+        <text class="card-value">{{today.used}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">昨日 {{yesterday.used}}套</text>
+      </view>
+      <view class="card card-used">
+        <text class="card-label">本月二手房成交</text>
+        <text class="card-value">{{thisMonth.used}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">上月 {{lastMonth.used}}套</text>
+      </view>
+      <view class="card card-used">
+        <text class="card-label">今年二手房成交</text>
+        <text class="card-value">{{thisYear.used}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">去年 {{lastYear.used}}套</text>
+      </view>
+    </view>
+
+    <!-- 走势图 -->
+    <view class="chart-section">
+      <text class="section-title">日成交走势对比</text>
+      <view class="chart-legend">
+        <text class="leg-dot leg-new"></text><text>新房</text>
+        <text class="leg-dot leg-used"></text><text>二手</text>
+        <text class="leg-line"></text><text>30日均线</text>
+      </view>
+      <canvas canvas-id="trendCanvas" id="trendCanvas" class="trend-canvas"></canvas>
+    </view>
+
+    <!-- 重点看板 -->
+    <view class="panel-section">
+      <text class="section-title">本周重点数据看板</text>
+      <view class="panel-row">
+        <view class="panel-card">
+          <text class="plabel">网签均价</text>
+          <text class="pvalue">{{avgPrice}}<text class="punit"> 万/㎡</text></text>
+        </view>
+        <view class="panel-card">
+          <text class="plabel">主力成交片区 TOP3</text>
+          <view wx:for="{{topDistricts}}" wx:key="name" class="prow">
+            <text>{{item.name}} · {{item.count}}套</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 领取按钮 -->
+    <view class="poster-bar">
+      <view class="poster-btn" bindtap="onSavePoster">
+        <text>📊 领取完整海报</text>
+        <text class="poster-hint">保存到相册，分享到朋友圈/小红书</text>
+      </view>
+    </view>
+
+    <!-- 隐藏的Canvas用于海报生成 -->
+    <canvas canvas-id="posterCanvas" id="posterCanvas" style="width:750px;height:1334px;position:fixed;left:-9999px;top:-9999px;"></canvas>
+  </block>
+</view>

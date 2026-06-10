@@ -8,7 +8,8 @@
     "pages/history-search/history-search",
     "pages/history-result/history-result",
     "pages/history-detail/history-detail",
-    "pages/community-overview/overview"
+    "pages/community-overview/overview",
+    "pages/dashboard/dashboard"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",

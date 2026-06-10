@@ -61,6 +61,10 @@ Page({
     wx.navigateTo({ url: '/pages/subscriptions/subscriptions' });
   },
 
+  onOpenDashboard() {
+    wx.navigateTo({ url: '/pages/dashboard/dashboard' });
+  },
+
   onOpenOps() {
     wx.navigateTo({ url: '/pages/ops/ops' });
   },
