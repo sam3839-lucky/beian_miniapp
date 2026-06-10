@@ -221,13 +221,13 @@ Page({
     ctx.setFillStyle('#333'); ctx.setFontSize(20); ctx.setTextAlign('left');
     ctx.fillText('日成交走势', 50, 525);
 
-    const trends = d.trends.slice(-14);
-    if (trends.length) {
-      const maxT = Math.max(...trends.map(t => (t.new || 0) + (t.used || 0))) * 1.15 || 1;
+    const pTrends = d.dailyTrends;
+    if (pTrends.length) {
+      const maxT = Math.max(...pTrends.map(t => (t.new || 0) + (t.used || 0))) * 1.15 || 1;
       const cw = W - 100, ch = 130;
-      const gapC = cw / trends.length;
+      const gapC = cw / pTrends.length;
       const barC = gapC * 0.6;
-      trends.forEach((t, i) => {
+      pTrends.forEach((t, i) => {
         const bx = 50 + i * gapC + (gapC - barC) / 2;
         const hn = (t.new || 0) / maxT * ch;
         const hu = (t.used || 0) / maxT * ch;
