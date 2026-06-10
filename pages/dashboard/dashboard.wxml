@@ -82,7 +82,7 @@
 
     <!-- 二维码引导 -->
     <view class="qr-section">
-      <view class="qr-box">扫码添加企业微信</view>
+      <image class="qr-img" src="/assets/qrcode.png" mode="aspectFit"/>
       <view class="qr-text">
         <text class="qr-title">👉 扫码添加企业微信，回复【深圳】免费领：</text>
         <text class="qr-item">✅ 深圳最新购房政策解读</text>
