@@ -270,5 +270,4 @@ Page({
     ctx.closePath();
   },
 
-  api: require('../../utils/api')
 });
