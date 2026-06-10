@@ -16,7 +16,8 @@ Page({
     thisMonth: {}, lastMonth: {},
     thisYear: {}, lastYear: {},
     dailyTrends: [],
-    avg30: 0,
+    avg30New: 0,
+    avg30Used: 0,
     avgPrice: '--',
     topDistricts: [],
     loading: true,
@@ -64,9 +65,10 @@ Page({
 
       // --- 日走势数据(最近14天) ---
       const dailyTrends = (dash.dailyItems || []).slice(0, 14).reverse();
-      // 30日均值 = 近30天日均成交
+      // 30日均 = 新房和二手分别算
       const all30 = (dash.dailyItems || []).slice(0, 30);
-      const avg30 = all30.length ? Math.round(all30.reduce((s, t) => s + (t.new || 0) + (t.used || 0), 0) / all30.length) : 0;
+      const avg30New = all30.length ? Math.round(all30.reduce((s, t) => s + (t.new || 0), 0) / all30.length) : 0;
+      const avg30Used = all30.length ? Math.round(all30.reduce((s, t) => s + (t.used || 0), 0) / all30.length) : 0;
 
       // --- 均价 ---
       const avgPrice = ov.avg_unit_price ? (ov.avg_unit_price / 10000).toFixed(2) : '--';
@@ -84,7 +86,7 @@ Page({
         lastMonth: { new: lm.new || 0, used: lm.used || 0 },
         thisYear: { new: thisYearNew, used: thisYearUsed },
         lastYear: { new: lastYearNew || '/', used: lastYearUsed || '/' },
-        dailyTrends, avg30,
+        dailyTrends, avg30New, avg30Used,
         avgPrice,
         topDistricts: zones,
         loading: false
@@ -97,7 +99,8 @@ Page({
 
   drawChart() {
     const trends = this.data.dailyTrends;
-    const avg30 = this.data.avg30;
+    const avgN = this.data.avg30New;
+    const avgU = this.data.avg30Used;
     if (!trends || !trends.length) return;
     const query = wx.createSelectorQuery().in(this);
     query.select('#trendCanvas').boundingClientRect().exec(res => {
@@ -109,7 +112,7 @@ Page({
       const pw = w - pad.left - pad.right;
       const ph = h - pad.top - pad.bottom;
       const vals = trends.map(t => (t.new || 0) + (t.used || 0));
-      const maxV = Math.max(...vals, avg30) * 1.2 || 1;
+      const maxV = Math.max(...vals, avgN, avgU) * 1.2 || 1;
       const gap = pw / trends.length;
       const barW = gap * 0.7;
 
@@ -131,22 +134,27 @@ Page({
         ctx.fillRect(x, pad.top + ph - hNew, barW / 2, Math.max(hNew, 1));
         ctx.setFillStyle('#0066B3');
         ctx.fillRect(x + barW / 2, pad.top + ph - hUsed, barW / 2, Math.max(hUsed, 1));
-        // 日期标签(每2天)
         if (i % 2 === 0 && t.date) {
           ctx.setFillStyle('#999'); ctx.setFontSize(8); ctx.setTextAlign('center');
           ctx.fillText(t.date.slice(5), x + barW / 2, h - 4);
         }
       });
 
-      // 30日均线
-      if (avg30 > 0) {
-        const avgY = pad.top + ph * (1 - avg30 / maxV);
-        ctx.setStrokeStyle('#E53935'); ctx.setLineWidth(1.5);
+      // 新房30日均线(浅蓝虚线)
+      if (avgN > 0) {
+        const yN = pad.top + ph * (1 - avgN / maxV);
+        ctx.setStrokeStyle('#7EB8E0'); ctx.setLineWidth(1.5);
         ctx.setLineDash([4, 3]); ctx.beginPath();
-        ctx.moveTo(pad.left, avgY); ctx.lineTo(w - pad.right, avgY); ctx.stroke();
+        ctx.moveTo(pad.left, yN); ctx.lineTo(w - pad.right, yN); ctx.stroke();
         ctx.setLineDash([]);
-        ctx.setFillStyle('#E53935'); ctx.setFontSize(9); ctx.setTextAlign('right');
-        ctx.fillText(avg30 + '', pad.left - 4, avgY - 2);
+      }
+      // 二手30日均线(深蓝虚线)
+      if (avgU > 0) {
+        const yU = pad.top + ph * (1 - avgU / maxV);
+        ctx.setStrokeStyle('#0066B3'); ctx.setLineWidth(1.5);
+        ctx.setLineDash([4, 3]); ctx.beginPath();
+        ctx.moveTo(pad.left, yU); ctx.lineTo(w - pad.right, yU); ctx.stroke();
+        ctx.setLineDash([]);
       }
 
       ctx.draw();

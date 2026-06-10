@@ -22,7 +22,7 @@
 .chart-legend{display:flex;justify-content:center;align-items:center;gap:8rpx;font-size:20rpx;color:#8C9BA8;margin-bottom:12rpx}
 .leg-dot{width:16rpx;height:16rpx;border-radius:4rpx}
 .leg-new{background:#7EB8E0}.leg-used{background:#0066B3}
-.leg-line{width:24rpx;height:0;border-top:2rpx dashed #E53935}
+.leg-line{width:24rpx;height:0;border-top:2rpx dashed}.leg-lnew{border-color:#7EB8E0}.leg-lused{border-color:#0066B3}
 .trend-canvas{width:100%;height:240rpx}
 
 /* 重点看板 */

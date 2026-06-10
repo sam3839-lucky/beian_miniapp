@@ -52,7 +52,8 @@
       <view class="chart-legend">
         <text class="leg-dot leg-new"></text><text>新房</text>
         <text class="leg-dot leg-used"></text><text>二手</text>
-        <text class="leg-line"></text><text>30日均线</text>
+        <text class="leg-line leg-lnew"></text><text>新房均</text>
+        <text class="leg-line leg-lused"></text><text>二手均</text>
       </view>
       <canvas canvas-id="trendCanvas" id="trendCanvas" class="trend-canvas"></canvas>
     </view>
