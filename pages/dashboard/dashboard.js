@@ -30,7 +30,7 @@ Page({
     this.setData({ loading: true, error: false });
     try {
       const [dash, ov] = await Promise.all([
-        api.getDashboard(12),
+        api.getDashboard(24),
         api.getOverview()
       ]);
 
