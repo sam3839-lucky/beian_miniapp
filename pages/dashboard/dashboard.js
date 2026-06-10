@@ -12,6 +12,7 @@ function arrow(a, b) {
 
 Page({
   data: {
+    updateTime: '',
     today: {}, yesterday: {},
     thisMonth: {}, lastMonth: {},
     thisYear: {}, lastYear: {},
@@ -79,13 +80,30 @@ Page({
         count: z.count
       }));
 
+      // 更新时间
+      const now = new Date();
+      const updateTime = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 ' +
+        String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+
+      // 环比箭头辅助
+      const trend = (a, b) => {
+        if (!a || !b) return { arrow: '→', cls: '', pct: '--' };
+        const p = ((a - b) / b * 100).toFixed(1);
+        const up = a > b;
+        return { arrow: up ? '↑' : a < b ? '↓' : '→', cls: up ? 'up' : 'down', pct: Math.abs(p) + '%' };
+      };
+
       this.setData({
+        updateTime,
         today: { date: today.date, new: today.new || 0, used: today.used || 0 },
         yesterday: { date: yesterday.date, new: yesterday.new || 0, used: yesterday.used || 0 },
         thisMonth: { month: tm.month, new: tm.new || 0, used: tm.used || 0 },
         lastMonth: { new: lm.new || 0, used: lm.used || 0 },
         thisYear: { new: thisYearNew, used: thisYearUsed },
         lastYear: { new: lastYearNew || '/', used: lastYearUsed || '/' },
+        tn_t: trend(today.new, yesterday.new), tn_u: trend(today.used, yesterday.used),
+        tm_t: trend(tm.new, lm.new), tm_u: trend(tm.used, lm.used),
+        ty_t: trend(thisYearNew, lastYearNew), ty_u: trend(thisYearUsed, lastYearUsed),
         dailyTrends, avg30New, avg30Used,
         avgPrice,
         topDistricts: zones,

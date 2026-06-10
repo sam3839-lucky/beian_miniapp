@@ -8,7 +8,7 @@
     <!-- 头部 -->
     <view class="header">
       <text class="title">深圳楼市成交概览</text>
-      <text class="subtitle">数据来源：深圳市住房和建设局官方平台</text>
+      <text class="subtitle">数据更新时间：{{updateTime}}</text>
       <view class="divider"></view>
     </view>
 
@@ -17,32 +17,32 @@
       <view class="card card-new">
         <text class="card-label">今日新房成交</text>
         <text class="card-value">{{today.new}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">昨日 {{yesterday.new}}套</text>
+        <text class="card-sub">昨日 {{yesterday.new}}套 <text class="arrow {{tn_t.cls}}">{{tn_t.arrow}} {{tn_t.pct}}</text></text>
       </view>
       <view class="card card-new">
         <text class="card-label">本月新房成交</text>
         <text class="card-value">{{thisMonth.new}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">上月 {{lastMonth.new}}套</text>
+        <text class="card-sub">上月 {{lastMonth.new}}套 <text class="arrow {{tm_t.cls}}">{{tm_t.arrow}} {{tm_t.pct}}</text></text>
       </view>
       <view class="card card-new">
         <text class="card-label">今年新房成交</text>
         <text class="card-value">{{thisYear.new}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">去年 {{lastYear.new}}套</text>
+        <text class="card-sub">去年 {{lastYear.new}}套 <text class="arrow {{ty_t.cls}}">{{ty_t.arrow}} {{ty_t.pct}}</text></text>
       </view>
       <view class="card card-used">
         <text class="card-label">今日二手房成交</text>
         <text class="card-value">{{today.used}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">昨日 {{yesterday.used}}套</text>
+        <text class="card-sub">昨日 {{yesterday.used}}套 <text class="arrow {{tn_u.cls}}">{{tn_u.arrow}} {{tn_u.pct}}</text></text>
       </view>
       <view class="card card-used">
         <text class="card-label">本月二手房成交</text>
         <text class="card-value">{{thisMonth.used}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">上月 {{lastMonth.used}}套</text>
+        <text class="card-sub">上月 {{lastMonth.used}}套 <text class="arrow {{tm_u.cls}}">{{tm_u.arrow}} {{tm_u.pct}}</text></text>
       </view>
       <view class="card card-used">
         <text class="card-label">今年二手房成交</text>
         <text class="card-value">{{thisYear.used}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">去年 {{lastYear.used}}套</text>
+        <text class="card-sub">去年 {{lastYear.used}}套 <text class="arrow {{ty_u.cls}}">{{ty_u.arrow}} {{ty_u.pct}}</text></text>
       </view>
     </view>
 
@@ -73,6 +73,22 @@
           </view>
         </view>
       </view>
+      <view class="tag-row">
+        <text class="tag">6月淡季</text>
+        <text class="tag">二手成交活跃</text>
+        <text class="tag">新房供应放量</text>
+      </view>
+    </view>
+
+    <!-- 二维码引导 -->
+    <view class="qr-section">
+      <view class="qr-box">扫码添加<br>企业微信</view>
+      <view class="qr-text">
+        <text class="qr-title">👉 扫码添加企业微信，回复【深圳】免费领：</text>
+        <text class="qr-item">✅ 深圳最新购房政策解读</text>
+        <text class="qr-item">✅ 片区笋盘清单</text>
+        <text class="qr-item">✅ 一对一购房答疑</text>
+      </view>
     </view>
 
     <!-- 领取按钮 -->
@@ -83,7 +99,14 @@
       </view>
     </view>
 
-    <!-- 隐藏的Canvas用于海报生成 -->
+    <!-- 底部 -->
+    <view class="footer">
+      <text>数据来源：深圳市住房和建设局官方平台，数据仅供参考</text>
+    </view>
+    <view class="footer-tags">
+      <text>#深圳楼市</text><text>#深圳买房</text><text>#深圳新房</text><text>#深圳二手房</text>
+    </view>
+
     <canvas canvas-id="posterCanvas" id="posterCanvas" style="width:750px;height:1334px;position:fixed;left:-9999px;top:-9999px;"></canvas>
   </block>
 </view>
