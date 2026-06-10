@@ -13,7 +13,7 @@ function arrow(a, b) {
 Page({
   data: {
     updateTime: '',
-    today: {}, yesterday: {},
+    yesterday: {}, dayBefore: {},
     thisMonth: {}, lastMonth: {},
     thisYear: {}, lastYear: {},
     dailyTrends: [],
@@ -34,7 +34,6 @@ Page({
     try {
       const today = new Date();
       const todayStr = today.toISOString().slice(0, 10);
-      const yestStr = new Date(today - 86400000).toISOString().slice(0, 10);
       // 本月/今年起始
       const thisMonthStart = todayStr.slice(0, 7) + '-01';
       const thisYearStart = todayStr.slice(0, 4) + '-01-01';
@@ -47,21 +46,20 @@ Page({
       const lastYearToday = (today.getFullYear() - 1) + todayStr.slice(4);
       const lastYearStart = (today.getFullYear() - 1) + '-01-01';
 
-      const [dash, ov, todayData, monthData, yearData, lastMonthData, lastYearData] = await Promise.all([
+      const [dash, ov, monthData, yearData, lastMonthData, lastYearData] = await Promise.all([
         api.getDashboard(24),
         api.getOverview(),
-        api.getDailyStats(todayStr, todayStr),
         api.getDailyStats(thisMonthStart, todayStr),
         api.getDailyStats(thisYearStart, todayStr),
         api.getDailyStats(lastMonthStart, lastMonthSame),
         api.getDailyStats(lastYearStart, lastYearToday)
       ]);
 
-      // --- 今日/昨日 ---
+      // --- 昨日/前日（数据源：dailyItems[0]=最近一天=昨日, [1]=前日）---
       const daily = dash.dailyItems || [];
-      const td = (todayData.items || [])[0] || {};
-      const todayNew = td.new || 0, todayUsed = td.used || 0;
-      const yesterday = daily[1] || {};
+      const yesterdayData = daily[0] || {};
+      const yesterdayNew = yesterdayData.new || 0, yesterdayUsed = yesterdayData.used || 0;
+      const dayBefore = daily[1] || {};
 
       // --- 本月累计 ---
       const monthItems = monthData.items || [];
@@ -113,13 +111,13 @@ Page({
 
       this.setData({
         updateTime,
-        today: { new: todayNew, used: todayUsed },
-        yesterday: { new: yesterday.new || 0, used: yesterday.used || 0 },
+        yesterday: { new: yesterdayNew, used: yesterdayUsed },
+        dayBefore: { new: dayBefore.new || 0, used: dayBefore.used || 0 },
         thisMonth: { month: thisMonthStart.slice(0, 7), new: monthNew, used: monthUsed },
         lastMonth: { new: lmNew, used: lmUsed },
         thisYear: { new: yearNew, used: yearUsed },
         lastYear: { new: lyNew, used: lyUsed },
-        tn_t: trend(todayNew, yesterday.new), tn_u: trend(todayUsed, yesterday.used),
+        tn_t: trend(yesterdayNew, dayBefore.new), tn_u: trend(yesterdayUsed, dayBefore.used),
         tm_t: trend(monthNew, lmNew), tm_u: trend(monthUsed, lmUsed),
         ty_t: trend(yearNew, lyNew), ty_u: trend(yearUsed, lyUsed),
         dailyTrends, avg30New, avg30Used,
@@ -232,10 +230,10 @@ Page({
     // 6张数据卡
     const d = this.data;
     const cards = [
-      { label: '今日新房成交', val: d.today.new + '套', sub: '昨日 ' + d.yesterday.new + '套', color: '#0066B3' },
+      { label: '昨日新房成交', val: d.yesterday.new + '套', sub: '前日 ' + d.dayBefore.new + '套', color: '#0066B3' },
       { label: '本月新房成交', val: d.thisMonth.new + '套', sub: '上月 ' + d.lastMonth.new + '套', color: '#0066B3' },
       { label: '今年新房成交', val: d.thisYear.new + '套', sub: '去年 ' + d.lastYear.new + '套', color: '#0066B3' },
-      { label: '今日二手房成交', val: d.today.used + '套', sub: '昨日 ' + d.yesterday.used + '套', color: '#34A853' },
+      { label: '昨日二手房成交', val: d.yesterday.used + '套', sub: '前日 ' + d.dayBefore.used + '套', color: '#34A853' },
       { label: '本月二手房成交', val: d.thisMonth.used + '套', sub: '上月 ' + d.lastMonth.used + '套', color: '#34A853' },
       { label: '今年二手房成交', val: d.thisYear.used + '套', sub: '去年 ' + d.lastYear.used + '套', color: '#34A853' },
     ];

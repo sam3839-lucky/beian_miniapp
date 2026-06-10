@@ -15,9 +15,9 @@
     <!-- 6张数据卡 -->
     <view class="cards-grid">
       <view class="card card-new">
-        <text class="card-label">今日新房成交</text>
-        <text class="card-value">{{today.new}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">昨日 {{yesterday.new}}套 <text class="arrow {{tn_t.cls}}">{{tn_t.arrow}} {{tn_t.pct}}</text></text>
+        <text class="card-label">昨日新房成交</text>
+        <text class="card-value">{{yesterday.new}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">前日 {{dayBefore.new}}套 <text class="arrow {{tn_t.cls}}">{{tn_t.arrow}} {{tn_t.pct}}</text></text>
       </view>
       <view class="card card-new">
         <text class="card-label">本月新房成交</text>
@@ -30,9 +30,9 @@
         <text class="card-sub">去年 {{lastYear.new}}套 <text class="arrow {{ty_t.cls}}">{{ty_t.arrow}} {{ty_t.pct}}</text></text>
       </view>
       <view class="card card-used">
-        <text class="card-label">今日二手房成交</text>
-        <text class="card-value">{{today.used}}<text class="card-unit"> 套</text></text>
-        <text class="card-sub">昨日 {{yesterday.used}}套 <text class="arrow {{tn_u.cls}}">{{tn_u.arrow}} {{tn_u.pct}}</text></text>
+        <text class="card-label">昨日二手房成交</text>
+        <text class="card-value">{{yesterday.used}}<text class="card-unit"> 套</text></text>
+        <text class="card-sub">前日 {{dayBefore.used}}套 <text class="arrow {{tn_u.cls}}">{{tn_u.arrow}} {{tn_u.pct}}</text></text>
       </view>
       <view class="card card-used">
         <text class="card-label">本月二手房成交</text>
