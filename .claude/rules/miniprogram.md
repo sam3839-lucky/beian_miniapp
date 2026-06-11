@@ -10,3 +10,4 @@ paths: ["pages/**"]
 - 文字 #333 / #888 / #A8A8A8, 背景 #F7F7F7, 卡片 #fff
 - 间距 rpx: 页面 32rpx, 卡片内 24rpx, 卡片间 12-16rpx
 - 数据来源: https://ruiheqi.cn/api/
+- 所有页面必须实现 onShareAppMessage()：返回 { title: 页面标题, path: 页面路径 }。新建页面时自动添加。

@@ -32,5 +32,12 @@ Page({
 
   onRetry() {
     this.loadStatus();
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 运营面板',
+      path: '/pages/ops/ops'
+    };
+  },
 });

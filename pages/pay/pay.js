@@ -33,5 +33,12 @@ Page({
       data: 'bogelsf',
       success: () => wx.showToast({ title: '已复制微信号，去微信添加', icon: 'none', duration: 2000 })
     });
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 升级会员',
+      path: '/pages/pay/pay'
+    };
+  },
 });

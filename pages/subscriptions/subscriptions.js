@@ -52,5 +52,12 @@ Page({
 
   onRetry() {
     this.loadSubscriptions();
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 订阅管理',
+      path: '/pages/subscriptions/subscriptions'
+    };
+  },
 });

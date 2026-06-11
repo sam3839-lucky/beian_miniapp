@@ -321,4 +321,10 @@ Page({
     ctx.closePath();
   },
 
+  onShareAppMessage() {
+    return {
+      title: '深圳楼市成交概览',
+      path: '/pages/dashboard/dashboard'
+    };
+  },
 });

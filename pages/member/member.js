@@ -34,5 +34,12 @@ Page({
 
   onUpgrade() {
     wx.navigateTo({ url: '/pages/pay/pay' });
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 会员中心',
+      path: '/pages/member/member'
+    };
+  },
 });
