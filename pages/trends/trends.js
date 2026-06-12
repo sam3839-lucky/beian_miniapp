@@ -67,7 +67,7 @@ Page({
       const rawTrends = d.trends || [];
       this.setData({
         districts: d.districts, dailyItems: d.dailyItems || [],
-        salesRanks: d.salesRanks || [], salesZones: d.salesZones || [], salesLoading: false,
+        salesRanks: (d.salesRanks || []).filter(r => r.project_name && r.zone), salesZones: (d.salesZones || []).filter(z => z), salesLoading: false,
       }, () => {
         this.buildAndDrawChart(rawTrends);
       });
@@ -292,8 +292,8 @@ Page({
     try {
       const data = await api.getProjectSalesRank(z, 30);
       this.setData({
-        salesRanks: data.ranks || [],
-        salesZones: data.zones || [],
+        salesRanks: (data.ranks || []).filter(r => r.project_name && r.zone),
+        salesZones: (data.zones || []).filter(z => z),
         salesLoading: false
       });
     } catch (e) {
