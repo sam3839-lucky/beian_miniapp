@@ -62,6 +62,7 @@ module.exports = {
   getUserTier: (openid) => request('/api/user-tier?openid=' + encodeURIComponent(openid)),
   incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
   getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
+  getBuildingStats: (project) => request('/api/building-stats?project=' + encodeURIComponent(project)),
 
   // ── 小区历史成交价查询 ──
   getProjectHistoryMeta: () => request('/api/project-history-search-meta'),

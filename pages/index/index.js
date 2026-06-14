@@ -28,6 +28,7 @@ Page({
     searchTapped: false,
     visibleFloors: [],
     hasMore: false,
+    quickCombo: '',
   },
 
   onShowAll() {
@@ -258,6 +259,27 @@ Page({
     ];
     this.setData({ areaActive: idx, areaFilter: ranges[idx] || ranges[0] });
     this.loadUnits();
+  },
+
+  // 快速筛选 combo
+  onQuickCombo(e) {
+    const combo = e.currentTarget.dataset.combo;
+    const presets = {
+      gangxu:  { price: { min: 0, max: 500 }, area: { min: 60, max: 100 }, areaActive: 1 },
+      gaishan: { price: { min: 500, max: 1200 }, area: { min: 80, max: 130 }, areaActive: 2 },
+      haozhai: { price: { min: 1200, max: 999999 }, area: { min: 100, max: 9999 }, areaActive: 3 },
+      xiaohu:  { price: { min: 0, max: 400 }, area: { min: 0, max: 80 }, areaActive: 0 },
+      daping:  { price: { min: 800, max: 999999 }, area: { min: 120, max: 9999 }, areaActive: 4 },
+    };
+    // 再次点击同一 combo 取消
+    const isSame = this.data.quickCombo === combo;
+    if (isSame) {
+      this.setData({ quickCombo: '', priceFilter: { min: 0, max: 999999 }, areaFilter: { min: 0, max: 9999 }, priceActive: 0, areaActive: 0 });
+    } else {
+      const p = presets[combo];
+      this.setData({ quickCombo: combo, priceFilter: p.price, areaFilter: p.area, priceActive: 1, areaActive: p.areaActive });
+    }
+    if (this.data.projectName) this.loadUnits();
   },
 
   async loadUnits(projectName) {

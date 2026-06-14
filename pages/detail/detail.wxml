@@ -7,53 +7,48 @@
   <view class="row"><text class="k">总价</text><text class="v red">{{totalPrice}}</text></view>
 </view>
 
-<!-- ═══ 月供计算器 ═══ -->
+<!-- ═══ 折扣计算器 ═══ -->
 <view class="calc-card">
-  <view class="calc-title">月供计算</view>
+  <view class="calc-title">💰 折扣计算器</view>
   <view class="calc-row">
-    <view class="calc-field">
-      <text class="calc-label">备案总价 {{totalPrice}}</text>
-    </view>
-  </view>
-  <view class="calc-row">
-    <view class="calc-field">
-      <text class="calc-label">折扣</text>
-      <picker mode="selector" range="{{discountOptions}}" value="{{discountIdx}}" bindchange="onDiscountChange">
-        <view class="picker-val">{{discount > 0 ? discount + '折' : '无折扣'}}</view>
-      </picker>
-    </view>
-  </view>
-  <view class="calc-row" wx:if="{{dealPrice}}">
-    <view class="calc-field">
-      <text class="calc-label">成交总价</text>
-      <text class="calc-deal-tag">{{dealPrice}}万</text>
-    </view>
-  </view>
-  <view class="calc-row">
-    <view class="calc-field">
-      <text class="calc-label">首付比例</text>
-      <view class="ratio-picker">
-        <view class="ratio-btn {{calcRatio === 15 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{15}}">15%</view>
-        <view class="ratio-btn {{calcRatio === 20 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{20}}">20%</view>
-        <view class="ratio-btn {{calcRatio === 30 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{30}}">30%</view>
-        <view class="ratio-btn {{calcRatio === 50 ? 'on' : ''}}" bindtap="onRatioTap" data-ratio="{{50}}">50%</view>
-      </view>
+    <text class="calc-label">折扣</text>
+    <input class="calc-input" type="digit" value="{{discount}}" bindinput="onDiscountInput" placeholder="85"/>
+    <text class="calc-unit">%</text>
+    <view class="calc-acts">
+      <view class="calc-chip {{discount == 85 ? 'on' : ''}}" bindtap="onDiscountChip" data-v="{{85}}">85折</view>
+      <view class="calc-chip {{discount == 90 ? 'on' : ''}}" bindtap="onDiscountChip" data-v="{{90}}">9折</view>
+      <view class="calc-chip {{discount == 95 ? 'on' : ''}}" bindtap="onDiscountChip" data-v="{{95}}">95折</view>
+      <view class="calc-chip {{discount == 100 ? 'on' : ''}}" bindtap="onDiscountChip" data-v="{{100}}">原价</view>
     </view>
   </view>
   <view class="calc-result">
-    <view class="cr-row">
-      <text class="cr-k">首付</text>
-      <text class="cr-v">{{calcDown}}万</text>
+    <view class="cr-row"><text class="cr-k">折后总价（{{discount}}折）</text><text class="cr-v big red">{{afterTotal}}</text></view>
+    <view class="cr-row"><text class="cr-k">折后单价</text><text class="cr-v">{{afterUnit}}</text></view>
+    <view class="cr-row"><text class="cr-k">首付 15%</text><text class="cr-v orange">{{afterDown15}}</text></view>
+    <view class="cr-row"><text class="cr-k">月供 30年</text><text class="cr-v">{{calcMonthly}}</text></view>
+  </view>
+  <view class="calc-note">💡 售价不低于备案价85%，最低可打85折 · 按LPR {{mortgageRateText}} 等额本息</view>
+</view>
+
+<!-- ═══ 楼栋去化 ═══ -->
+<view class="bld-card" wx:if="{{bldStats.length}}">
+  <view class="bld-head">
+    <text>🏗️ 楼栋去化情况</text>
+    <text class="bld-summary">{{bldStats.length}}栋 · 已售{{bldTotalSold}}套</text>
+  </view>
+  <view class="bld-row {{bldActive === item.building ? 'on' : ''}}" wx:for="{{bldStats}}" wx:key="building"
+        data-building="{{item.building}}" bindtap="onBldRowTap">
+    <view class="bld-info">
+      <text class="bld-tag">{{item.building}}</text>
+      <text class="bld-sub">{{item.total}}套</text>
     </view>
-    <view class="cr-row">
-      <text class="cr-k">贷款</text>
-      <text class="cr-v">{{calcLoan}}万</text>
+    <view class="bld-wrap">
+      <view class="bld-track">
+        <view class="bld-fill" style="width:{{item.pct}}%;background:{{item.pct > 90 ? '#FF4D4F' : item.pct > 50 ? '#FF8C00' : '#CCC'}}"></view>
+      </view>
+      <text class="bld-pct" style="color:{{item.pct > 90 ? '#FF4D4F' : item.pct > 50 ? '#FF8C00' : '#999'}}">{{item.pct}}%</text>
     </view>
-    <view class="cr-row cr-main">
-      <text class="cr-k">月供</text>
-      <text class="cr-v big">{{calcMonthly}}万</text>
-    </view>
-    <view class="cr-note">按LPR {{mortgageRateText}} · 30年期等额本息</view>
+    <text class="bld-sold">{{item.sold}}/{{item.total}}</text>
   </view>
 </view>
 

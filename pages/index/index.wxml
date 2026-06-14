@@ -40,6 +40,15 @@
     <text>未找到匹配项目，试试输入区域名</text>
   </view>
 
+  <!-- 快速筛选 combo -->
+  <scroll-view class="quick-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{!quickSearch || !searchTapped}}">
+    <view class="quick-chip {{quickCombo === 'gangxu' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="gangxu">刚需两房</view>
+    <view class="quick-chip {{quickCombo === 'gaishan' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="gaishan">改善三房</view>
+    <view class="quick-chip {{quickCombo === 'haozhai' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="haozhai">豪宅四房+</view>
+    <view class="quick-chip {{quickCombo === 'xiaohu' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="xiaohu">小户一房</view>
+    <view class="quick-chip {{quickCombo === 'daping' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="daping">大平层</view>
+  </scroll-view>
+
   <!-- 筛选栏（无搜索时显示） -->
   <view class="filters" wx:if="{{!quickSearch || !searchTapped}}">
     <view class="filter-row">

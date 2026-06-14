@@ -11,17 +11,17 @@ Page({
     status: '',
     statusColor: '',
     calcRatio: 15,
-    discount: 0,
-    discountIdx: 0,
-    discountOptions: ['无折扣', '99折', '98折', '97折', '96折', '95折', '94折', '93折', '92折', '91折', '90折', '89折', '88折', '87折', '86折', '85折'],
-    discountValues:  [0, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85],
-    dealPrice: '',
-    calcDown: '--',
-    calcLoan: '--',
+    discount: 85,
+    afterTotal: '--',
+    afterUnit: '--',
+    afterDown15: '--',
     calcMonthly: '--',
     mortgageRateText: '3.05%',
     subscribed: false,
-    _totalWan: 0
+    _totalWan: 0,
+    bldStats: [],
+    bldActive: '',
+    bldTotalSold: 0,
   },
 
   onLoad(opts) {
@@ -59,6 +59,7 @@ Page({
     const sm = statusMap[unit.status] || { text: unit.status, color: '#888' };
     const rate = getApp().globalData.mortgageRate || 0.0305;
 
+    this.loadBuildingStats();
     this.setData({
       unit, project, building,
       area, unitPrice: up, totalPrice: tp,
@@ -69,39 +70,54 @@ Page({
     this.calcMortgage();
   },
 
-  onDiscountChange(e) {
-    const idx = parseInt(e.detail.value);
-    const discount = this.data.discountValues[idx];
-    const tw = this.data._totalWan;
-    const dealPrice = discount > 0 ? (tw * discount / 100).toFixed(1) : '';
-    this.setData({ discountIdx: idx, discount, dealPrice });
+  onDiscountInput(e) {
+    const v = parseInt(e.detail.value) || 85;
+    const discount = Math.max(85, Math.min(100, v));
+    this.setData({ discount });
     this.calcMortgage();
   },
 
-  onRatioTap(e) {
-    this.setData({ calcRatio: parseInt(e.currentTarget.dataset.ratio) });
+  onDiscountChip(e) {
+    const v = parseInt(e.currentTarget.dataset.v);
+    this.setData({ discount: v });
     this.calcMortgage();
   },
 
   calcMortgage() {
-    // 折扣价优先，否则用备案总价
-    const d = this.data.discount;
-    const total = (d > 0) ? this.data._totalWan * d / 100 : this.data._totalWan;
-    if (!total || total <= 0) return;
-    const ratio = this.data.calcRatio / 100;
-    const down = Math.round(total * ratio);
-    const loan = total - down;
-    const rate = getApp().globalData.mortgageRate || 0.0315;
+    const tw = this.data._totalWan;
+    if (!tw || tw <= 0) return;
+    const discount = this.data.discount;
+    const afterTotalWan = tw * discount / 100;
+    const afterUnitPrice = this.data.unitPrice ? (parseFloat(this.data.unitPrice.replace('万/㎡','')) * 10000 * discount / 100) : 0;
+    const down15 = Math.round(afterTotalWan * 0.15);
+    const loan = afterTotalWan - down15;
+    const rate = getApp().globalData.mortgageRate || 0.0305;
     const mr = rate / 12;
     const months = 360;
     const factor = (mr * Math.pow(1 + mr, months)) / (Math.pow(1 + mr, months) - 1);
     const monthly = Math.round(loan * factor * 10000) / 10000;
 
     this.setData({
-      calcDown: down.toFixed(0),
-      calcLoan: loan.toFixed(0),
-      calcMonthly: monthly.toFixed(2)
+      afterTotal: afterTotalWan.toFixed(1) + '万',
+      afterUnit: afterUnitPrice > 0 ? (afterUnitPrice / 10000).toFixed(2) + '万/㎡' : '--',
+      afterDown15: down15.toFixed(0) + '万',
+      calcMonthly: monthly >= 1 ? monthly.toFixed(2) + '万' : Math.round(monthly * 10000) + '元'
     });
+  },
+
+  async loadBuildingStats() {
+    if (!this.data.project) return;
+    try {
+      const d = await api.getBuildingStats(this.data.project);
+      const buildings = d.buildings || [];
+      const totalSold = buildings.reduce((s, b) => s + (b.sold || 0), 0);
+      this.setData({ bldStats: buildings, bldTotalSold: totalSold });
+    } catch (e) { /* ignore */ }
+  },
+
+  onBldRowTap(e) {
+    const bld = e.currentTarget.dataset.building;
+    this.setData({ bldActive: this.data.bldActive === bld ? '' : bld });
   },
 
   onSharePoster() {
