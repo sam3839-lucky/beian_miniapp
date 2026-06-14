@@ -63,6 +63,7 @@ module.exports = {
   incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
   getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
   getBuildingStats: (project) => request('/api/building-stats?project=' + encodeURIComponent(project)),
+  getTopAbsorption: () => request('/api/top-absorption'),
 
   // ── 小区历史成交价查询 ──
   getProjectHistoryMeta: () => request('/api/project-history-search-meta'),

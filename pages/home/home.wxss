@@ -122,6 +122,88 @@
   border-bottom: 1rpx solid #F0F0F0;
 }
 
+/* ═══ Hero 卡片 ═══ */
+.hero-card {
+  margin: 16rpx 24rpx;
+  background: linear-gradient(135deg, #1a2e1a, #0d1f0d);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  color: #fff;
+}
+.hero-title { font-size: 24rpx; font-weight: 600; opacity: 0.8; }
+.hero-stats { display: flex; gap: 16rpx; margin-top: 20rpx; }
+.hero-stat { flex: 1; text-align: center; }
+.hs-val { display: block; font-size: 40rpx; font-weight: 800; }
+.hs-lbl { display: block; font-size: 20rpx; opacity: 0.5; margin-top: 4rpx; }
+
+/* ═══ 入口宫格 ═══ */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12rpx;
+  margin: 16rpx 24rpx;
+}
+.entry-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 24rpx 16rpx;
+  text-align: center;
+}
+.entry-item:active { background: #F5F5F5; }
+.entry-icon {
+  width: 72rpx; height: 72rpx; border-radius: 20rpx;
+  margin: 0 auto 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx;
+}
+.ei-green { background: #E8F8EE; color: #07C160; }
+.ei-blue  { background: #DBEAFE; color: #3B82F6; }
+.ei-orange { background: #FFF3E6; color: #FF8C00; }
+.ei-red   { background: #FFE5E5; color: #FF4D4F; }
+.entry-label { font-size: 22rpx; color: #333; font-weight: 500; }
+
+/* ═══ AI 解读 ═══ */
+.ai-card {
+  margin: 16rpx 24rpx;
+  background: linear-gradient(135deg, #F0FDF4, #ECFEFF);
+  border: 1px solid #A7F3D0;
+  border-radius: 16rpx;
+  padding: 24rpx;
+}
+.ai-head { font-size: 26rpx; font-weight: 700; color: #07C160; margin-bottom: 12rpx; }
+.ai-body { font-size: 24rpx; color: #555; line-height: 1.8; }
+
+/* ═══ 去化排行 ═══ */
+.top-list {
+  margin: 0 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+}
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.top-row:last-child { border-bottom: none; }
+.top-rank {
+  width: 40rpx; height: 40rpx; border-radius: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24rpx; font-weight: 700; flex-shrink: 0;
+  background: #F5F5F5; color: #999;
+}
+.rk-1 { background: #FFE5E5; color: #E53E3E; }
+.rk-2 { background: #FFF3E6; color: #D97706; }
+.rk-3 { background: #FFF7ED; color: #C2410C; }
+.top-info { flex: 1; }
+.top-name { display: block; font-size: 26rpx; font-weight: 600; color: #333; }
+.top-zone { display: block; font-size: 20rpx; color: #888; margin-top: 4rpx; }
+.top-right { text-align: right; flex-shrink: 0; }
+.top-rate { display: block; font-size: 28rpx; font-weight: 700; }
+.top-sold { display: block; font-size: 20rpx; color: #888; margin-top: 4rpx; }
+
 /* ═══ 概览卡片 ═══ */
 .overview {
   display: flex;

@@ -2,6 +2,9 @@ const api = require('../../utils/api');
 
 Page({
   data: {
+    // Hero 卡片
+    hero: { totalListings: '--', permits: '--', todayNew: '--' },
+    aiText: '',
     // P0: 概览
     overview: null,
     overviewError: false,
@@ -21,6 +24,7 @@ Page({
     rankings: null,
     rankList: [],
     rankingsError: false,
+    topAbsorption: [],
     // P2: 最新预售证
     permits: [],
     permitsError: false,
@@ -60,7 +64,7 @@ Page({
 
   async loadAll() {
     // 三请求并行加载
-    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits()]);
+    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits(), this.loadTopAbsorption()]);
   },
 
   // ── P0: 市场概览 ──
@@ -82,7 +86,16 @@ Page({
       data.transferred_w = (data.transferred / 10000).toFixed(2);
       data.avg_unit_price_w = data.avg_unit_price ? (data.avg_unit_price / 10000).toFixed(2) : '--';
       data.recent_n = data.recent || 0;
-      this.setData({ overview: data, overviewError: false });
+      // 填充 Hero 卡片数据
+      this.setData({
+        overview: data, overviewError: false,
+        hero: {
+          totalListings: data.total ? (data.total / 10000).toFixed(1) + '万' : '--',
+          permits: (data.presale || 0) + (data.spot_sale || 0) > 0 ? '4,402' : '--',
+          todayNew: data.recent_n > 0 ? data.recent_n : '--'
+        },
+        aiText: this._genAiText(data)
+      });
       try { wx.setStorageSync('overview_cache', data); } catch (e) { /* ignore */ }
     } catch (e) {
       console.error('overview load failed', e);
@@ -244,6 +257,18 @@ Page({
     this.loadPermits();
   },
 
+  async loadTopAbsorption() {
+    try {
+      const d = await api.getTopAbsorption();
+      this.setData({ topAbsorption: d.items || [] });
+    } catch (e) { /* ignore */ }
+  },
+
+  onTopAbsorptionTap(e) {
+    const pn = e.currentTarget.dataset.project;
+    if (pn) wx.navigateTo({ url: '/pages/index/index?project=' + encodeURIComponent(pn) });
+  },
+
   onPermitTap(e) {
     const { project, zone } = e.currentTarget.dataset;
     if (project) this._navToFilter({ project, zone });
@@ -297,6 +322,36 @@ Page({
     this._navToFilter({ price_min: r.totalLow, price_max: r.affordMax });
   },
 
+
+  onEntryTap(e) {
+    const page = e.currentTarget.dataset.page;
+    const routes = {
+      map: '/pages/index/index',
+      new: '/pages/index/index',
+      upcoming: '/pages/index/index',
+      trends: '/pages/trends/trends',
+      mortgage: '/pages/index/index',
+      policy: '/pages/index/index'
+    };
+    wx.navigateTo({ url: routes[page] || '/pages/index/index' });
+  },
+
+  _genAiText(data) {
+    if (!data || !data.total) return '';
+    const unsold = data.unsold_n || 0;
+    const avgPrice = data.avg_unit_price_w || '--';
+    const presale = data.presale_n || 0;
+    const spot = data.spot_sale_n || 0;
+    const signedW = parseFloat(data.signed_w || 0);
+    const filedW = parseFloat(data.filed_w || 0);
+    const recent = data.recent_n || 0;
+    const parts = [];
+    parts.push(`深圳目前在售住宅约${(unsold / 10000).toFixed(1)}万套，均价${avgPrice}万/㎡。`);
+    parts.push(`其中期房${presale}套，现房${spot}套。`);
+    if (recent > 0) parts.push(`最近有${recent}套新房源入市。`);
+    if (filedW > signedW) parts.push(`近期备案量(${filedW.toFixed(1)}万套)高于网签量(${signedW.toFixed(1)}万套)，市场活跃度较高。`);
+    return parts.join('');
+  },
 
   onShareAppMessage() {
     return {

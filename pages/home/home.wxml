@@ -52,6 +52,53 @@
 
   <!-- ═══ 用量提示 ═══ -->
 
+  <!-- ═══ 行情 Hero 卡片 ═══ -->
+  <view class="hero-card" wx:if="{{!search}}">
+    <view class="hero-title">深圳 · 一手房</view>
+    <view class="hero-stats">
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.totalListings}}</text>
+        <text class="hs-lbl">备案房源</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.permits}}</text>
+        <text class="hs-lbl">预售证</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.todayNew}}</text>
+        <text class="hs-lbl">今日新增</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ 入口宫格 ═══ -->
+  <view class="entry-grid" wx:if="{{!search}}">
+    <view class="entry-item" bindtap="onEntryTap" data-page="map">
+      <view class="entry-icon ei-green">🗺️</view>
+      <text class="entry-label">地图找房</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="new">
+      <view class="entry-icon ei-blue">🏠</view>
+      <text class="entry-label">新房查询</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="upcoming">
+      <view class="entry-icon ei-orange">🔥</view>
+      <text class="entry-label">即将入市</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="trends">
+      <view class="entry-icon ei-red">📈</view>
+      <text class="entry-label">成交趋势</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="mortgage">
+      <view class="entry-icon ei-green">💰</view>
+      <text class="entry-label">房贷计算</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="policy">
+      <view class="entry-icon ei-blue">📋</view>
+      <text class="entry-label">政策速递</text>
+    </view>
+  </view>
+
   <!-- ═══ P0: 市场概览卡片 ═══ -->
   <view class="overview-skel" wx:if="{{!overview && !overviewError}}">
     <view class="skel-card"></view><view class="skel-card"></view>
@@ -173,6 +220,27 @@
     </view>
   </view>
 
+  <!-- ═══ 本周去化最快 ═══ -->
+  <view class="section" wx:if="{{topAbsorption.length}}">
+    <view class="section-head">
+      <text class="section-title">本周去化最快 Top 3</text>
+    </view>
+    <view class="top-list">
+      <view class="top-row" wx:for="{{topAbsorption}}" wx:key="project_name"
+            data-project="{{item.project_name}}" bindtap="onTopAbsorptionTap">
+        <view class="top-rank rk-{{index + 1}}">{{index + 1}}</view>
+        <view class="top-info">
+          <text class="top-name">{{item.project_name}}</text>
+          <text class="top-zone">{{item.zone}}</text>
+        </view>
+        <view class="top-right">
+          <text class="top-rate" style="color:{{item.pct > 90 ? '#FF4D4F' : item.pct > 50 ? '#FF8C00' : '#999'}}">{{item.pct}}%</text>
+          <text class="top-sold">{{item.sold_count}}套</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- ═══ P2: 最新预售证 ═══ -->
   <view class="section">
     <view class="section-head">
@@ -225,6 +293,12 @@
         <view class="cr-hint">点击查看可购房源 →</view>
       </view>
     </view>
+  </view>
+
+  <!-- ═══ AI 每日解读 ═══ -->
+  <view class="ai-card" wx:if="{{!search && aiText}}">
+    <view class="ai-head">🤖 AI 每日解读</view>
+    <text class="ai-body">{{aiText}}</text>
   </view>
 
   <view style="height:80rpx;"></view>
