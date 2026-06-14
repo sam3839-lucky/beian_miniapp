@@ -72,11 +72,18 @@ Page({
     // 优先展示本地缓存，同时后台刷新
     try {
       const cached = wx.getStorageSync('overview_cache');
-      if (cached) this.setData({ overview: cached, overviewError: false });
+      if (cached) {
+        this.setData({ overview: cached, overviewError: false });
+        this._fillHeroData(cached);
+      }
     } catch (e) { /* ignore */ }
 
     try {
-      const data = await api.getOverview();
+      // 加 8s 超时保护，避免 overview 慢查询阻塞页面
+      const data = await Promise.race([
+        api.getOverview(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
+      ]);
       data.unsold_w = (data.unsold / 10000).toFixed(2);
       data.unsold_n = data.unsold || 0;
       data.presale_n = data.presale || 0;
@@ -86,16 +93,8 @@ Page({
       data.transferred_w = (data.transferred / 10000).toFixed(2);
       data.avg_unit_price_w = data.avg_unit_price ? (data.avg_unit_price / 10000).toFixed(2) : '--';
       data.recent_n = data.recent || 0;
-      // 填充 Hero 卡片数据
-      this.setData({
-        overview: data, overviewError: false,
-        hero: {
-          totalListings: data.total ? (data.total / 10000).toFixed(1) + '万' : '--',
-          permits: (data.presale || 0) + (data.spot_sale || 0) > 0 ? '4,402' : '--',
-          todayNew: data.recent_n > 0 ? data.recent_n : '--'
-        },
-        aiText: this._genAiText(data)
-      });
+      this.setData({ overview: data, overviewError: false });
+      this._fillHeroData(data);
       try { wx.setStorageSync('overview_cache', data); } catch (e) { /* ignore */ }
     } catch (e) {
       console.error('overview load failed', e);
@@ -317,15 +316,25 @@ Page({
 
   onEntryTap(e) {
     const page = e.currentTarget.dataset.page;
-    const routes = {
-      map: '/pages/index/index',
-      new: '/pages/index/index',
-      upcoming: '/pages/index/index',
-      trends: '/pages/trends/trends',
-      mortgage: '/pages/index/index',
-      policy: '/pages/index/index'
-    };
-    wx.navigateTo({ url: routes[page] || '/pages/index/index' });
+    // 跳转映射：trends是tab页用switchTab，其余用navigateTo
+    if (page === 'trends') {
+      wx.switchTab({ url: '/pages/trends/trends' });
+    } else if (page === 'upcoming') {
+      wx.navigateTo({ url: '/pages/upcoming/upcoming' });
+    } else {
+      wx.navigateTo({ url: '/pages/index/index' });
+    }
+  },
+
+  _fillHeroData(data) {
+    this.setData({
+      hero: {
+        totalListings: data.total ? (data.total / 10000).toFixed(1) + '万' : '--',
+        permits: '4,402',
+        todayNew: (data.recent_n || data.recent || 0) > 0 ? (data.recent_n || data.recent) : '--'
+      },
+      aiText: this._genAiText(data)
+    });
   },
 
   _genAiText(data) {
