@@ -122,8 +122,6 @@
 .bld-pct { width: 64rpx; text-align: right; font-size: 24rpx; font-weight: 700; flex-shrink: 0; }
 .bld-sold { width: 80rpx; text-align: right; font-size: 20rpx; color: #888; flex-shrink: 0; }
 
-/* ═══ 底部分享 ═══ */
-.follow-bar {
 .cr-note {
   text-align: right;
   font-size: 22rpx;
