@@ -9,7 +9,9 @@
     "pages/history-result/history-result",
     "pages/history-detail/history-detail",
     "pages/community-overview/overview",
-    "pages/dashboard/dashboard"
+    "pages/dashboard/dashboard",
+    "pages/upcoming/upcoming",
+    "pages/compare/compare"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",

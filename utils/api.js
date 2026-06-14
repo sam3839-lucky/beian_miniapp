@@ -64,6 +64,8 @@ module.exports = {
   getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
   getBuildingStats: (project) => request('/api/building-stats?project=' + encodeURIComponent(project)),
   getTopAbsorption: () => request('/api/top-absorption'),
+  getUpcoming: (zone) => request('/api/upcoming?zone=' + encodeURIComponent(zone || '')),
+  getZoneCompare: (project) => request('/api/zone-compare?project=' + encodeURIComponent(project)),
 
   // ── 小区历史成交价查询 ──
   getProjectHistoryMeta: () => request('/api/project-history-search-meta'),

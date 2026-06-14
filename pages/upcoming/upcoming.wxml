@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="search-bar">
+    <picker mode="selector" range="{{zones}}" value="{{zoneIdx}}" bindchange="onZoneChange">
+      <view class="picker-val">{{zones[zoneIdx] || '所有区'}}</view>
+    </picker>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-msg">加载中...</view>
+
+  <block wx:else>
+    <view class="up-card" wx:for="{{items}}" wx:key="project_name"
+          data-project="{{item.project_name}}" bindtap="onItemTap">
+      <view class="up-head">
+        <text class="up-name">{{item.project_name}}</text>
+        <text class="up-zone">{{item.zone}}</text>
+      </view>
+      <view class="up-body">
+        <view class="up-stat">
+          <text class="up-sval">{{item.unsold}}</text>
+          <text class="up-slbl">可售套数</text>
+        </view>
+        <view class="up-stat">
+          <text class="up-sval">{{item.avgUnitWan}}万/㎡</text>
+          <text class="up-slbl">参考均价</text>
+        </view>
+        <view class="up-stat">
+          <text class="up-sval">{{item.total}}</text>
+          <text class="up-slbl">总房源</text>
+        </view>
+      </view>
+      <view class="up-foot">
+        <text class="up-dev" wx:if="{{item.developer}}">{{item.developer}}</text>
+        <text class="up-date" wx:if="{{item.pass_date}}">取证 {{item.pass_date}}</text>
+      </view>
+    </view>
+
+    <view class="state-msg" wx:if="{{!items.length}}">暂无即将入市项目</view>
+  </block>
+</view>
