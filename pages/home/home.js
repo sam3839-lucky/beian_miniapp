@@ -192,21 +192,16 @@ Page({
   },
 
   // ── P1: 榜单 ──
-  async loadRankings() {
+  async loadRankings(tab) {
     try {
-      const data = await api.getRankings();
-      const keys = ['cheap_total', 'dear_total', 'cheap_unit', 'dear_unit'];
-      const list = (data[keys[this.data.rankTab]] || []).map(item => ({
+      const t = tab || 'cheap_total';
+      const data = await api.getRankings(t);
+      const list = (data.items || []).map(item => ({
         ...item,
         unitPriceWan: (item.unit_price / 10000).toFixed(1)
       }));
-      this.setData({
-        rankings: data,
-        rankList: list,
-        rankingsError: false
-      });
+      this.setData({ rankList: list, rankingsError: false });
     } catch (e) {
-      console.error('rankings load failed', e);
       this.setData({ rankingsError: true });
     }
   },
@@ -218,12 +213,9 @@ Page({
 
   onRankTabChange(e) {
     const idx = parseInt(e.currentTarget.dataset.index);
-    const keys = ['cheap_total', 'dear_total', 'cheap_unit', 'dear_unit'];
-    const list = ((this.data.rankings || {})[keys[idx]] || []).map(item => ({
-      ...item,
-      unitPriceWan: (item.unit_price / 10000).toFixed(1)
-    }));
-    this.setData({ rankTab: idx, rankList: list });
+    const tabs = ['cheap_total', 'dear_total', 'cheap_unit', 'dear_unit'];
+    this.setData({ rankTab: idx, rankList: [] });
+    this.loadRankings(tabs[idx]);
   },
 
   onRankItemTap(e) {

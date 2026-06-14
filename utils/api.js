@@ -46,7 +46,7 @@ module.exports = {
     return request(url);
   },
   getOverview: () => request('/api/overview'),
-  getRankings: () => request('/api/rankings'),
+  getRankings: (tab) => request('/api/rankings?tab=' + (tab || 'cheap_total')),
   getLatestPermits: () => request('/api/latest-permits'),
   getAdminStatus: () => request('/api/admin/status'),
   getTransactionSummary: () => request('/api/transactions/summary'),
