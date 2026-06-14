@@ -76,6 +76,9 @@
   padding: 4rpx 12rpx;
   border-radius: 4rpx;
 }
+.qr-tag { font-size: 20rpx; padding: 2rpx 10rpx; border-radius: 4rpx; font-weight: 600; flex-shrink: 0; }
+.tag-pre { background: #E8F8EE; color: #059669; }
+.tag-spot { background: #FFF3E6; color: #D97706; }
 .qr-stats {
   display: flex;
   gap: 8rpx;

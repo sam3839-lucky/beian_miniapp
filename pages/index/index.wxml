@@ -18,6 +18,7 @@
           bindtap="onQuickResultTap" hover-class="qr-card-hover">
       <view class="qr-head">
         <text class="qr-name">{{item.project_name}}</text>
+        <text class="qr-tag {{item.sale_type === '预售' ? 'tag-pre' : 'tag-spot'}}">{{item.sale_type}}</text>
         <text class="qr-zone">{{item.zone}}</text>
       </view>
       <view class="qr-stats">

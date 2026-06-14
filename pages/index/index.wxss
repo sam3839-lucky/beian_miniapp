@@ -15,6 +15,9 @@
 .qr-head { display: flex; align-items: baseline; gap: 16rpx; margin-bottom: 16rpx; }
 .qr-name { font-size: 30rpx; font-weight: 700; color: #333; }
 .qr-zone { font-size: 22rpx; color: #07C160; background: rgba(7,193,96,0.08); padding: 4rpx 12rpx; border-radius: 4rpx; }
+.qr-tag { font-size: 20rpx; padding: 2rpx 10rpx; border-radius: 4rpx; font-weight: 600; flex-shrink: 0; }
+.tag-pre { background: #E8F8EE; color: #059669; }
+.tag-spot { background: #FFF3E6; color: #D97706; }
 .qr-stats { display: flex; gap: 8rpx; }
 .qr-stat { flex: 1; background: #F7F7F7; border-radius: 8rpx; padding: 16rpx 12rpx; text-align: center; }
 .qr-snum { display: block; font-size: 32rpx; font-weight: 700; color: #333; }
