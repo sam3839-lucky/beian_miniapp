@@ -18,14 +18,14 @@
         <view class="kpi kpi-new">
           <text class="kv">{{kpiNewMom}}</text>
           <text class="kl">新房环比 · {{items[items.length-1].month}}月</text>
-          <text class="kd" style="color:{{kpiNewMom > 100 ? '#FF4D4F' : '#07C160'}}">{{kpiNewMom > 100 ? '↑' : kpiNewMom < 100 ? '↓' : '→'}} {{(kpiNewMom - 100).toFixed(1)}}%</text>
-          <text class="k-yoy">同比 {{kpiNewYoy}} {{kpiNewYoy < 100 ? '↓' : '↑'}}{{(100 - kpiNewYoy).toFixed(1)}}%</text>
+          <text class="kd" style="color:{{kpiNewDirColor}}">{{kpiNewArrow}} {{kpiNewChg}}%</text>
+          <text class="k-yoy">同比 {{kpiNewYoy}} {{kpiNewYoyArrow}}{{kpiNewYoyChg}}%</text>
         </view>
         <view class="kpi kpi-used">
           <text class="kv">{{kpiUsedMom}}</text>
           <text class="kl">二手环比 · {{items[items.length-1].month}}月</text>
-          <text class="kd" style="color:{{kpiUsedMom > 100 ? '#FF4D4F' : '#07C160'}}">{{kpiUsedMom > 100 ? '↑' : kpiUsedMom < 100 ? '↓' : '→'}} {{(kpiUsedMom - 100).toFixed(1)}}%</text>
-          <text class="k-yoy">同比 {{kpiUsedYoy}} {{kpiUsedYoy < 100 ? '↓' : '↑'}}{{(100 - kpiUsedYoy).toFixed(1)}}%</text>
+          <text class="kd" style="color:{{kpiUsedDirCls}}">{{kpiUsedArrow}} {{kpiUsedChg}}%</text>
+          <text class="k-yoy">同比 {{kpiUsedYoy}} {{kpiUsedYoyArrow}}{{kpiUsedYoyChg}}%</text>
         </view>
       </view>
       <view class="cumul-bar">
@@ -73,22 +73,22 @@
             <text class="as">＜ 90㎡ 刚需</text>
             <text class="ay" style="color:#059669">{{areaNew90.yoy || '--'}}</text>
             <text class="am">环比 {{areaNew90.mom || '--'}}</text>
-            <text class="am" style="color:#FF4D4F">同比 {{areaNew90.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew90.yoy || 0)).toFixed(1)}}%</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew90.dirArrow}}{{areaNew90.dirChg}}%</text>
           </view>
           <view class="area-card area-orange">
             <text class="as">90-144㎡ 改善</text>
             <text class="ay" style="color:#D97706">{{areaNew90_144.yoy || '--'}}</text>
             <text class="am">环比 {{areaNew90_144.mom || '--'}}</text>
-            <text class="am" style="color:#FF4D4F">同比 {{areaNew90_144.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew90_144.yoy || 0)).toFixed(1)}}%</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew90_144.dirArrow}}{{areaNew90_144.dirChg}}%</text>
           </view>
           <view class="area-card area-blue">
             <text class="as">＞ 144㎡ 豪宅</text>
             <text class="ay" style="color:#2563EB">{{areaNew144.yoy || '--'}}</text>
             <text class="am">环比 {{areaNew144.mom || '--'}}</text>
-            <text class="am" style="color:#FF4D4F">同比 {{areaNew144.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew144.yoy || 0)).toFixed(1)}}%</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew144.dirArrow}}{{areaNew144.dirChg}}%</text>
           </view>
         </view>
-        <view class="area-note">改善户型降幅最大（{{(100 - (areaNew90_144.yoy || 0)).toFixed(1)}}%），刚需和豪宅相对抗跌</view>
+        <view class="area-note">改善户型降幅最大（{{areaNoteChg}}%），刚需和豪宅相对抗跌</view>
       </view>
     </view>
 

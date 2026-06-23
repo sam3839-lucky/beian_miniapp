@@ -42,13 +42,20 @@ Page({
     if (!items.length) return;
     const latest = items[items.length - 1];
 
-    // KPI
-    this.setData({
-      kpiNewMom: latest.new.mom || '--',
-      kpiNewYoy: latest.new.yoy || '--',
-      kpiUsedMom: latest.used.mom || '--',
-      kpiUsedYoy: latest.used.yoy || '--',
+    const _dir = (v) => ({
+      arrow: v > 100 ? '↑' : v < 100 ? '↓' : '→',
+      chg: Math.abs(v - 100).toFixed(1),
+      color: v > 100 ? '#FF4D4F' : v < 100 ? '#07C160' : '#888'
     });
+    const _yoy = (v) => ({
+      arrow: v < 100 ? '↓' : '↑',
+      chg: Math.abs(100 - v).toFixed(1)
+    });
+
+    const dNew = _dir(latest.new.mom || 100);
+    const dUsed = _dir(latest.used.mom || 100);
+    const yNew = _yoy(latest.new.yoy || 100);
+    const yUsed = _yoy(latest.used.yoy || 100);
 
     // 累积值：以起始月为100，逐月乘环比
     let newCumul = 100, usedCumul = 100;
@@ -59,20 +66,35 @@ Page({
     }
     const newDelta = (newCumul - 100).toFixed(1);
     const usedDelta = (usedCumul - 100).toFixed(1);
+
+    // 面积段
+    const area90 = latest.new_90 || {};
+    const area144 = latest.new_90_144 || {};
+    const area144p = latest.new_144 || {};
+    [area90, area144, area144p].forEach(a => {
+      a.dirArrow = (a.yoy || 0) < 100 ? '↓' : '↑';
+      a.dirChg = Math.abs(100 - (a.yoy || 0)).toFixed(1);
+    });
+    const areaNoteChg = Math.abs(100 - (area144.yoy || 0)).toFixed(1);
+
     this.setData({
+      kpiNewMom: latest.new.mom || '--',
+      kpiNewYoy: latest.new.yoy || '--',
+      kpiNewArrow: dNew.arrow, kpiNewChg: dNew.chg, kpiNewDirColor: dNew.color,
+      kpiNewYoyArrow: yNew.arrow, kpiNewYoyChg: yNew.chg,
+      kpiUsedMom: latest.used.mom || '--',
+      kpiUsedYoy: latest.used.yoy || '--',
+      kpiUsedArrow: dUsed.arrow, kpiUsedChg: dUsed.chg, kpiUsedDirColor: dUsed.color,
+      kpiUsedYoyArrow: yUsed.arrow, kpiUsedYoyChg: yUsed.chg,
       kpiNewCumul: newDelta > 0 ? '+' + newDelta + '%' : newDelta + '%',
       kpiUsedCumul: usedDelta > 0 ? '+' + usedDelta + '%' : usedDelta + '%',
       cumulStart: startMonth,
+      areaNew90: area90,
+      areaNew90_144: area144,
+      areaNew144: area144p,
+      areaNoteChg: areaNoteChg,
     });
 
-    // 面积段
-    this.setData({
-      areaNew90: latest.new_90 || {},
-      areaNew90_144: latest.new_90_144 || {},
-      areaNew144: latest.new_144 || {},
-    });
-
-    // AI text
     this.genAiText(items);
   },
 
