@@ -29,10 +29,15 @@ Page({
     try {
       const city = this.data.cities[this.data.cityIdx];
       const months = this.data.timeRanges[this.data.timeIdx] || 100;
-      const d = await api.getPriceVolume(city, months);
+      // 10s 超时保护
+      const d = await Promise.race([
+        api.getPriceVolume(city, months),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 10000))
+      ]);
       this.setData({ items: d.items, hasVolume: d.has_volume || false, loading: false });
       this.updateDisplay();
     } catch (e) {
+      console.error('price-index load failed', e);
       this.setData({ loading: false });
     }
   },
@@ -96,6 +101,99 @@ Page({
     });
 
     this.genAiText(items);
+    // 延迟画图，等 DOM 渲染完
+    setTimeout(() => this.drawChart(), 200);
+  },
+
+  drawChart() {
+    const items = this.data.items;
+    if (!items.length) return;
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#trendCanvas').boundingClientRect().exec(res => {
+      if (!res[0] || !res[0].width) return;
+      const w = res[0].width;
+      const h = res[0].height || 160;
+      const ctx = wx.createCanvasContext('trendCanvas', this);
+      const pad = { top: 8, right: 40, bottom: 18, left: 32 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      // 计算累积值序列
+      const n = items.length;
+      let newC = 100, usedC = 100;
+      const newVals = [], usedVals = [], moms = [];
+      for (const item of items) {
+        if (item.new.mom) newC = newC * item.new.mom / 100;
+        if (item.used.mom) usedC = usedC * item.used.mom / 100;
+        newVals.push(newC);
+        usedVals.push(usedC);
+        moms.push(item.new.mom || 100);
+      }
+
+      // Y轴范围
+      const allVals = [...newVals, ...usedVals];
+      const yMin = Math.floor(Math.min(...allVals, 90) - 1);
+      const yMax = Math.ceil(Math.max(...allVals, 105) + 1);
+      const yRange = yMax - yMin;
+      const toY = (v) => pad.top + ph * (1 - (v - yMin) / yRange);
+      const toX = (i) => pad.left + (pw / (n - 1)) * i;
+      const gap = pw / n;
+
+      // 背景色块
+      for (let i = 0; i < n; i++) {
+        const x = pad.left + gap * i;
+        const mom = moms[i];
+        ctx.setFillStyle(mom >= 100 ? 'rgba(7,193,96,0.15)' : 'rgba(255,77,79,0.12)');
+        ctx.fillRect(x, pad.top, gap, ph);
+      }
+
+      // 基准线 100
+      const y100 = toY(100);
+      ctx.setStrokeStyle('#E5E5E5');
+      ctx.setLineWidth(1);
+      ctx.beginPath(); ctx.moveTo(pad.left, y100); ctx.lineTo(w - pad.right, y100); ctx.stroke();
+
+      // Y轴标签
+      ctx.setFillStyle('#BBB'); ctx.setFontSize(9); ctx.setTextAlign('right');
+      for (let v = Math.floor(yMin); v <= Math.ceil(yMax); v += 2) {
+        ctx.fillText(v + '', pad.left - 4, toY(v) + 3);
+      }
+
+      // X轴月份标签（选几个显示）
+      ctx.setTextAlign('center'); ctx.setFillStyle('#BBB'); ctx.setFontSize(8);
+      const step = Math.max(1, Math.floor(n / 8));
+      for (let i = 0; i < n; i += step) {
+        const m = items[i].month.slice(5); // MM
+        ctx.fillText(m, toX(i), h - 4);
+      }
+
+      // 新房累积线
+      ctx.setStrokeStyle('#07C160'); ctx.setLineWidth(2); ctx.setLineCap('round');
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const y = toY(newVals[i]), x = toX(i);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // 二手累积线
+      ctx.setStrokeStyle('#FF8C00'); ctx.setLineWidth(2); ctx.setLineCap('round');
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const y = toY(usedVals[i]), x = toX(i);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // 终点数值标注
+      const lastIdx = n - 1;
+      ctx.setFillStyle('#07C160'); ctx.setFontSize(10); ctx.setTextAlign('left');
+      ctx.fillText(newVals[lastIdx].toFixed(1), toX(lastIdx) + 4, toY(newVals[lastIdx]) + 3);
+      ctx.setFillStyle('#FF8C00');
+      ctx.fillText(usedVals[lastIdx].toFixed(1), toX(lastIdx) + 4, toY(usedVals[lastIdx]) + 3);
+
+      ctx.draw();
+    });
   },
 
   genAiText(items) {

@@ -28,8 +28,9 @@
 .ch-tab{font-size:20rpx;padding:6rpx 16rpx;border-radius:24rpx;background:#F5F5F5;color:#888}
 .ch-tab.on{background:#07C160;color:#fff;font-weight:600}
 .sz-only{font-size:18rpx;color:#BBB;font-weight:400;background:#F0FDF4;padding:2rpx 10rpx;border-radius:6rpx}
-.trend-canvas{width:100%;height:320rpx;margin:8rpx 0}
-.vol-canvas{width:100%;height:200rpx;margin:8rpx 0}
+.chart-placeholder{text-align:center;padding:60rpx 20rpx;color:#BBB;font-size:24rpx}
+.chart-placeholder-sub{display:block;font-size:20rpx;margin-top:8rpx}
+.trend-canvas{width:100%;height:320rpx}
 .ch-legend{display:flex;gap:24rpx;justify-content:center;font-size:20rpx;margin-top:8rpx}
 
 /* Area */
