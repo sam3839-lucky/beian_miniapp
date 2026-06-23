@@ -209,6 +209,9 @@
 
 /* ═══ 房价指数 ═══ */
 .idx-card { background:#fff; margin:0 24rpx 8rpx; border-radius:16rpx; padding:24rpx; box-shadow:0 2rpx 12rpx rgba(0,0,0,.06); }
+.seg-tabs { display:flex; gap:8rpx; margin-bottom:20rpx; }
+.seg-tab { font-size:22rpx; padding:8rpx 16rpx; border-radius:40rpx; background:#F5F5F5; color:#666; }
+.seg-tab.on { background:#07C160; color:#fff; font-weight:600; }
 .idx-stats { display:flex; gap:8rpx; margin-bottom:20rpx; }
 .idx-stat { flex:1; background:#F9FAFB; border-radius:8rpx; padding:16rpx 8rpx; text-align:center; }
 .idx-sval { display:block; font-size:36rpx; font-weight:800; }

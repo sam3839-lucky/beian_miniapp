@@ -6,6 +6,7 @@ Page({
     hero: { totalListings: '--', permits: '--', todayNew: '--' },
     aiText: '',
     priceIndex: null,
+    priceSeg: 'all',
     // P0: 概览
     overview: null,
     overviewError: false,
@@ -249,10 +250,34 @@ Page({
     this.loadPermits();
   },
 
+  onPriceSegTap(e) {
+    const seg = e.currentTarget.dataset.seg;
+    this.setData({ priceSeg: seg });
+    this._updatePriceDisplay();
+  },
+
+  _updatePriceDisplay() {
+    const idx = this.data.priceIndex;
+    if (!idx || !idx.items) return;
+    const seg = this.data.priceSeg;
+    const key = seg === 'all' ? 'new' : 'new_' + seg;
+    const items = idx.items.map(item => {
+      const d = item[key] || {};
+      return { month: item.month.slice(5), mom: d.mom, yoy: d.yoy, base: d.base };
+    });
+    const latest = items[items.length - 1] || {};
+    this.setData({
+      idxItems: items,
+      idxLatest: latest,
+      idxMonth: (idx.items[idx.items.length - 1] || {}).month || ''
+    });
+  },
+
   async loadPriceIndex() {
     try {
       const d = await api.getPriceIndex('深圳', 12);
       this.setData({ priceIndex: d });
+      this._updatePriceDisplay();
     } catch (e) { /* ignore */ }
   },
 

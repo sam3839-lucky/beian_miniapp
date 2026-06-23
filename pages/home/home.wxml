@@ -101,36 +101,39 @@
   </view>
 
   <!-- ═══ 房价指数卡片 ═══ -->
-  <view class="section" wx:if="{{!search && priceIndex && priceIndex.items.length}}">
+  <view class="section" wx:if="{{!search && idxItems.length}}">
     <view class="section-head">
       <text class="section-title">📊 深圳房价指数</text>
     </view>
     <view class="idx-card">
+      <!-- 面积段切换 -->
+      <view class="seg-tabs">
+        <view class="seg-tab {{priceSeg === 'all' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="all">全部</view>
+        <view class="seg-tab {{priceSeg === '90' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="90">90㎡以下</view>
+        <view class="seg-tab {{priceSeg === '90_144' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="90_144">90-144㎡</view>
+        <view class="seg-tab {{priceSeg === '144' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="144">144㎡以上</view>
+      </view>
       <!-- 核心数据 -->
       <view class="idx-stats">
         <view class="idx-stat">
-          <text class="idx-sval">{{priceIndex.items[priceIndex.items.length-1].new.yoy || '--'}}</text>
-          <text class="idx-slbl">新房同比</text>
+          <text class="idx-sval">{{idxLatest.yoy || '--'}}</text>
+          <text class="idx-slbl">同比</text>
         </view>
         <view class="idx-stat">
-          <text class="idx-sval">{{priceIndex.items[priceIndex.items.length-1].new.mom || '--'}}</text>
-          <text class="idx-slbl">新房环比</text>
+          <text class="idx-sval">{{idxLatest.mom || '--'}}</text>
+          <text class="idx-slbl">环比</text>
         </view>
         <view class="idx-stat">
-          <text class="idx-sval">{{priceIndex.items[priceIndex.items.length-1].used.yoy || '--'}}</text>
-          <text class="idx-slbl">二手同比</text>
-        </view>
-        <view class="idx-stat">
-          <text class="idx-sval">{{priceIndex.items[priceIndex.items.length-1].used.mom || '--'}}</text>
-          <text class="idx-slbl">二手环比</text>
+          <text class="idx-sval">{{idxLatest.base || '--'}}</text>
+          <text class="idx-slbl">定基</text>
         </view>
       </view>
       <!-- 迷你走势条 -->
       <view class="idx-chart">
-        <view class="idx-bar {{item.new.mom > 100 ? 'up' : 'down'}}" wx:for="{{priceIndex.items}}" wx:key="month"
-              style="height:{{(item.new.mom - 94) * 8}}px;min-height:4px"></view>
+        <view class="idx-bar {{item.mom > 100 ? 'up' : 'down'}}" wx:for="{{idxItems}}" wx:key="month"
+              style="height:{{(item.mom - 94) * 8}}px;min-height:4px"></view>
       </view>
-      <view class="idx-source">国家统计局 70城房价指数 · {{priceIndex.items[priceIndex.items.length-1].month}}月</view>
+      <view class="idx-source">国家统计局 70城房价指数 · {{idxMonth}}月</view>
     </view>
   </view>
 
