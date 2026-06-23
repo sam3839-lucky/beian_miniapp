@@ -102,7 +102,10 @@ Page({
 
     this.genAiText(items);
     // 延迟画图，等 DOM 渲染完
-    setTimeout(() => { this.drawChart(); this.drawVolChart(); }, 200);
+    setTimeout(() => {
+      try { this.drawChart(); } catch(e) {}
+      try { this.drawVolChart(); } catch(e) {}
+    }, 300);
   },
 
   drawChart() {
