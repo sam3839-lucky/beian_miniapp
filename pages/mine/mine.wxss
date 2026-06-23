@@ -25,6 +25,14 @@
 .ur-name { font-size: 26rpx; color: #333; }
 .ur-val { font-size: 26rpx; color: #07C160; font-weight: 600; }
 
+/* 菜单入口 */
+.menu-section { padding: 0; }
+.menu-item { display: flex; align-items: center; padding: 28rpx 32rpx; gap: 16rpx; }
+.menu-item:active { background: #F7F7F7; }
+.menu-icon { font-size: 36rpx; width: 48rpx; text-align: center; flex-shrink: 0; }
+.menu-label { flex: 1; font-size: 30rpx; color: #333; font-weight: 500; }
+.menu-arrow { font-size: 32rpx; color: #CCC; flex-shrink: 0; }
+
 /* 菜单行 */
 .menu-row { display: flex; justify-content: space-between; align-items: center; padding: 8rpx 0; font-size: 28rpx; color: #333; }
 .menu-row-hover { opacity: 0.7; }
