@@ -58,7 +58,7 @@
         <view class="chart-head">
           <text class="ch-title">📊 量价关系 <text class="sz-only">深圳专属</text></text>
         </view>
-        <view class="chart-placeholder"><text>📊 量价图将在此渲染</text></view>
+        <canvas canvas-id="volCanvas" id="volCanvas" class="vol-canvas"></canvas>
       </view>
     </view>
 

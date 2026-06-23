@@ -102,7 +102,7 @@ Page({
 
     this.genAiText(items);
     // 延迟画图，等 DOM 渲染完
-    setTimeout(() => this.drawChart(), 200);
+    setTimeout(() => { this.drawChart(); this.drawVolChart(); }, 200);
   },
 
   drawChart() {
@@ -191,6 +191,66 @@ Page({
       ctx.fillText(newVals[lastIdx].toFixed(1), toX(lastIdx) + 4, toY(newVals[lastIdx]) + 3);
       ctx.setFillStyle('#FF8C00');
       ctx.fillText(usedVals[lastIdx].toFixed(1), toX(lastIdx) + 4, toY(usedVals[lastIdx]) + 3);
+
+      ctx.draw();
+    });
+  },
+
+  drawVolChart() {
+    if (!this.data.hasVolume) return;
+    const items = this.data.items;
+    const withVol = items.filter(i => i.volume && (i.volume.new > 0 || i.volume.used > 0));
+    if (withVol.length < 2) return;
+
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#volCanvas').boundingClientRect().exec(res => {
+      if (!res[0] || !res[0].width) return;
+      const w = res[0].width;
+      const h = res[0].height || 100;
+      const ctx = wx.createCanvasContext('volCanvas', this);
+      const pad = { top: 4, right: 8, bottom: 14, left: 32 };
+      const pw = w - pad.left - pad.right;
+      const ph = h - pad.top - pad.bottom;
+
+      const n = withVol.length;
+      const gap = pw / n;
+      const barW = gap * 0.35;
+
+      // 找最大值
+      let maxV = 1;
+      for (const item of withVol) {
+        maxV = Math.max(maxV, item.volume.new || 0, item.volume.used || 0);
+      }
+      maxV = Math.ceil(maxV * 1.15);
+
+      // 新房成交量柱
+      for (let i = 0; i < n; i++) {
+        const x = pad.left + gap * i + gap * 0.15;
+        const v = withVol[i].volume.new || 0;
+        const barH = (v / maxV) * ph;
+        ctx.setFillStyle('#E8F8EE');
+        ctx.fillRect(x, pad.top + ph - barH, barW, barH);
+      }
+
+      // 二手房成交量柱
+      for (let i = 0; i < n; i++) {
+        const x = pad.left + gap * i + gap * 0.5;
+        const v = withVol[i].volume.used || 0;
+        const barH = (v / maxV) * ph;
+        ctx.setFillStyle('#FFF3E6');
+        ctx.fillRect(x, pad.top + ph - barH, barW, barH);
+      }
+
+      // X轴月份
+      ctx.setFillStyle('#BBB'); ctx.setFontSize(8); ctx.setTextAlign('center');
+      for (let i = 0; i < n; i++) {
+        const x = pad.left + gap * i + gap / 2;
+        ctx.fillText(withVol[i].month.slice(5), x, h - 2);
+      }
+
+      // Y轴参考线
+      ctx.setStrokeStyle('#F0F0F0'); ctx.setLineWidth(1);
+      ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(w - pad.right, pad.top + ph); ctx.stroke();
 
       ctx.draw();
     });
