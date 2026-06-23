@@ -67,6 +67,7 @@ module.exports = {
   getUpcoming: (zone) => request('/api/upcoming?zone=' + encodeURIComponent(zone || '')),
   getZoneCompare: (project) => request('/api/zone-compare?project=' + encodeURIComponent(project)),
   getPriceIndex: (city, months) => request('/api/price-index?city=' + encodeURIComponent(city || '深圳') + '&months=' + (months || 12)),
+  getPriceVolume: (city, months) => request('/api/price-volume?city=' + encodeURIComponent(city || '深圳') + '&months=' + (months || 54)),
 
   // ── 小区历史成交价查询 ──
   getProjectHistoryMeta: () => request('/api/project-history-search-meta'),

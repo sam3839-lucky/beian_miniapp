@@ -1,0 +1,104 @@
+<view class="page">
+  <!-- 城市选择 -->
+  <view class="city-bar">
+    <picker mode="selector" range="{{cities}}" value="{{cityIdx}}" bindchange="onCityChange">
+      <view class="city-sel">{{cities[cityIdx]}}</view>
+    </picker>
+    <view class="city-date">{{cumulStart}}起 · 国家统计局 70城房价指数</view>
+  </view>
+
+  <block wx:if="{{loading}}">
+    <view class="state-msg">加载中...</view>
+  </block>
+
+  <block wx:else>
+    <!-- KPI -->
+    <view class="section">
+      <view class="kpi-row">
+        <view class="kpi kpi-new">
+          <text class="kv">{{kpiNewMom}}</text>
+          <text class="kl">新房环比 · {{items[items.length-1].month}}月</text>
+          <text class="kd" style="color:{{kpiNewMom > 100 ? '#FF4D4F' : '#07C160'}}">{{kpiNewMom > 100 ? '↑' : kpiNewMom < 100 ? '↓' : '→'}} {{(kpiNewMom - 100).toFixed(1)}}%</text>
+          <text class="k-yoy">同比 {{kpiNewYoy}} {{kpiNewYoy < 100 ? '↓' : '↑'}}{{(100 - kpiNewYoy).toFixed(1)}}%</text>
+        </view>
+        <view class="kpi kpi-used">
+          <text class="kv">{{kpiUsedMom}}</text>
+          <text class="kl">二手环比 · {{items[items.length-1].month}}月</text>
+          <text class="kd" style="color:{{kpiUsedMom > 100 ? '#FF4D4F' : '#07C160'}}">{{kpiUsedMom > 100 ? '↑' : kpiUsedMom < 100 ? '↓' : '→'}} {{(kpiUsedMom - 100).toFixed(1)}}%</text>
+          <text class="k-yoy">同比 {{kpiUsedYoy}} {{kpiUsedYoy < 100 ? '↓' : '↑'}}{{(100 - kpiUsedYoy).toFixed(1)}}%</text>
+        </view>
+      </view>
+      <view class="cumul-bar">
+        <text>累计变化（{{cumulStart}}起）</text>
+        <text>新房 <text style="color:{{kpiNewCumul.indexOf('-')===0?'#FF4D4F':'#07C160'}}">{{kpiNewCumul}}</text> · 二手 <text style="color:{{kpiUsedCumul.indexOf('-')===0?'#FF4D4F':'#07C160'}}">{{kpiUsedCumul}}</text></text>
+      </view>
+    </view>
+
+    <!-- 走势图 -->
+    <view class="section">
+      <view class="chart-card">
+        <view class="chart-head">
+          <text class="ch-title">📈 价格走势 · 累积变化</text>
+          <view class="ch-tabs">
+            <text class="ch-tab {{timeIdx === item ? 'on' : ''}}" wx:for="{{timeLabels}}" wx:key="*this" wx:for-index="item" data-idx="{{item}}" bindtap="onTimeTap">{{timeLabels[item]}}</text>
+          </view>
+        </view>
+        <canvas canvas-id="trendCanvas" id="trendCanvas" class="trend-canvas"></canvas>
+        <view class="ch-legend">
+          <text style="color:#07C160">━ 新房累积</text>
+          <text style="color:#FF8C00">┅ 二手累积</text>
+          <text style="color:#BBB">— 基准100</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 量价关系（仅深圳） -->
+    <view class="section" wx:if="{{hasVolume}}">
+      <view class="chart-card">
+        <view class="chart-head">
+          <text class="ch-title">📊 量价关系 <text class="sz-only">深圳专属</text></text>
+        </view>
+        <canvas canvas-id="volCanvas" id="volCanvas" class="vol-canvas"></canvas>
+      </view>
+    </view>
+
+    <!-- 面积段 -->
+    <view class="section">
+      <view class="chart-card">
+        <view class="chart-head">
+          <text class="ch-title">🏠 面积段分化 · {{items[items.length-1].month}}月</text>
+        </view>
+        <view class="area-row">
+          <view class="area-card area-green">
+            <text class="as">＜ 90㎡ 刚需</text>
+            <text class="ay" style="color:#059669">{{areaNew90.yoy || '--'}}</text>
+            <text class="am">环比 {{areaNew90.mom || '--'}}</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew90.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew90.yoy || 0)).toFixed(1)}}%</text>
+          </view>
+          <view class="area-card area-orange">
+            <text class="as">90-144㎡ 改善</text>
+            <text class="ay" style="color:#D97706">{{areaNew90_144.yoy || '--'}}</text>
+            <text class="am">环比 {{areaNew90_144.mom || '--'}}</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew90_144.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew90_144.yoy || 0)).toFixed(1)}}%</text>
+          </view>
+          <view class="area-card area-blue">
+            <text class="as">＞ 144㎡ 豪宅</text>
+            <text class="ay" style="color:#2563EB">{{areaNew144.yoy || '--'}}</text>
+            <text class="am">环比 {{areaNew144.mom || '--'}}</text>
+            <text class="am" style="color:#FF4D4F">同比 {{areaNew144.yoy < 100 ? '↓' : '↑'}}{{(100 - (areaNew144.yoy || 0)).toFixed(1)}}%</text>
+          </view>
+        </view>
+        <view class="area-note">改善户型降幅最大（{{(100 - (areaNew90_144.yoy || 0)).toFixed(1)}}%），刚需和豪宅相对抗跌</view>
+      </view>
+    </view>
+
+    <!-- AI 解读 -->
+    <view class="section" wx:if="{{aiText}}">
+      <view class="ai-card">
+        <view class="ai-head">🤖 AI 解读</view>
+        <text class="ai-body">{{aiText}}</text>
+        <view class="ai-source">数据来源：国家统计局 70城房价指数 · 深圳市住房和建设局</view>
+      </view>
+    </view>
+  </block>
+</view>

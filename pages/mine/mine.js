@@ -61,6 +61,10 @@ Page({
     wx.navigateTo({ url: '/pages/subscriptions/subscriptions' });
   },
 
+  onOpenPriceIndex() {
+    wx.navigateTo({ url: '/pages/price-index/price-index' });
+  },
+
   onOpenDashboard() {
     wx.navigateTo({ url: '/pages/dashboard/dashboard' });
   },
