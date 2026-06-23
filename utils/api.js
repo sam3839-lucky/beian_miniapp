@@ -66,6 +66,7 @@ module.exports = {
   getTopAbsorption: () => request('/api/top-absorption'),
   getUpcoming: (zone) => request('/api/upcoming?zone=' + encodeURIComponent(zone || '')),
   getZoneCompare: (project) => request('/api/zone-compare?project=' + encodeURIComponent(project)),
+  getPriceIndex: (city, months) => request('/api/price-index?city=' + encodeURIComponent(city || '深圳') + '&months=' + (months || 12)),
 
   // ── 小区历史成交价查询 ──
   getProjectHistoryMeta: () => request('/api/project-history-search-meta'),

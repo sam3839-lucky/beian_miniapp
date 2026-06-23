@@ -5,6 +5,7 @@ Page({
     // Hero 卡片
     hero: { totalListings: '--', permits: '--', todayNew: '--' },
     aiText: '',
+    priceIndex: null,
     // P0: 概览
     overview: null,
     overviewError: false,
@@ -64,7 +65,7 @@ Page({
 
   async loadAll() {
     // 三请求并行加载
-    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits(), this.loadTopAbsorption()]);
+    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits(), this.loadTopAbsorption(), this.loadPriceIndex()]);
   },
 
   // ── P0: 市场概览 ──
@@ -248,6 +249,13 @@ Page({
     this.loadPermits();
   },
 
+  async loadPriceIndex() {
+    try {
+      const d = await api.getPriceIndex('深圳', 12);
+      this.setData({ priceIndex: d });
+    } catch (e) { /* ignore */ }
+  },
+
   async loadTopAbsorption() {
     try {
       const d = await api.getTopAbsorption();
@@ -351,6 +359,18 @@ Page({
     parts.push(`其中期房${presale}套，现房${spot}套。`);
     if (recent > 0) parts.push(`最近有${recent}套新房源入市。`);
     if (filedW > signedW) parts.push(`近期备案量(${filedW.toFixed(1)}万套)高于网签量(${signedW.toFixed(1)}万套)，市场活跃度较高。`);
+    // 加入价格指数分析
+    const idx = this.data.priceIndex;
+    if (idx && idx.items && idx.items.length) {
+      const latest = idx.items[idx.items.length - 1];
+      const mom = latest.new && latest.new.mom;
+      const yoy = latest.new && latest.new.yoy;
+      if (mom) {
+        const dir = mom > 100 ? '上涨' : mom < 100 ? '下跌' : '持平';
+        const arrow = mom > 100 ? '↑' : mom < 100 ? '↓' : '→';
+        parts.push(`价格指数：${latest.month.slice(5)}月新房环比${arrow}${dir}(${mom})，同比${yoy ? (yoy > 100 ? '↑' : '↓') : ''}${yoy || '--'}。`);
+      }
+    }
     return parts.join('');
   },
 
