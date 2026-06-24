@@ -163,12 +163,21 @@ Page({
         ctx.fillText(v + '', pad.left - 4, toY(v) + 3);
       }
 
-      // X轴月份标签（选几个显示）
+      // X轴月份标签（每N个显示一个，跨年处标年份）
       ctx.setTextAlign('center'); ctx.setFillStyle('#BBB'); ctx.setFontSize(8);
-      const step = Math.max(1, Math.floor(n / 8));
+      const step = Math.max(1, Math.floor(n / 6));
+      let lastYear = '';
       for (let i = 0; i < n; i += step) {
-        const m = items[i].month.slice(5); // MM
-        ctx.fillText(m, toX(i), h - 4);
+        const m = items[i].month;
+        const label = m.slice(2, 4) + '/' + m.slice(5, 7); // "25/05"
+        ctx.fillText(label, toX(i), h - 4);
+        // 每年1月标年份
+        if (m.slice(5,7) === '01' || (i === 0 && m.slice(0,4) !== lastYear)) {
+          ctx.setFillStyle('#999'); ctx.setFontSize(9);
+          ctx.fillText(m.slice(0,4), toX(i), h - 13);
+          ctx.setFillStyle('#BBB'); ctx.setFontSize(8);
+          lastYear = m.slice(0,4);
+        }
       }
 
       // 新房累积线
@@ -245,11 +254,13 @@ Page({
         ctx.fillRect(x, pad.top + ph - barH, barW, barH);
       }
 
-      // X轴月份
-      ctx.setFillStyle('#BBB'); ctx.setFontSize(8); ctx.setTextAlign('center');
-      for (let i = 0; i < n; i++) {
+      // X轴月份（每2个显示一次，空间有限）
+      ctx.setFillStyle('#BBB'); ctx.setFontSize(7); ctx.setTextAlign('center');
+      const vstep = Math.max(1, Math.floor(n / 8));
+      for (let i = 0; i < n; i += vstep) {
         const x = pad.left + gap * i + gap / 2;
-        ctx.fillText(withVol[i].month.slice(5), x, h - 2);
+        const m = withVol[i].month;
+        ctx.fillText(m.slice(2,4)+'/'+m.slice(5,7), x, h - 2);
       }
 
       // Y轴参考线
