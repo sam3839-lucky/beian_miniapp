@@ -24,6 +24,17 @@ Page({
     this.loadData();
   },
 
+  onShow() {
+    const app = getApp();
+    const city = app.globalData.selectedCity;
+    if (city && city !== this.data.cities[this.data.cityIdx]) {
+      const idx = this.data.cities.indexOf(city);
+      this.setData({ cityIdx: idx >= 0 ? idx : 0 });
+      this.loadData();
+      app.globalData.selectedCity = null; // 消费后清除
+    }
+  },
+
   async loadData() {
     this.setData({ loading: true });
     try {

@@ -66,12 +66,9 @@ Page({
   onCityTap(e) {
     const city = e.currentTarget.dataset.city;
     this._saveRecent(city);
-    // 返回上一页并传参数
-    const pages = getCurrentPages();
-    const prev = pages[pages.length - 2];
-    if (prev && prev.onCitySelected) {
-      prev.onCitySelected(city);
-    }
+    // 通过全局数据传回选中的城市
+    const app = getApp();
+    app.globalData.selectedCity = city;
     wx.navigateBack();
   },
 
