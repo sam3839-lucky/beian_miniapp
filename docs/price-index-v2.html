@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>房价指数设计</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#F7F7F7;max-width:420px;margin:0 auto;min-height:100vh;padding:16px}
+.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:12px}
+h2{font-size:15px;margin-bottom:14px}
+
+/* 面积段 */
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{font-size:13px;padding:6px 14px;border-radius:20px;background:#F5F5F5;color:#666;cursor:pointer}
+.tab.on{background:#07C160;color:#fff;font-weight:600}
+
+/* 双卡 */
+.dual{display:flex;gap:10px;margin-bottom:16px}
+.dcard{flex:1;border-radius:10px;padding:14px 12px;text-align:center}
+.dcard.new{background:#F0FDF4;border:2px solid #6EE7B7}
+.dcard.used{background:#FFF7ED;border:2px solid #FED7AA}
+.dlabel{font-size:12px;color:#888;margin-bottom:4px}
+.dval{font-size:32px;font-weight:800;line-height:1.2}
+.ddir{font-size:12px;margin-top:2px}
+.dsub{font-size:12px;color:#888;margin-top:4px}
+
+/* 走势图 */
+.chart-area{background:#FAFAFA;border-radius:10px;padding:14px 10px 10px}
+.chart-legend{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px}
+.chart{display:flex;align-items:flex-end;gap:3px;height:60px;padding:0 2px;position:relative}
+.chart::before{content:'';position:absolute;bottom:36px;left:0;right:0;height:1px;background:#E5E5E5}
+.bar-group{flex:1;display:flex;gap:1px;align-items:flex-end;position:relative;z-index:1}
+.bar-new{flex:1;background:#07C160;border-radius:1px 1px 0 0;min-width:3px}
+.bar-used{flex:1;background:#FF8C00;border-radius:1px 1px 0 0;min-width:3px}
+.months{display:flex;gap:3px;margin-top:6px}
+.months span{flex:1;text-align:center;font-size:9px;color:#BBB}
+.source{text-align:center;font-size:10px;color:#CCC;margin-top:10px}
+
+/* 说明 */
+.note{font-size:12px;color:#888;line-height:1.8;background:#FFF;border-radius:12px;padding:14px;margin-bottom:12px}
+.note b{color:#07C160}
+</style>
+</head>
+<body>
+
+<div class="note">
+  <b>只改这一块</b>：Hero + 入口宫格 + 去化排行 + AI解读 <b>全部不动</b>，仅替换房价指数卡片内容。
+</div>
+
+<div class="card">
+  <h2>📊 深圳房价指数</h2>
+
+  <!-- 面积段 -->
+  <div class="tabs">
+    <span class="tab on">全部</span>
+    <span class="tab">90㎡以下</span>
+    <span class="tab">90-144㎡</span>
+    <span class="tab">144㎡以上</span>
+  </div>
+
+  <!-- 新房/二手双卡 -->
+  <div class="dual">
+    <div class="dcard new">
+      <div class="dlabel">🏠 新房</div>
+      <div class="dval" style="color:#07C160">100.1</div>
+      <div class="ddir" style="color:#07C160">环比 ↑0.1%</div>
+      <div class="dsub">同比 94.7 ↓5.3%</div>
+    </div>
+    <div class="dcard used">
+      <div class="dlabel">🏢 二手房</div>
+      <div class="dval" style="color:#FF8C00">100.3</div>
+      <div class="ddir" style="color:#FF8C00">环比 ↑0.3%</div>
+      <div class="dsub">同比 93.5 ↓6.5%</div>
+    </div>
+  </div>
+
+  <!-- 叠加走势图 -->
+  <div class="chart-area">
+    <div class="chart-legend">
+      <span style="color:#07C160">● 新房环比</span>
+      <span style="color:#888">近12月</span>
+      <span style="color:#FF8C00">● 二手环比</span>
+    </div>
+    <div class="chart">
+      <div class="bar-group"><div class="bar-new" style="height:14px"></div><div class="bar-used" style="height:16px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:18px"></div><div class="bar-used" style="height:20px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:16px"></div><div class="bar-used" style="height:6px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:12px"></div><div class="bar-used" style="height:8px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:10px"></div><div class="bar-used" style="height:8px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:8px"></div><div class="bar-used" style="height:4px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:6px"></div><div class="bar-used" style="height:4px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:4px"></div><div class="bar-used" style="height:2px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:2px"></div><div class="bar-used" style="height:8px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:12px"></div><div class="bar-used" style="height:10px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:10px"></div><div class="bar-used" style="height:22px"></div></div>
+      <div class="bar-group"><div class="bar-new" style="height:16px"></div><div class="bar-used" style="height:14px"></div></div>
+    </div>
+    <div class="months">
+      <span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span><span>1月</span><span>2月</span><span>3月</span><span>4月</span>
+    </div>
+  </div>
+
+  <div class="source">国家统计局 70城房价指数 · 2026年4月</div>
+</div>
+
+</body>
+</html>
