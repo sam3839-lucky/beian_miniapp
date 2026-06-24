@@ -290,6 +290,16 @@ Page({
     this.setData({ aiText: parts.join('') });
   },
 
+  onOpenCitySelect() {
+    wx.navigateTo({ url: '/pages/city-select/city-select' });
+  },
+
+  onCitySelected(city) {
+    const idx = this.data.cities.indexOf(city);
+    this.setData({ cityIdx: idx >= 0 ? idx : 0 });
+    this.loadData();
+  },
+
   onCityChange(e) {
     this.setData({ cityIdx: parseInt(e.detail.value) });
     this.loadData();

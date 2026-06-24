@@ -1,0 +1,64 @@
+<view class="page">
+  <!-- 搜索 -->
+  <view class="search-bar">
+    <input class="search-input" placeholder="🔍 搜索城市" value="{{search}}" bindinput="onSearchInput"/>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="sec" wx:if="{{search}}">
+    <view class="city-grid">
+      <view class="city-item" wx:for="{{filtered}}" wx:key="*this" data-city="{{item}}" bindtap="onCityTap">{{item}}</view>
+    </view>
+    <view class="empty" wx:if="{{!filtered.length}}">未找到匹配城市</view>
+  </view>
+
+  <!-- 正常列表 -->
+  <block wx:else>
+    <!-- 常用 -->
+    <view class="sec" wx:if="{{recent.length}}">
+      <view class="sec-title">📍 常用城市</view>
+      <view class="recent-grid">
+        <view class="recent-chip" wx:for="{{recent}}" wx:key="*this" data-city="{{item}}" bindtap="onCityTap">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 一线 -->
+    <view class="sec">
+      <view class="sec-title">⭐ 一线城市</view>
+      <view class="city-grid">
+        <view class="city-item tier1" wx:for="{{TIER1}}" wx:key="*this" data-city="{{item}}" bindtap="onCityTap">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 热点 -->
+    <view class="sec">
+      <view class="sec-title">🔥 热点城市</view>
+      <view class="city-grid">
+        <view class="city-item hot" wx:for="{{HOT}}" wx:key="*this" data-city="{{item}}" bindtap="onCityTap">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 省会 -->
+    <view class="sec">
+      <view class="sec-title">🏙 省会城市</view>
+      <view class="city-grid">
+        <view class="city-item" wx:for="{{CAPITALS}}" wx:key="*this" data-city="{{item}}" bindtap="onCityTap">{{item}}</view>
+      </view>
+    </view>
+
+    <!-- 全部 70 城 -->
+    <view class="sec">
+      <view class="collapse-toggle" bindtap="onToggleAll">
+        {{showAll ? '📋 全部 70 城 ▲' : '📋 全部 70 城 ▼'}}
+      </view>
+      <view wx:if="{{showAll}}">
+        <view class="letter-group" wx:for="{{letterGroups}}" wx:key="letter">
+          <view class="letter-header">{{item.letter}}</view>
+          <view class="letter-cities">
+            <text class="letter-chip" wx:for="{{item.cities}}" wx:for-item="c" wx:key="*this" data-city="{{c}}" bindtap="onCityTap">{{c}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,9 +1,7 @@
 <view class="page">
   <!-- 城市选择 -->
-  <view class="city-bar">
-    <picker mode="selector" range="{{cities}}" value="{{cityIdx}}" bindchange="onCityChange">
-      <view class="city-sel">{{cities[cityIdx]}}</view>
-    </picker>
+  <view class="city-bar" bindtap="onOpenCitySelect">
+    <view class="city-sel">{{cities[cityIdx] || '深圳'}}</view>
     <view class="city-date">{{cumulStart}}起 · 国家统计局 70城房价指数</view>
   </view>
 

@@ -12,7 +12,8 @@
     "pages/dashboard/dashboard",
     "pages/upcoming/upcoming",
     "pages/compare/compare",
-    "pages/price-index/price-index"
+    "pages/price-index/price-index",
+    "pages/city-select/city-select"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",
