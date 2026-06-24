@@ -80,7 +80,9 @@ Page({
   },
 
   onToggleAll() {
-    this.setData({ showAll: !this.data.showAll });
+    const newVal = !this.data.showAll;
+    console.log('onToggleAll:', this.data.showAll, '->', newVal, 'groups:', this.data.letterGroups.length);
+    this.setData({ showAll: newVal });
   },
 
   getLetterGroups() {
