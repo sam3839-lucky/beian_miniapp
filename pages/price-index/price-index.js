@@ -24,6 +24,12 @@ Page({
     this.loadData();
   },
 
+  onShow() {
+    // navigateBack 回来后重新加载
+    if (this._loaded) this.loadData();
+    this._loaded = true;
+  },
+
   async loadData() {
     this.setData({ loading: true });
     try {

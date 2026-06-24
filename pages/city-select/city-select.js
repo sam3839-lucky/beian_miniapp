@@ -66,16 +66,14 @@ Page({
   onCityTap(e) {
     const city = e.currentTarget.dataset.city;
     this._saveRecent(city);
-    // 通过 setData 回调确保 cityIdx 更新后再加载
+    // 用 redirectTo 替换当前页栈，确保前页重新加载
     const pages = getCurrentPages();
     const prevPage = pages[pages.length - 2];
     if (prevPage) {
       const idx = prevPage.data.cities.indexOf(city);
-      prevPage.setData({ cityIdx: idx >= 0 ? idx : 0 }, () => {
-        prevPage.loadData();
-      });
+      prevPage.setData({ cityIdx: idx >= 0 ? idx : 0 });
     }
-    wx.navigateBack();
+    wx.navigateBack({ delta: 1 });
   },
 
   _saveRecent(city) {
