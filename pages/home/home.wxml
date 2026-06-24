@@ -136,7 +136,7 @@
         </view>
       </view>
       <view class="idx-months">
-        <text class="idx-mlabel" wx:for="{{idxItems}}" wx:key="month">{{item.month}}</text>
+        <text class="idx-mlabel" wx:for="{{idxItems}}" wx:key="month">{{item.show ? item.month : ''}}</text>
       </view>
       <view class="idx-source">国家统计局 70城房价指数 · {{idxMonth}}月</view>
     </view>

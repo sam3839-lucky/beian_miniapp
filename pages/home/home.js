@@ -270,6 +270,7 @@ Page({
       const barH = mom ? Math.min(180, Math.max(4, Math.abs(mom - 100) * 80)) : 4;
       return { month: item.month.slice(5), mom, label, barH, up: mom > 100 };
     });
+    for (let i = 0; i < items.length; i++) items[i].show = (i % 2 === 0);
     const latest = items[items.length - 1] || {};
     this.setData({
       idxItems: items,
