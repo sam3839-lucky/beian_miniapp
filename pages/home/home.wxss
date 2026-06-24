@@ -208,7 +208,7 @@
 .top-sold { display: block; font-size: 20rpx; color: #888; margin-top: 4rpx; }
 
 /* ═══ 房价指数 ═══ */
-.idx-card { background:#fff; margin:0 24rpx 8rpx; border-radius:16rpx; padding:24rpx; box-shadow:0 2rpx 12rpx rgba(0,0,0,.06); }
+.idx-card { background:#fff; margin:0 24rpx 8rpx; border-radius:16rpx; padding:24rpx; box-shadow:0 2rpx 12rpx rgba(0,0,0,.06); overflow:hidden; }
 .seg-tabs { display:flex; gap:8rpx; margin-bottom:20rpx; }
 .seg-tab { font-size:22rpx; padding:8rpx 16rpx; border-radius:40rpx; background:#F5F5F5; color:#666; }
 .seg-tab.on { background:#07C160; color:#fff; font-weight:600; }
@@ -224,8 +224,8 @@
 .idx-bar-label { font-size:16rpx; font-weight:700; margin-bottom:4rpx; white-space:nowrap; }
 .idx-bar-label.up { color:#059669; }
 .idx-bar-label.down { color:#DC2626; }
-.idx-months { display:flex; gap:4rpx; padding:0 4rpx; }
-.idx-mlabel { flex:1; text-align:center; font-size:16rpx; color:#BBB; }
+.idx-months { display:flex; gap:4rpx; padding:0 4rpx; overflow:hidden; }
+.idx-mlabel { flex:1; text-align:center; font-size:14rpx; color:#BBB; min-width:0; }
 .idx-source { text-align:center; font-size:18rpx; color:#BBB; margin-top:12rpx; }
 
 /* ═══ 概览卡片 ═══ */
