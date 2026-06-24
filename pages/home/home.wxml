@@ -130,8 +130,10 @@
       </view>
       <!-- 迷你走势条 -->
       <view class="idx-chart">
-        <view class="idx-bar {{item.mom > 100 ? 'up' : 'down'}}" wx:for="{{idxItems}}" wx:key="month"
-              style="height:{{(item.mom - 94) * 8}}px;min-height:4px"></view>
+        <view class="idx-bar-wrap" wx:for="{{idxItems}}" wx:key="month">
+          <text class="idx-bar-label {{item.mom > 100 ? 'up' : 'down'}}">{{item.mom > 100 ? '+' : ''}}{{(item.mom - 100).toFixed(1)}}%</text>
+          <view class="idx-bar {{item.mom > 100 ? 'up' : 'down'}}" style="height:{{item.barH}}px;min-height:4px"></view>
+        </view>
       </view>
       <view class="idx-months">
         <text class="idx-mlabel" wx:for="{{idxItems}}" wx:key="month">{{item.month}}</text>

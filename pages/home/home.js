@@ -264,7 +264,10 @@ Page({
     const key = seg === 'all' ? 'new' : 'new_' + seg;
     const items = idx.items.map(item => {
       const d = item[key] || {};
-      return { month: item.month.slice(5), mom: d.mom, yoy: d.yoy, base: d.base };
+      const mom = d.mom;
+      // 以100为基准，放大150倍显示差异
+      const h = mom ? Math.max(4, Math.abs(mom - 100) * 150) : 4;
+      return { month: item.month.slice(5), mom, yoy: d.yoy, base: d.base, barH: h };
     });
     const latest = items[items.length - 1] || {};
     this.setData({
