@@ -265,9 +265,10 @@ Page({
     const items = idx.items.map(item => {
       const d = item[key] || {};
       const mom = d.mom;
-      // 以100为基准，放大150倍显示差异
-      const h = mom ? Math.max(4, Math.abs(mom - 100) * 150) : 4;
-      return { month: item.month.slice(5), mom, yoy: d.yoy, base: d.base, barH: h };
+      const diff = mom ? (mom - 100).toFixed(1) : '0.0';
+      const label = mom > 100 ? '+' + diff + '%' : diff + '%';
+      const barH = mom ? Math.max(4, Math.abs(mom - 100) * 150) : 4;
+      return { month: item.month.slice(5), mom, label, barH, up: mom > 100 };
     });
     const latest = items[items.length - 1] || {};
     this.setData({
