@@ -267,7 +267,7 @@ Page({
       const mom = d.mom;
       const diff = mom ? (mom - 100).toFixed(1) : '0.0';
       const label = mom > 100 ? '+' + diff + '%' : diff + '%';
-      const barH = mom ? Math.min(180, Math.max(4, Math.abs(mom - 100) * 80)) : 4;
+      const barH = mom ? Math.min(140, Math.max(4, Math.abs(mom - 100) * 60)) : 4;
       return { month: item.month.slice(5), mom, label, barH, up: mom > 100 };
     });
     for (let i = 0; i < items.length; i++) items[i].show = (i % 2 === 0);
