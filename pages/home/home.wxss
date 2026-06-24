@@ -220,6 +220,8 @@
 .idx-bar { flex:1; border-radius:3rpx 3rpx 0 0; min-width:6rpx; }
 .idx-bar.up { background:#07C160; }
 .idx-bar.down { background:#FF4D4F; }
+.idx-months { display:flex; gap:4rpx; padding:0 4rpx; }
+.idx-mlabel { flex:1; text-align:center; font-size:16rpx; color:#BBB; }
 .idx-source { text-align:center; font-size:18rpx; color:#BBB; margin-top:12rpx; }
 
 /* ═══ 概览卡片 ═══ */
