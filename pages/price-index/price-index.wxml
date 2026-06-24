@@ -43,11 +43,10 @@
             <text class="ch-tab {{timeIdx === item ? 'on' : ''}}" wx:for="{{timeLabels}}" wx:key="*this" wx:for-index="item" data-idx="{{item}}" bindtap="onTimeTap">{{timeLabels[item]}}</text>
           </view>
         </view>
-        <canvas canvas-id="trendCanvas" id="trendCanvas" class="trend-canvas"></canvas>
+        <canvas canvas-id="trendCanvas" id="trendCanvas" style="width:100%;height:320rpx"></canvas>
         <view class="ch-legend">
           <text style="color:#07C160">━ 新房累积</text>
           <text style="color:#FF8C00">┅ 二手累积</text>
-          <text style="color:#BBB">— 基准100</text>
         </view>
       </view>
     </view>
@@ -58,7 +57,7 @@
         <view class="chart-head">
           <text class="ch-title">📊 量价关系 <text class="sz-only">深圳专属</text></text>
         </view>
-        <canvas canvas-id="volCanvas" id="volCanvas" class="vol-canvas"></canvas>
+        <canvas canvas-id="volCanvas" id="volCanvas" style="width:100%;height:200rpx"></canvas>
       </view>
     </view>
 

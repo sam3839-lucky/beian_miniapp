@@ -103,9 +103,10 @@ Page({
     this.genAiText(items);
     // 延迟画图，等 DOM 渲染完
     setTimeout(() => {
-      try { this.drawChart(); } catch(e) {}
-      try { this.drawVolChart(); } catch(e) {}
-    }, 300);
+      console.log('drawChart start, items:', this.data.items.length, 'hasVolume:', this.data.hasVolume);
+      try { this.drawChart(); } catch(e) { console.error('drawChart err:', e); }
+      try { this.drawVolChart(); } catch(e) { console.error('drawVolChart err:', e); }
+    }, 500);
   },
 
   drawChart() {
@@ -201,9 +202,9 @@ Page({
 
   drawVolChart() {
     if (!this.data.hasVolume) return;
-    const items = this.data.items;
-    const withVol = items.filter(i => i.volume && (i.volume.new > 0 || i.volume.used > 0));
-    if (withVol.length < 2) return;
+    const items = this.data.items || [];
+    const withVol = items.filter(i => i.volume);
+    if (withVol.length < 1) return;
 
     const query = wx.createSelectorQuery().in(this);
     query.select('#volCanvas').boundingClientRect().exec(res => {
