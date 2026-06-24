@@ -65,13 +65,15 @@ Page({
   },
 
   async loadAll() {
-    // 三请求并行加载
-    Promise.all([this.loadOverview(), this.loadRankings(), this.loadPermits(), this.loadTopAbsorption(), this.loadPriceIndex()]);
+    // 先加载缓存，快速渲染
+    this._showCachedOverview();
+    // 快速接口并行
+    Promise.all([this.loadRankings(), this.loadPermits(), this.loadTopAbsorption(), this.loadPriceIndex()]);
+    // 慢接口单独跑，不阻塞页面
+    this.loadOverview().catch(() => {});
   },
 
-  // ── P0: 市场概览 ──
-  async loadOverview() {
-    // 优先展示本地缓存，同时后台刷新
+  _showCachedOverview() {
     try {
       const cached = wx.getStorageSync('overview_cache');
       if (cached) {
@@ -79,13 +81,12 @@ Page({
         this._fillHeroData(cached);
       }
     } catch (e) { /* ignore */ }
+  },
 
+  // ── P0: 市场概览 ──
+  async loadOverview() {
     try {
-      // 加 8s 超时保护，避免 overview 慢查询阻塞页面
-      const data = await Promise.race([
-        api.getOverview(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
-      ]);
+      const data = await api.getOverview();
       data.unsold_w = (data.unsold / 10000).toFixed(2);
       data.unsold_n = data.unsold || 0;
       data.presale_n = data.presale || 0;
