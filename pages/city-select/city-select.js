@@ -27,20 +27,22 @@ Page({
 
   onLoad() {
     const recent = wx.getStorageSync('recent_cities') || [];
-    // 预计算字母分组
-    const groupsMap = {};
-    for (const c of ALL_CITIES) {
-      const first = c[0];
-      if (!groupsMap[first]) groupsMap[first] = [];
-      groupsMap[first].push(c);
-    }
+    // 拼音首字母分组
+    const pinyinMap = {
+      'A':'安庆','B':'包头 北海 北京 蚌埠','C':'长春 长沙 常德 成都 重庆',
+      'D':'大理 大连 丹东','F':'福州','G':'赣州 广州 贵阳 桂林',
+      'H':'哈尔滨 海口 杭州 合肥 呼和浩特 惠州','J':'吉林 济南 济宁 锦州 九江',
+      'K':'昆明','L':'兰州 泸州 洛阳','M':'牡丹江','N':'南昌 南充 南京 南宁 宁波',
+      'P':'平顶山','Q':'秦皇岛 青岛 泉州','S':'三亚 厦门 上海 韶关 深圳 沈阳 石家庄 苏州',
+      'T':'太原 唐山 天津','W':'温州 无锡 乌鲁木齐 武汉','X':'西安 西宁 徐州',
+      'Y':'烟台 扬州 宜昌 银川 岳阳','Z':'湛江 郑州 遵义'
+    };
     const letterGroups = [];
-    // 手动分组，保持字母顺序
-    const ranges = [['A','D'],['F','J'],['K','N'],['Q','S'],['T','Z']];
+    const ranges = [['A','D'],['F','J'],['K','N'],['P','S'],['T','Z']];
     for (const [start, end] of ranges) {
       const cities = [];
-      for (const [letter, cs] of Object.entries(groupsMap).sort()) {
-        if (letter >= start && letter <= end) cities.push(...cs);
+      for (const k of Object.keys(pinyinMap).sort()) {
+        if (k >= start && k <= end) cities.push(...pinyinMap[k].split(' '));
       }
       if (cities.length) letterGroups.push({ letter: start + '-' + end, cities });
     }
