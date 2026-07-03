@@ -106,26 +106,21 @@
       <text class="section-title">📊 深圳房价指数</text>
     </view>
     <view class="idx-card">
-      <!-- 面积段切换 -->
-      <view class="seg-tabs">
-        <view class="seg-tab {{priceSeg === 'all' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="all">全部</view>
-        <view class="seg-tab {{priceSeg === '90' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="90">90㎡以下</view>
-        <view class="seg-tab {{priceSeg === '90_144' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="90_144">90-144㎡</view>
-        <view class="seg-tab {{priceSeg === '144' ? 'on' : ''}}" bindtap="onPriceSegTap" data-seg="144">144㎡以上</view>
+      <!-- 新房/二手切换 -->
+      <view class="type-switch">
+        <view class="type-btn {{priceType === 'new' ? 'on-new' : ''}}" bindtap="onPriceTypeTap" data-type="new">🏠 新房</view>
+        <view class="type-btn {{priceType === 'used' ? 'on-used' : ''}}" bindtap="onPriceTypeTap" data-type="used">🏢 二手房</view>
       </view>
       <!-- 核心数据 -->
       <view class="idx-stats">
-        <view class="idx-stat">
-          <text class="idx-sval">{{idxLatest.yoy || '--'}}</text>
-          <text class="idx-slbl">同比</text>
-        </view>
-        <view class="idx-stat">
+        <view class="idx-stat {{priceType === 'new' ? 'idx-new' : 'idx-used'}}">
           <text class="idx-sval">{{idxLatest.mom || '--'}}</text>
-          <text class="idx-slbl">环比</text>
+          <text class="idx-slbl">环比 · {{idxMonth}}月</text>
+          <text class="idx-kd" style="color:{{idxLatest.up ? '#07C160' : '#FF4D4F'}}">{{idxLatest.label}}</text>
         </view>
-        <view class="idx-stat">
-          <text class="idx-sval">{{idxLatest.base || '--'}}</text>
-          <text class="idx-slbl">定基</text>
+        <view class="idx-stat" style="background:#F5F9FF;border:2rpx solid #DBEAFE">
+          <text class="idx-sval" style="color:#3B82F6">{{idxLatest.yoy || '--'}}</text>
+          <text class="idx-slbl">同比</text>
         </view>
       </view>
       <!-- 迷你走势条 -->

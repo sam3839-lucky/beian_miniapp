@@ -6,7 +6,7 @@ Page({
     hero: { totalListings: '--', permits: '--', todayNew: '--' },
     aiText: '',
     priceIndex: null,
-    priceSeg: 'all',
+    priceType: 'new',  // 'new' | 'used'
     // P0: 概览
     overview: null,
     overviewError: false,
@@ -251,24 +251,24 @@ Page({
     this.loadPermits();
   },
 
-  onPriceSegTap(e) {
-    const seg = e.currentTarget.dataset.seg;
-    this.setData({ priceSeg: seg });
+  onPriceTypeTap(e) {
+    const type = e.currentTarget.dataset.type;
+    this.setData({ priceType: type });
     this._updatePriceDisplay();
   },
 
   _updatePriceDisplay() {
     const idx = this.data.priceIndex;
     if (!idx || !idx.items) return;
-    const seg = this.data.priceSeg;
-    const key = seg === 'all' ? 'new' : 'new_' + seg;
+    const key = this.data.priceType;
     const items = idx.items.map(item => {
       const d = item[key] || {};
       const mom = d.mom;
       const diff = mom ? (mom - 100).toFixed(1) : '0.0';
       const label = mom > 100 ? '+' + diff + '%' : diff + '%';
       const barH = mom ? Math.max(4, Math.abs(mom - 100) * 60) : 4;
-      return { month: item.month.slice(5), mom, label, barH, up: mom > 100 };
+      const yoy = d.yoy;
+      return { month: item.month.slice(5), mom, yoy, label, barH, up: mom > 100 };
     });
     for (let i = 0; i < items.length; i++) items[i].show = (i % 2 === 0);
     const latest = items[items.length - 1] || {};

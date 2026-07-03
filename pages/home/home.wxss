@@ -209,14 +209,18 @@
 
 /* ═══ 房价指数 ═══ */
 .idx-card { background:#fff; margin:0 24rpx 8rpx; border-radius:16rpx; padding:24rpx; box-shadow:0 2rpx 12rpx rgba(0,0,0,.06); overflow:hidden; }
-.seg-tabs { display:flex; gap:8rpx; margin-bottom:20rpx; }
-.seg-tab { font-size:22rpx; padding:8rpx 16rpx; border-radius:40rpx; background:#F5F5F5; color:#666; }
-.seg-tab.on { background:#07C160; color:#fff; font-weight:600; }
+.type-switch { display:flex; background:#F5F5F5; border-radius:20rpx; padding:4rpx; margin-bottom:20rpx; }
+.type-btn { flex:1; text-align:center; padding:14rpx; border-radius:16rpx; font-size:26rpx; font-weight:600; color:#888; }
+.type-btn.on-new { background:#07C160; color:#fff; }
+.type-btn.on-used { background:#FF8C00; color:#fff; }
 .idx-stats { display:flex; gap:8rpx; margin-bottom:20rpx; }
 .idx-stat { flex:1; background:#F9FAFB; border-radius:8rpx; padding:16rpx 8rpx; text-align:center; }
+.idx-stat.idx-new { background:#F0FDF4; border:2rpx solid #6EE7B7; }
+.idx-stat.idx-used { background:#FFF7ED; border:2rpx solid #FED7AA; }
 .idx-sval { display:block; font-size:36rpx; font-weight:800; }
 .idx-slbl { display:block; font-size:20rpx; color:#888; margin-top:4rpx; }
-.idx-chart { display:flex; align-items:flex-end; gap:2rpx; height:180rpx; padding:0; position:relative; }
+.idx-kd { display:block; font-size:22rpx; font-weight:600; margin-top:4rpx; }
+.idx-chart { display:flex; align-items:flex-end; gap:2rpx; height:120rpx; padding:0; position:relative; }
 .idx-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; min-width:0; }
 .idx-bar { width:100%; border-radius:2rpx 2rpx 0 0; }
 .idx-baseline { position:absolute; bottom:26rpx; left:0; right:0; height:1px; background:#E5E5E5; }
