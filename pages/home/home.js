@@ -362,6 +362,8 @@ Page({
       wx.navigateTo({ url: '/pages/upcoming/upcoming' });
     } else if (page === 'mortgage') {
       wx.navigateTo({ url: '/pages/mortgage/mortgage' });
+    } else if (page === 'new') {
+      wx.switchTab({ url: '/pages/index/index' });
     } else {
       wx.navigateTo({ url: '/pages/index/index' });
     }
