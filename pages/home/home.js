@@ -267,7 +267,7 @@ Page({
       const mom = d.mom;
       const diff = mom ? (mom - 100).toFixed(1) : '0.0';
       const label = mom > 100 ? '+' + diff + '%' : diff + '%';
-      const barH = mom ? Math.min(140, Math.max(4, Math.abs(mom - 100) * 60)) : 4;
+      const barH = mom ? Math.max(4, Math.abs(mom - 100) * 60) : 4;
       return { month: item.month.slice(5), mom, label, barH, up: mom > 100 };
     });
     for (let i = 0; i < items.length; i++) items[i].show = (i % 2 === 0);
@@ -360,6 +360,8 @@ Page({
       wx.switchTab({ url: '/pages/trends/trends' });
     } else if (page === 'upcoming') {
       wx.navigateTo({ url: '/pages/upcoming/upcoming' });
+    } else if (page === 'mortgage') {
+      wx.navigateTo({ url: '/pages/mortgage/mortgage' });
     } else {
       wx.navigateTo({ url: '/pages/index/index' });
     }
