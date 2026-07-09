@@ -390,7 +390,7 @@ Page({
     const filedW = parseFloat(data.filed_w || 0);
     const recent = data.recent_n || 0;
     const parts = [];
-    parts.push(`深圳目前在售住宅约${(unsold / 10000).toFixed(1)}万套，均价${avgPrice}万/㎡。`);
+    parts.push(`深圳目前在售房源约${(unsold / 10000).toFixed(1)}万套，均价${avgPrice}万/㎡。`);
     parts.push(`其中期房${presale}套，现房${spot}套。`);
     if (recent > 0) parts.push(`最近有${recent}套新房源入市。`);
     if (filedW > signedW) parts.push(`近期备案量(${filedW.toFixed(1)}万套)高于网签量(${signedW.toFixed(1)}万套)，市场活跃度较高。`);
