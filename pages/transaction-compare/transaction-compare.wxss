@@ -1,0 +1,749 @@
+.page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 48rpx;
+  overflow-x: hidden;
+  background: #F5F5F5;
+  color: #1A1A1A;
+}
+
+.filter-panel {
+  padding: 24rpx;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 24rpx;
+  background: #FFFFFF;
+}
+
+.filter-heading,
+.scope-row,
+.month-head,
+.month-heading,
+.compare-row {
+  display: flex;
+  align-items: center;
+}
+
+.filter-heading {
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.filter-copy,
+.scope-copy,
+.compare-year {
+  min-width: 0;
+}
+
+.filter-title,
+.filter-subtitle,
+.scope-title,
+.scope-subtitle,
+.compare-year-number,
+.compare-year-label,
+.page-note-scale {
+  display: block;
+}
+
+.filter-title {
+  font-size: 32rpx;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.filter-subtitle {
+  margin-top: 6rpx;
+  color: #666666;
+  font-size: 24rpx;
+  line-height: 1.45;
+}
+
+.year-range {
+  flex-shrink: 0;
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: #F5F5F5;
+  color: #666666;
+  font-size: 22rpx;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.control-label {
+  margin-bottom: 10rpx;
+  color: #666666;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.segmented {
+  display: flex;
+  gap: 10rpx;
+}
+
+.segment {
+  min-width: 0;
+  min-height: 44px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #EEEEEE;
+  border-radius: 16rpx;
+  background: #FFFFFF;
+  color: #666666;
+  font-size: 26rpx;
+  font-weight: 600;
+  transition: transform 150ms ease-out, opacity 150ms ease-out, border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.segmented--metric .segment,
+.segmented--year .segment {
+  flex: 1;
+}
+
+.segment--active {
+  border-color: #07C160;
+  background: #F0FBF5;
+  color: #07C160;
+  font-weight: 700;
+}
+
+.segment--pressed {
+  opacity: 0.76;
+  transform: scale(0.98);
+}
+
+.scope-row {
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+
+.scope-copy {
+  flex: 1;
+}
+
+.scope-title {
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.scope-subtitle {
+  margin-top: 4rpx;
+  color: #999999;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
+.segmented--year {
+  width: 260rpx;
+  flex-shrink: 0;
+}
+
+.segmented--year .segment {
+  min-height: 44px;
+  font-size: 24rpx;
+}
+
+.cutoff {
+  display: flex;
+  align-items: flex-start;
+  gap: 14rpx;
+  margin-top: 20rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 16rpx;
+  background: #FFF7E6;
+  color: #D97706;
+}
+
+.cutoff-icon {
+  width: 30rpx;
+  height: 30rpx;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  margin-top: 2rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 50%;
+  font-size: 20rpx;
+  line-height: 26rpx;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cutoff-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.cutoff-text,
+.cutoff-rule {
+  display: block;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.cutoff-rule {
+  margin-top: 2rpx;
+  font-size: 22rpx;
+}
+
+.updated-text {
+  display: block;
+  margin-top: 4rpx;
+  color: #8A6A35;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
+.table-card {
+  overflow: hidden;
+  margin-top: 20rpx;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 24rpx;
+  background: #FFFFFF;
+}
+
+.table-controls {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 16rpx 14rpx;
+}
+
+.table-controls .segmented {
+  flex: 1;
+  gap: 6rpx;
+}
+
+.table-controls .segmented--year {
+  width: auto;
+  flex: 0 0 156rpx;
+}
+
+.table-controls .segment {
+  min-height: 40px;
+  border-radius: 12rpx;
+  font-size: 21rpx;
+}
+
+.table-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12rpx;
+  padding: 22rpx 20rpx 12rpx;
+}
+
+.table-title,
+.table-subtitle {
+  display: block;
+}
+
+.table-title {
+  font-size: 28rpx;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.table-subtitle,
+.table-latest {
+  color: #999999;
+  font-size: 20rpx;
+  line-height: 1.4;
+}
+
+.table-subtitle {
+  margin-top: 4rpx;
+}
+
+.table-latest {
+  flex: 0 0 auto;
+  padding-top: 4rpx;
+  white-space: nowrap;
+}
+
+.data-legend {
+  display: flex;
+  gap: 16rpx;
+  padding: 0 20rpx 14rpx;
+}
+
+.legend-item {
+  font-size: 20rpx;
+  font-weight: 700;
+}
+
+.legend-item--total { color: #1A1A1A; }
+.legend-item--new { color: #3B82F6; }
+.legend-item--used { color: #FF8C00; }
+
+.matrix {
+  margin: 0 16rpx;
+  border-top: 1rpx solid #EEEEEE;
+  border-left: 1rpx solid #EEEEEE;
+}
+
+.matrix-row {
+  display: flex;
+  min-height: 108rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+}
+
+.matrix-row--header {
+  min-height: 56rpx;
+  background: #F7F7F7;
+}
+
+.matrix-row--current {
+  background: #FFFCF5;
+}
+
+.matrix-row--cumulative {
+  background: #F0FBF5;
+  border-bottom: 2rpx solid #CBE9D7;
+}
+
+.matrix-month,
+.matrix-year,
+.matrix-cell {
+  box-sizing: border-box;
+  border-right: 1rpx solid #EEEEEE;
+}
+
+.matrix-month {
+  width: 70rpx;
+  flex: 0 0 70rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8rpx 6rpx;
+  text-align: center;
+}
+
+.matrix-month-label {
+  font-size: 22rpx;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.matrix-month-status {
+  margin-top: 4rpx;
+  color: #D97706;
+  font-size: 16rpx;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.matrix-year,
+.matrix-cell {
+  min-width: 0;
+  flex: 1;
+}
+
+.matrix-year {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666666;
+  font-size: 21rpx;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.matrix-cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6rpx;
+  padding: 10rpx 4rpx;
+}
+
+.matrix-cell--current {
+  box-shadow: inset 0 4rpx 0 #1A1A1A;
+}
+
+.cell-value {
+  overflow: hidden;
+  font-size: 17rpx;
+  line-height: 1.25;
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+
+.cell-value--total { color: #1A1A1A; }
+.cell-value--new { color: #3B82F6; }
+.cell-value--used { color: #FF8C00; }
+
+.cell-delta {
+  overflow: hidden;
+  color: #17212B;
+  font-size: 17rpx;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: center;
+  text-overflow: ellipsis;
+}
+
+.cell-delta--muted {
+  color: #A0A8AE;
+  font-weight: 500;
+}
+
+.table-cutoff {
+  padding: 12rpx 20rpx;
+  background: #FFF7E6;
+  color: #D97706;
+  font-size: 20rpx;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.month-card {
+  overflow: hidden;
+  margin-top: 20rpx;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 24rpx;
+  background: #FFFFFF;
+}
+
+.month-card:first-child {
+  margin-top: 0;
+}
+
+.month-card--progress,
+.month-card--incomplete {
+  border: 2rpx dashed #D97706;
+}
+
+.month-head {
+  min-height: 88rpx;
+  box-sizing: border-box;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 18rpx 24rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+}
+
+.month-heading {
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.month-title {
+  font-size: 28rpx;
+  line-height: 1.35;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.month-status {
+  padding: 4rpx 10rpx;
+  border-radius: 8rpx;
+  background: #FFF7E6;
+  color: #D97706;
+  font-size: 20rpx;
+  line-height: 1.35;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.month-status--muted {
+  background: #F5F5F5;
+  color: #666666;
+}
+
+.month-headline {
+  min-width: 0;
+  color: #666666;
+  font-size: 22rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  text-align: right;
+}
+
+.month-headline--progress {
+  color: #D97706;
+}
+
+.compare-row {
+  position: relative;
+  min-height: 88rpx;
+  box-sizing: border-box;
+  gap: 8rpx;
+  padding: 14rpx 16rpx;
+  border-top: 1rpx solid #F0F0F0;
+}
+
+.month-head + .compare-row {
+  border-top: 0;
+}
+
+.compare-row--current {
+  background: #F7F7F7;
+  box-shadow: inset 6rpx 0 0 #1A1A1A;
+}
+
+.compare-row--incomplete {
+  background: #FFFCF5;
+}
+
+.compare-year {
+  width: 80rpx;
+  flex: 0 0 auto;
+}
+
+.compare-year-number {
+  font-size: 26rpx;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.compare-year-label {
+  margin-top: 4rpx;
+  overflow: hidden;
+  color: #999999;
+  font-size: 18rpx;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  height: 16rpx;
+  min-width: 80rpx;
+  flex: 1;
+  overflow: hidden;
+  border-radius: 6rpx;
+  background: #EEEEEE;
+}
+
+.bar-value {
+  height: 100%;
+  border-radius: 6rpx;
+  background: #B8B8B8;
+  transition: width 150ms ease-out;
+}
+
+.compare-row--current .bar-value {
+  background: #1A1A1A;
+}
+
+.compare-row--oldest .bar-value {
+  background: #D8D8D8;
+}
+
+.compare-row--incomplete .bar-value {
+  background: #D8D8D8;
+}
+
+.compare-value {
+  width: 110rpx;
+  flex: 0 0 auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.compare-value-number {
+  font-size: 25rpx;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -1rpx;
+}
+
+.compare-value-unit {
+  margin-left: 4rpx;
+  color: #999999;
+  font-size: 18rpx;
+  font-weight: 500;
+}
+
+.compare-value-missing {
+  color: #999999;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.compare-delta {
+  width: 118rpx;
+  flex: 0 0 auto;
+  overflow: hidden;
+  color: #666666;
+  font-size: 19rpx;
+  line-height: 1.3;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.compare-delta--base {
+  color: #999999;
+  font-weight: 500;
+}
+
+.card-cutoff {
+  padding: 12rpx 20rpx;
+  border-top: 1rpx solid #F4E4C7;
+  background: #FFF7E6;
+  color: #D97706;
+  font-size: 20rpx;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.state-panel {
+  min-height: 420rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20rpx;
+  padding: 48rpx 32rpx;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 24rpx;
+  background: #FFFFFF;
+  text-align: center;
+}
+
+.state-symbol,
+.loading-mark {
+  width: 72rpx;
+  height: 72rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20rpx;
+  border-radius: 50%;
+  background: #F5F5F5;
+  color: #999999;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.state-symbol--error {
+  background: #FFF1F0;
+  color: #FF4D4F;
+}
+
+.loading-mark {
+  border: 6rpx solid #EEEEEE;
+  border-top-color: #07C160;
+  background: transparent;
+  animation: spin 800ms linear infinite;
+}
+
+.state-title {
+  font-size: 28rpx;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.state-copy {
+  max-width: 500rpx;
+  margin-top: 10rpx;
+  color: #666666;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.retry-button {
+  min-width: 240rpx;
+  min-height: 44px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28rpx;
+  padding: 0 36rpx;
+  border: 0;
+  border-radius: 16rpx;
+  background: #07C160;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.retry-button::after {
+  border: 0;
+}
+
+.retry-button--pressed {
+  opacity: 0.8;
+  transform: scale(0.98);
+}
+
+.page-note {
+  padding: 28rpx 12rpx 0;
+  color: #999999;
+  font-size: 20rpx;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.page-note-source {
+  display: block;
+  margin-top: 6rpx;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 340px) {
+  .page {
+    padding-right: 24rpx;
+    padding-left: 24rpx;
+  }
+
+  .filter-panel {
+    padding: 20rpx;
+  }
+
+  .scope-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .segmented--year {
+    width: 100%;
+  }
+
+  .month-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6rpx;
+  }
+
+  .month-headline {
+    text-align: left;
+  }
+
+  .compare-row {
+    gap: 6rpx;
+    padding-right: 12rpx;
+    padding-left: 12rpx;
+  }
+
+  .compare-year {
+    width: 76rpx;
+  }
+
+  .compare-value {
+    width: 104rpx;
+  }
+
+  .compare-delta {
+    width: 112rpx;
+    font-size: 18rpx;
+  }
+}

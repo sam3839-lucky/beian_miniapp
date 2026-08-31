@@ -1,9 +1,15 @@
 <view class="page">
-  <!-- 成交概览 -->
-  <view class="section menu-section" bindtap="onOpenDashboard">
-    <view class="menu-item">
+  <!-- 成交数据 -->
+  <view class="section menu-section">
+    <view class="menu-item" bindtap="onOpenDashboard" hover-class="menu-item-hover">
       <text class="menu-icon">📊</text>
       <text class="menu-label">成交概览</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="onOpenTransactionCompare" hover-class="menu-item-hover">
+      <text class="menu-icon">🗓️</text>
+      <text class="menu-label">历史成交对比</text>
       <text class="menu-arrow">›</text>
     </view>
   </view>

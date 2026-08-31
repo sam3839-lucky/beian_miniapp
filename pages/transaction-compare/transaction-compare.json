@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "历史成交对比",
+  "backgroundColor": "#F5F5F5",
+  "backgroundTextStyle": "dark",
+  "enablePullDownRefresh": true,
+  "usingComponents": {}
+}

@@ -1,0 +1,91 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-panel state-panel--loading" aria-label="正在加载历史成交数据">
+    <view class="loading-mark"></view>
+    <text class="state-title">正在加载成交数据</text>
+    <text class="state-copy">正在整理同月的历年成交量，请稍候</text>
+  </view>
+
+  <view wx:elif="{{error}}" class="state-panel state-panel--error">
+    <view class="state-symbol state-symbol--error">!</view>
+    <text class="state-title">成交数据加载失败</text>
+    <text class="state-copy">{{error}}</text>
+    <button class="retry-button" bindtap="onRetry" hover-class="retry-button--pressed">重新加载</button>
+  </view>
+
+  <view wx:elif="{{empty}}" class="state-panel state-panel--empty">
+    <view class="state-symbol">—</view>
+    <text class="state-title">暂无可对比数据</text>
+    <text class="state-copy">当前筛选条件下还没有完整的月度成交记录</text>
+  </view>
+
+  <block wx:else>
+    <view class="table-card" wx:if="{{monthlyTable}}">
+      <view class="table-controls" aria-label="历史成交对比筛选">
+        <view class="segmented segmented--year" aria-role="group" aria-label="选择对比年数">
+          <view
+            wx:for="{{yearOptions}}"
+            wx:key="value"
+            class="segment {{yearCount === item.value ? 'segment--active' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="onYearCountChange"
+            hover-class="segment--pressed"
+            aria-role="button"
+            aria-label="{{item.label}}"
+            aria-checked="{{yearCount === item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+        <view class="segmented segmented--metric" aria-role="group" aria-label="选择成交类型">
+          <view
+            wx:for="{{metrics}}"
+            wx:key="value"
+            class="segment {{metric === item.value ? 'segment--active' : ''}}"
+            data-value="{{item.value}}"
+            bindtap="onMetricChange"
+            hover-class="segment--pressed"
+            aria-role="button"
+            aria-label="{{item.label}}"
+            aria-checked="{{metric === item.value}}"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <view class="matrix" aria-label="月份和年份成交数据表">
+        <view class="matrix-row matrix-row--header">
+          <view class="matrix-month">月份</view>
+          <view wx:for="{{monthlyTable.years}}" wx:key="*this" class="matrix-year">{{item}}</view>
+        </view>
+        <view
+          wx:for="{{monthlyTable.months}}"
+          wx:key="month"
+          wx:for-item="month"
+          class="matrix-row {{month.isCurrentMonth ? 'matrix-row--current' : ''}} {{month.isCumulative ? 'matrix-row--cumulative' : ''}}"
+        >
+          <view class="matrix-month">
+            <text class="matrix-month-label">{{month.label}}</text>
+            <text class="matrix-month-status" wx:if="{{month.isPartial}}">进行中</text>
+          </view>
+          <view
+            wx:for="{{month.cells}}"
+            wx:key="year"
+            wx:for-item="cell"
+            class="matrix-cell {{cell.isCurrent ? 'matrix-cell--current' : ''}}"
+            aria-label="{{cell.year}}年：{{metricLabel}} {{cell.displayHasValue ? cell.displayText + '套' : '数据不完整'}}，{{cell.comparisonText}}"
+          >
+            <text class="cell-value cell-value--{{metric}}">{{cell.displayText}}</text>
+            <text class="cell-delta {{cell.comparisonComparable ? '' : 'cell-delta--muted'}}">{{cell.comparisonText}}</text>
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="page-note" wx:if="{{monthlyTable}}">
+      <text class="page-note-scale">月份按最新到最早排列；“—”表示该年份数据不完整。</text>
+      <text class="page-note-source">数据来源：深圳市住房和建设局公开信息</text>
+    </view>
+  </block>
+</view>
