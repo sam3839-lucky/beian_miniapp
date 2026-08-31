@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+<title>项目概览页</title>
+<style>
+/* ═══ 完全对齐现有实际代码的设计 Token ═══ */
+:root {
+  --green:#07C160; --red:#FF4D4F; --orange:#FF8C00;
+  --text:#333; --t2:#666; --t3:#888; --t4:#A8A8A8;
+  --bg:#F7F7F7; --card:#fff; --border:#E5E5E5; --f0:#F0F0F0;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;justify-content:center;padding:40px 20px;min-height:100vh}
+.page-container{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;align-items:flex-start;max-width:1800px}
+@media(max-width:800px){.page-container{flex-direction:column;align-items:center}.phone{width:340px!important}}
+
+/* Phone frame */
+.phone{width:375px;background:var(--card);border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15),0 0 0 2px #222;position:relative;flex-shrink:0}
+.phone-status{display:flex;justify-content:space-between;padding:12px 24px 6px;font-size:12px;font-weight:600}
+.phone-content{background:var(--bg);min-height:400px;overflow-y:auto}
+.page-label{position:absolute;top:-26px;left:12px;font-size:11px;color:#BBB;font-weight:500;white-space:nowrap}
+.flow-arrow{display:flex;flex-direction:column;align-items:center;font-size:28px;color:#CCC;flex-shrink:0;padding:0 4px;gap:2px}
+.flow-label{font-size:10px;color:var(--green);text-align:center;font-weight:600}
+
+/* ═══ 真实代码里的组件 ═══ */
+/* 导航栏 — from detail page */
+.nav-bar{display:flex;align-items:center;padding:12px 16px;background:var(--card);font-size:16px;font-weight:600;gap:12px}
+.nav-back{font-size:20px;color:var(--green)}
+
+/* 深色 Hero — from detail page (实际有，调整了颜色) */
+.hero{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:20px 16px}
+.hero .h-name{font-size:18px;font-weight:700}
+.hero .h-loc{font-size:11px;opacity:.5;margin:4px 0}
+.hero .h-price{font-size:28px;font-weight:800;margin-top:8px;letter-spacing:-.5px}
+.hero .h-price small{font-size:13px;font-weight:400;opacity:.6}
+.hero .h-tags{display:flex;gap:6px;margin-top:8px}
+.htag{font-size:10px;padding:4px 10px;border-radius:20px;font-weight:500}
+.htag-g{background:rgba(7,193,96,.2);color:#4ADE80}
+.htag-b{background:rgba(59,130,246,.2);color:#60A5FA}
+.htag-o{background:rgba(255,140,0,.2);color:#FFB74D}
+
+/* 信息栅格 — from detail page (igrid) */
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin:32rpx;border-radius:8rpx;overflow:hidden}
+.icell{background:var(--card);padding:10px 8px;text-align:center}
+.icell .iv{font-size:16px;font-weight:700}
+.icell .il{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* 楼栋去化面板 — from detail page (bld-card) */
+.bld-panel{margin:16rpx 32rpx;background:var(--card);border-radius:8rpx;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.bld-h{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:.5px solid var(--f0)}
+.bld-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid #f8f8f8}
+.bld-row:last-child{border-bottom:none}
+.bld-info{width:64px;flex-shrink:0}
+.bld-tag{font-size:11px;font-weight:600;display:block}
+.bld-num{font-size:9px;color:var(--t3)}
+.bld-wrap{flex:1;display:flex;align-items:center;gap:6px}
+.bld-track{flex:1;height:6px;background:var(--f0);border-radius:3px;overflow:hidden}
+.bld-fill{height:100%;border-radius:3px}
+.bld-pct{width:32px;text-align:right;font-size:11px;font-weight:700}
+.bld-sold{width:50px;text-align:right;font-size:10px;color:var(--t3)}
+
+/* 横向操作按钮栏 */
+.act-bar{display:flex;gap:8px;margin:16rpx 32rpx}
+.act-btn{flex:1;padding:12px;border:none;border-radius:8rpx;font-size:13px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.act-btn:active{opacity:.85;transform:scale(.98)}
+.act-p{background:var(--green);color:#fff}
+.act-s{background:var(--card);color:var(--text);border:1.5px solid var(--border)}
+
+/* ═══ 销控表弹窗 — 用实际设计token ═══ */
+.sheet-mask{background:rgba(0,0,0,.5);display:flex;align-items:flex-end;min-height:100%}
+.sheet{width:100%;background:var(--card);border-radius:16px 16px 0 0;overflow:hidden;max-height:85vh;display:flex;flex-direction:column}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 12px;flex-shrink:0;border-bottom:.5px solid var(--f0)}
+.sheet-title{font-size:16px;font-weight:700}.sheet-close{font-size:22px;color:var(--t3);padding:4px 8px}
+.sheet-body{flex:1;overflow-y:auto;padding:16px}
+.sheet-foot{padding:12px 16px 20px;border-top:.5px solid var(--border);flex-shrink:0}
+
+.btabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.btab{font-size:11px;padding:6px 14px;border-radius:20px;background:#F5F5F5;color:var(--t2);border:none;font-family:inherit;font-weight:500}
+.btab.on{background:var(--green);color:#fff}.btab .sub{font-size:9px;opacity:.8;display:block}
+
+.sfilter{display:flex;gap:8px;margin-bottom:12px}
+.sfbtn{flex:1;text-align:center;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);font-size:12px;font-weight:600;font-family:inherit}
+.sfbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+
+.fmts{display:flex;gap:8px;margin-bottom:12px}
+.fmt{flex:1;text-align:center;padding:10px;border-radius:8px;border:1.5px solid var(--border);background:var(--card);color:var(--t2);font-size:13px;font-family:inherit}
+.fmt.on{border-color:var(--green);color:var(--green);background:#F0FDF4}
+.fmt-icon{display:block;font-size:22px;margin-bottom:4px}
+
+.sg-summary{display:flex;gap:8px;margin-bottom:12px}
+.sg-sitem{flex:1;text-align:center;background:#F9FAFB;border-radius:8rpx;padding:10px 6px}
+.sg-sval{display:block;font-size:18px;font-weight:700;line-height:1.2}
+.sg-slbl{display:block;font-size:10px;color:var(--t3);margin-top:2px}
+
+.sg-wrap{overflow-x:auto}
+.sg{display:inline-block;min-width:100%}
+.sg-head{display:flex;margin-bottom:4px;padding-left:34px}
+.sg-hcell{width:100px;height:28px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t3);margin:1px;flex-shrink:0;background:#FAFAFA;border-radius:4px}
+.sg-floor{display:flex;align-items:flex-start;margin-bottom:3px}
+.sg-flabel{width:34px;font-size:10px;color:var(--t3);text-align:center;flex-shrink:0;padding-top:10px;font-weight:600}
+.sg-cell{width:100px;margin:1px;border-radius:6px;padding:6px 3px;flex-shrink:0;text-align:center;line-height:1.3;min-height:48px;display:flex;flex-direction:column;justify-content:center}
+.sg-cell .sg-room{font-size:12px;font-weight:700}
+.sg-cell .sg-total{font-size:14px;font-weight:800;margin:2px 0}
+.sg-cell .sg-unit{font-size:9px;color:var(--t3)}
+.s-avail{background:#E8F8EE;border:1.5px solid #6EE7B7}.s-avail .sg-room{color:#059669}
+.s-sold{background:#FFE5E5;border:1.5px solid #FECACA}.s-sold .sg-room{color:#DC2626}
+
+.sg-legend{display:flex;gap:14px;margin-top:12px}
+.sg-lg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+.sg-ldot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+.btn{width:100%;padding:14px;border:none;border-radius:8rpx;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn-p{background:var(--green);color:#fff}
+.btn-s{background:#F5F5F5;color:var(--text)}
+
+.share-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:8px 0}
+.share-item{text-align:center}
+.share-icon{width:52px;height:52px;border-radius:14px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.share-label{font-size:11px;color:var(--t2)}
+
+/* 找房页的关键组件（对照用）*/
+.sbar{background:var(--card);padding:16rpx 32rpx;display:flex;align-items:center;gap:16rpx}
+.sbox{display:flex;align-items:center;background:var(--bg);border-radius:8rpx;padding:20rpx 24rpx;flex:1}
+.qcombo{background:var(--card);padding:12rpx 28rpx;display:flex;gap:12rpx;white-space:nowrap}
+.qchip{font-size:22rpx;padding:10rpx 24rpx;border-radius:40rpx;background:#F5F5F5;color:var(--t2);flex-shrink:0}
+.qchip.on{background:#FFF3E6;color:#D97706;border:1px solid #FDE68A;font-weight:600}
+
+.flt{background:var(--card);padding:8px 14px 10px;display:flex;flex-direction:column;gap:8px}
+.flt-row{display:flex;gap:8px}
+.pv{flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--border);font-size:14px;color:var(--text);background:var(--bg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cr{display:flex;gap:6px;flex-wrap:wrap}
+.cc{font-size:11px;padding:5px 12px;border-radius:20px;background:var(--bg);color:var(--t2)}
+.cc.on{background:var(--green);color:#fff;font-weight:600}
+
+.sbar-stat{display:flex;align-items:center;background:var(--card);margin:10px 14px;border-radius:8rpx;padding:14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.si{flex:1;text-align:center}.si .sv{display:block;font-size:20px;font-weight:800}.si .sl{display:block;font-size:10px;color:var(--t3)}
+.ss{width:1px;height:28px;background:var(--border)}
+
+/* 房源卡片 — 从price-card */
+.ucard{background:var(--card);margin:0 14px 6px;border-radius:8rpx;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;justify-content:space-between;align-items:center}
+.ucl{flex:1}.ucno{font-size:14px;font-weight:700}.ucbld{font-size:10px;color:var(--t3)}
+.ucm{text-align:right}.uca{font-size:13px}.ucd{font-size:10px;color:var(--t3)}
+.ucr{text-align:right;width:80px}.ucp{font-size:16px;font-weight:800;color:var(--red)}.ucup{font-size:11px;color:var(--t3)}
+.floor-sep{display:flex;align-items:center;padding:8px 14px;gap:8px}
+.floor-sep .line{flex:1;height:.5px;background:var(--border)}
+.floor-sep .num{font-size:11px;color:var(--t3);font-weight:600}
+
+/* 对比条 */
+.cmp-note{font-size:11px;color:var(--t3);padding:8px 32rpx;text-align:center}
+</style>
+</head>
+<body>
+<div class="page-container">
+
+<!-- ═══════════ 左侧：现有页面流（真实代码） ═══════════ -->
+<div style="display:flex;flex-direction:column;gap:16px">
+
+<!-- ① 首页 -->
+<div class="phone" style="width:320px">
+  <div class="page-label">① 首页(home) — 现有</div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="phone-content">
+    <div style="padding:14px 16px 8px;font-size:18px;font-weight:800">深圳楼市行情</div>
+    <div class="hero" style="padding:14px;margin:0 28rpx">
+      <div style="font-size:13px;opacity:.8">深圳 · 一手房</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <div style="flex:1;text-align:center"><div style="font-size:18px;font-weight:800">38.6万</div><div style="font-size:10px;opacity:.5">备案房源</div></div>
+        <div style="flex:1;text-align:center"><div style="font-size:18px;font-weight:800">4,402</div><div style="font-size:10px;opacity:.5">预售证</div></div>
+        <div style="flex:1;text-align:center"><div style="font-size:18px;font-weight:800">127</div><div style="font-size:10px;opacity:.5">新增</div></div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:20px;font-size:11px;color:var(--t3)">↓ 点击新房查询 / 搜索项目</div>
+  </div>
+</div>
+
+<!-- ② 找房页 -->
+<div class="phone" style="width:320px">
+  <div class="page-label">② 找房(index) — 现有</div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="phone-content">
+    <div class="sbar"><div class="sbox"><span style="font-size:24rpx;margin-right:16rpx">🔍</span><span style="font-size:24rpx;color:var(--t3);flex:1">半山悦海花园</span></div></div>
+    <div class="qcombo"><span class="qchip">刚需两房</span><span class="qchip">改善三房</span><span class="qchip">豪宅四房+</span></div>
+
+    <!-- 瞬搜结果 — 这是用户看到的 -->
+    <div style="background:var(--card);padding:2px 0">
+      <div style="padding:24rpx 32rpx;border-bottom:.5px solid var(--f0)">
+        <div style="display:flex;align-items:baseline;gap:16rpx;margin-bottom:12rpx">
+          <span style="font-size:30rpx;font-weight:700;color:var(--text)">半山悦海花园</span>
+          <span style="font-size:20rpx;padding:2rpx 10rpx;border-radius:4px;font-weight:600;background:#FFF3E6;color:#D97706">现售</span>
+          <span style="font-size:22rpx;color:var(--green);background:rgba(7,193,96,.08);padding:4rpx 12rpx;border-radius:4px">盐田</span>
+        </div>
+        <div style="display:flex;gap:8rpx">
+          <div style="flex:1;background:var(--bg);border-radius:8rpx;padding:16rpx;text-align:center"><span style="font-size:32rpx;font-weight:700">110</span><span style="display:block;font-size:20rpx;color:var(--t3)">可售套</span></div>
+          <div style="flex:1;background:var(--bg);border-radius:8rpx;padding:16rpx;text-align:center"><span style="font-size:32rpx;font-weight:700">6.4</span><span style="display:block;font-size:20rpx;color:var(--t3)">万/㎡</span></div>
+          <div style="flex:1;background:var(--bg);border-radius:8rpx;padding:16rpx;text-align:center"><span style="font-size:32rpx;font-weight:700">170-2673</span><span style="display:block;font-size:20rpx;color:var(--t3)">万</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cmp-note">⬇ 点击项目卡片 ↓</div>
+  </div>
+</div>
+
+</div>
+
+<div class="flow-arrow" style="flex-direction:row;align-self:center">
+  <span style="font-size:28px;color:var(--green)">→</span>
+  <span class="flow-label">新增跳转</span>
+</div>
+
+<!-- ═══════════ ③ 项目概览 — 新页面 ═══════════ -->
+<div style="display:flex;flex-direction:column;gap:16px">
+
+<div class="phone" style="border:2px solid var(--green)">
+  <div class="page-label" style="color:var(--green)">③ 项目概览(project) <b>NEW</b></div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="nav-bar"><span class="nav-back">‹</span>半山悦海花园</div>
+  <div class="phone-content">
+    <!-- Hero — 复用 detail 页的样式 -->
+    <div class="hero">
+      <div class="h-name">半山悦海花园</div>
+      <div class="h-loc">盐田 · 沙头角 · 预售证 深房许字(2026)盐田002号</div>
+      <div class="h-price">52,200<small>元/㎡</small></div>
+      <div class="h-tags">
+        <span class="htag htag-g">毛坯</span>
+        <span class="htag htag-o">现售</span>
+        <span class="htag htag-b">在售</span>
+      </div>
+    </div>
+
+    <!-- 数据栅格 — 复用 detail 的 igrid -->
+    <div class="igrid">
+      <div class="icell"><div class="iv" style="color:var(--red)">97.5%</div><div class="il">去化率</div></div>
+      <div class="icell"><div class="iv">836</div><div class="il">总房源</div></div>
+      <div class="icell"><div class="iv">21</div><div class="il">可售余量</div></div>
+    </div>
+
+    <!-- 销控表入口 — 新组件 -->
+    <div style="margin:12rpx 32rpx;background:var(--card);border-radius:8rpx;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);border-left:4px solid var(--green);display:flex;align-items:center;gap:12px">
+      <div style="width:44px;height:44px;border-radius:12px;background:#E8F8EE;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:22px">📊</div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:700">销控表下载</div><div style="font-size:11px;color:var(--t3);margin-top:2px">楼栋去化一览 · Excel / 长图</div></div>
+      <div style="font-size:18px;color:var(--t3)">›</div>
+    </div>
+
+    <!-- 楼栋去化 — 复用 detail 的 bld-panel -->
+    <div class="bld-panel">
+      <div class="bld-h"><span>楼栋去化情况</span><span style="font-size:11px;color:var(--t3);font-weight:400">5栋 · 已售815套</span></div>
+      <div class="bld-row"><div class="bld-info"><span class="bld-tag">1栋</span><span class="bld-num">2单元·200套</span></div><div class="bld-wrap"><div class="bld-track"><div class="bld-fill" style="width:99%;background:var(--red)"></div></div><span class="bld-pct" style="color:var(--red)">99%</span></div><span class="bld-sold">198/200</span></div>
+      <div class="bld-row"><div class="bld-info"><span class="bld-tag">2栋</span><span class="bld-num">2单元·156套</span></div><div class="bld-wrap"><div class="bld-track"><div class="bld-fill" style="width:96%;background:var(--red)"></div></div><span class="bld-pct" style="color:var(--red)">96%</span></div><span class="bld-sold">150/156</span></div>
+      <div class="bld-row"><div class="bld-info"><span class="bld-tag">3栋</span><span class="bld-num">2单元·192套</span></div><div class="bld-wrap"><div class="bld-track"><div class="bld-fill" style="width:97%;background:var(--red)"></div></div><span class="bld-pct" style="color:var(--red)">97%</span></div><span class="bld-sold">187/192</span></div>
+      <div class="bld-row"><div class="bld-info"><span class="bld-tag">4栋</span><span class="bld-num">2单元·164套</span></div><div class="bld-wrap"><div class="bld-track"><div class="bld-fill" style="width:96%;background:var(--red)"></div></div><span class="bld-pct" style="color:var(--red)">96%</span></div><span class="bld-sold">158/164</span></div>
+      <div style="font-size:11px;color:var(--green);text-align:center;padding-top:8px">点击楼栋 → 查看房源列表</div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="act-bar">
+      <button class="act-btn act-s">🔔 关注</button>
+      <button class="act-btn act-s">📋 同板块对比</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="flow-arrow" style="flex-direction:row;align-self:center">
+  <span style="font-size:28px;color:var(--green)">→</span>
+  <span class="flow-label">点楼栋</span>
+</div>
+
+<!-- ═══════════ ④ 房源列表 ═══════════ -->
+<div style="display:flex;flex-direction:column;gap:16px">
+
+<div class="phone" style="width:320px">
+  <div class="page-label">④ 房源列表(index·选楼栋) — 现有</div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="nav-bar"><span class="nav-back">‹</span>半山悦海 · 1栋</div>
+  <div class="phone-content">
+    <div class="flt">
+      <div class="flt-row"><div class="pv">盐田</div><div class="pv">半山悦海花园</div></div>
+      <div class="flt-row"><div class="pv">1栋</div><span style="flex:1;padding:10px 14px;border-radius:12px;border:1px solid var(--border);font-size:14px;color:var(--t3);background:var(--bg)">搜房号</span></div>
+      <div class="cr"><span class="cc">全部</span><span class="cc on">300-500万</span><span class="cc">500-800万</span></div>
+    </div>
+    <div class="sbar-stat">
+      <div class="si"><span class="sv">200</span><span class="sl">总套数</span></div><div class="ss"></div>
+      <div class="si"><span class="sv" style="color:var(--red)">198</span><span class="sl">已售</span></div><div class="ss"></div>
+      <div class="si"><span class="sv" style="color:var(--green)">2</span><span class="sl">可售</span></div>
+    </div>
+    <div class="floor-sep"><div class="line"></div><span class="num">25F</span><div class="line"></div></div>
+    <div class="ucard">
+      <div class="ucl"><div class="ucno">2501</div><div class="ucbld">1栋 · <span style="font-size:20rpx;padding:2rpx 8rpx;border-radius:4px;font-weight:600;background:#FFF3E6;color:#D97706">现售</span></div></div>
+      <div class="ucm"><div class="uca">106.5㎡</div><div class="ucd">分摊21.09㎡</div></div>
+      <div class="ucr"><div class="ucp">558万</div><div class="ucup">52,465元/㎡</div></div>
+    </div>
+    <div class="ucard">
+      <div class="ucl"><div class="ucno">2502</div><div class="ucbld">1栋 · <span style="font-size:20rpx;padding:2rpx 8rpx;border-radius:4px;font-weight:600;background:#E8F8EE;color:#059669">预售</span></div></div>
+      <div class="ucm"><div class="uca">89.6㎡</div><div class="ucd">分摊17.74㎡</div></div>
+      <div class="ucr"><div class="ucp">423万</div><div class="ucup">47,229元/㎡</div></div>
+    </div>
+    <div style="text-align:center;padding:10px;font-size:11px;color:var(--green)">展开全部 22 层 ▼</div>
+  </div>
+</div>
+
+</div>
+
+</div><!-- /page-container -->
+
+<!-- ═══════════ 底部：销控表弹窗（独立展示） ═══════════ -->
+<div style="display:flex;gap:24px;justify-content:center;margin-top:24px;flex-wrap:wrap">
+
+  <div class="phone" style="width:320px">
+    <div class="page-label">⑤a 销控表 — 半屏弹窗</div>
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="sheet-mask">
+      <div class="sheet">
+        <div class="sheet-head"><span></span><span class="sheet-title">📊 销控表</span><span class="sheet-close">✕</span></div>
+        <div class="sheet-body">
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">选择楼栋</div>
+          <div class="btabs">
+            <button class="btab on">1栋<span class="sub">198/200</span></button>
+            <button class="btab">2栋<span class="sub">150/156</span></button>
+            <button class="btab">3栋<span class="sub">187/192</span></button>
+          </div>
+
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">显示范围</div>
+          <div class="sfilter">
+            <button class="sfbtn on">全部房源</button>
+            <button class="sfbtn">仅可售</button>
+          </div>
+
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">下载格式</div>
+          <div class="fmts">
+            <button class="fmt on"><span class="fmt-icon">📋</span>Excel</button>
+            <button class="fmt"><span class="fmt-icon">🖼️</span>长图</button>
+          </div>
+
+          <div class="sg-summary">
+            <div class="sg-sitem"><span class="sg-sval" style="color:var(--red)">198</span><span class="sg-slbl">不可售</span></div>
+            <div class="sg-sitem"><span class="sg-sval" style="color:var(--green)">2</span><span class="sg-slbl">可售</span></div>
+            <div class="sg-sitem"><span class="sg-sval">200</span><span class="sg-slbl">总套数</span></div>
+            <div class="sg-sitem"><span class="sg-sval" style="color:var(--red)">99%</span><span class="sg-slbl">去化率</span></div>
+          </div>
+
+          <div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px">预览</div>
+          <div class="sg-wrap"><div class="sg">
+            <div class="sg-head"><div class="sg-hcell">01<br>106.5㎡</div><div class="sg-hcell">02<br>89.6㎡</div><div class="sg-hcell">03<br>90.3㎡</div><div class="sg-hcell">04<br>88.0㎡</div><div class="sg-hcell">05<br>111.2㎡</div><div class="sg-hcell">06<br>88.9㎡</div></div>
+            <div class="sg-floor"><div class="sg-flabel">25F</div><div class="sg-cell s-sold"><span class="sg-room">2501</span><span class="sg-total">558万</span><span class="sg-unit">52,465</span></div><div class="sg-cell s-sold"><span class="sg-room">2502</span><span class="sg-total">423万</span><span class="sg-unit">47,229</span></div><div class="sg-cell s-sold"><span class="sg-room">2503</span><span class="sg-total">442万</span><span class="sg-unit">48,994</span></div><div class="sg-cell s-avail"><span class="sg-room">2504</span><span class="sg-total">435万</span><span class="sg-unit">49,432</span></div><div class="sg-cell s-avail"><span class="sg-room">2505</span><span class="sg-total">565万</span><span class="sg-unit">50,890</span></div><div class="sg-cell s-sold"><span class="sg-room">2506</span><span class="sg-total">446万</span><span class="sg-unit">48,994</span></div></div>
+            <div class="sg-floor"><div class="sg-flabel">24F</div><div class="sg-cell s-sold"><span class="sg-room">2401</span><span class="sg-total">558万</span><span class="sg-unit">52,465</span></div><div class="sg-cell s-sold"><span class="sg-room">2402</span><span class="sg-total">423万</span><span class="sg-unit">47,229</span></div><div class="sg-cell s-sold"><span class="sg-room">2403</span><span class="sg-total">442万</span><span class="sg-unit">48,994</span></div><div class="sg-cell s-avail"><span class="sg-room">2404</span><span class="sg-total">432万</span><span class="sg-unit">49,150</span></div><div class="sg-cell s-sold"><span class="sg-room">2405</span><span class="sg-total">565万</span><span class="sg-unit">50,890</span></div><div class="sg-cell s-sold"><span class="sg-room">2406</span><span class="sg-total">446万</span><span class="sg-unit">48,994</span></div></div>
+            <div class="sg-floor"><div class="sg-flabel">23F</div><div class="sg-cell s-sold"><span class="sg-room">2301</span><span class="sg-total">558万</span><span class="sg-unit">52,465</span></div><div class="sg-cell s-avail"><span class="sg-room">2302</span><span class="sg-total">423万</span><span class="sg-unit">47,229</span></div><div class="sg-cell s-sold"><span class="sg-room">2303</span><span class="sg-total">442万</span><span class="sg-unit">48,994</span></div><div class="sg-cell s-sold"><span class="sg-room">2304</span><span class="sg-total">435万</span><span class="sg-unit">49,432</span></div><div class="sg-cell s-sold"><span class="sg-room">2305</span><span class="sg-total">565万</span><span class="sg-unit">50,890</span></div><div class="sg-cell s-sold"><span class="sg-room">2306</span><span class="sg-total">446万</span><span class="sg-unit">48,994</span></div></div>
+          </div></div>
+          <div class="sg-legend">
+            <div class="sg-lg"><div class="sg-ldot" style="background:#E8F8EE;border:1.5px solid #6EE7B7"></div>可售</div>
+            <div class="sg-lg"><div class="sg-ldot" style="background:#FFE5E5;border:1.5px solid #FECACA"></div>不可售</div>
+          </div>
+        </div>
+        <div class="sheet-foot"><button class="btn btn-p">📥 下载 Excel 销控表</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-arrow" style="flex-direction:row;align-self:center"><span style="font-size:28px;color:var(--green)">→</span></div>
+
+  <div class="phone" style="width:320px">
+    <div class="page-label">⑤b 下载完成</div>
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="sheet-mask">
+      <div class="sheet">
+        <div class="sheet-head"><span></span><span class="sheet-title">✅ 已生成</span><span class="sheet-close">✕</span></div>
+        <div class="sheet-body" style="text-align:center;padding:20px">
+          <div style="font-size:56px;margin-bottom:10px">📋</div>
+          <div style="font-size:14px;color:var(--t2)">半山悦海花园 · 1栋</div>
+          <div style="font-size:12px;color:var(--t3);margin-bottom:20px">Excel · 32KB</div>
+          <div style="background:#F9FAFB;border-radius:8rpx;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:20px;text-align:left">
+            <div style="width:44px;height:44px;border-radius:10px;background:#E8F8EE;display:flex;align-items:center;justify-content:center;font-size:22px">📋</div>
+            <div style="flex:1;overflow:hidden"><div style="font-size:13px;font-weight:600">半山悦海花园_1栋_销控表.xlsx</div><div style="font-size:11px;color:var(--t3)">32KB·刚刚</div></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">分享或保存</div>
+          <div class="share-grid">
+            <div class="share-item"><div class="share-icon" style="background:#E8F8EE;color:var(--green)">💬</div><div class="share-label">转发客户</div></div>
+            <div class="share-item"><div class="share-icon" style="background:#DBEAFE;color:#3B82F6">💾</div><div class="share-label">保存文件</div></div>
+            <div class="share-item"><div class="share-icon" style="background:#FFF3E6;color:var(--orange)">📱</div><div class="share-label">分享好友</div></div>
+            <div class="share-item"><div class="share-icon" style="background:#F5F5F5;color:var(--t2)">⋯</div><div class="share-label">更多</div></div>
+          </div>
+        </div>
+        <div class="sheet-foot"><button class="btn btn-s">完成</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

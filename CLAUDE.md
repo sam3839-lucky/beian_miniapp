@@ -45,3 +45,9 @@ WeChat 小程序，查询深圳市住建局公示的一手房备案价。用户�
 - 每页 200 条，全量约 1935 页，5 次连续报错退出（支持 resume）
 - rebuild_db 有 30 万行安全阈值，低于此数拒绝覆盖
 - 数据库: `sync/property_new.db` (74MB, SQLite, WAL 模式)
+
+## Design System
+Always read DESIGN.md before making any visual or UI decisions.
+All font choices, colors, spacing, and aesthetic direction are defined there.
+Do not deviate without explicit user approval.
+In QA mode, flag any code that doesn't match DESIGN.md.

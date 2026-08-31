@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>月度成交走势 - 设计稿</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #F7F7F7; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif; }
+.page { max-width: 375px; margin: 0 auto; background: #F7F7F7; min-height: 100vh; }
+
+/* search bar */
+.search-bar { margin: 12px 16px; background: #fff; border-radius: 8px; padding: 0 12px; height: 42px; display: flex; align-items: center; }
+.search-bar .icon { font-size: 14px; margin-right: 6px; }
+.search-bar .text { flex: 1; font-size: 13px; color: #bbb; }
+.search-bar .badge { font-size: 10px; color: #fff; background: #07C160; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
+
+/* ring card */
+.ring-card { background: #fff; margin: 0 16px 16px; border-radius: 8px; padding: 16px 0 14px; text-align: center; }
+.ring-title { font-size: 15px; font-weight: 600; color: #333; }
+.ring-date { font-size: 11px; color: #999; margin: 2px 0 10px; }
+.ring-wrap { width: 180px; height: 180px; margin: 0 auto; position: relative; }
+.ring-legend { display: flex; justify-content: center; gap: 24px; margin-top: 10px; font-size: 13px; color: #333; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.dot.new { background: #07C160; }
+.dot.used { background: #FF8C00; }
+
+/* section */
+.section { margin: 0 16px 16px; }
+.section-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 10px; }
+
+/* range tabs */
+.range-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.range-tab {
+  flex: 1; text-align: center; padding: 8px 0; font-size: 12px; color: #888;
+  background: #fff; border-radius: 6px; border: 1.5px solid transparent;
+}
+.range-tab.on { background: #07C160; color: #fff; font-weight: 600; }
+
+/* chart card */
+.chart-card { background: #fff; border-radius: 8px; padding: 16px 12px; }
+.chart-area { position: relative; width: 100%; height: 200px; }
+.chart-area canvas { width: 100%; height: 100%; }
+.legend-row { display: flex; justify-content: center; gap: 20px; margin-top: 10px; font-size: 12px; color: #888; align-items: center; }
+.note { text-align: center; font-size: 11px; color: #aaa; padding: 12px 0; }
+
+/* district mock */
+.two-col { display: flex; gap: 8px; }
+.dcol { flex: 1; background: #fff; border-radius: 8px; padding: 12px; }
+.dcol-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 8px; }
+.drow { display: flex; align-items: center; gap: 4px; padding: 4px 0; font-size: 11px; }
+.dname { color: #333; width: 40px; }
+.dbar-wrap { flex: 1; height: 7px; border-radius: 3px; background: #F0F0F0; overflow: hidden; }
+.dbar { height: 100%; border-radius: 3px; }
+.dbar.new { background: #07C160; }
+.dbar.used { background: #FF8C00; }
+.dcnt { color: #888; width: 28px; text-align: right; }
+.dpct { color: #333; font-weight: 600; width: 32px; text-align: right; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- search bar -->
+  <div class="search-bar">
+    <span class="icon">&#128269;</span>
+    <span class="text">搜小区，查历史成交价</span>
+    <span class="badge">13.9万条</span>
+  </div>
+
+  <!-- donut card -->
+  <div class="ring-card">
+    <div class="ring-title">5月累计成交统计</div>
+    <div class="ring-date">截止到 5月28日</div>
+    <div class="ring-wrap">
+      <canvas id="donutMini" width="360" height="360"></canvas>
+    </div>
+    <div class="ring-legend">
+      <span><span class="dot new"></span>一手 2,268</span>
+      <span><span class="dot used"></span>二手 6,390</span>
+      <span style="color:#888;font-size:11px">26.2% / 73.8%</span>
+    </div>
+  </div>
+
+  <!-- district mock -->
+  <div class="section">
+    <div class="section-title">各区成交占比</div>
+    <div class="two-col">
+      <div class="dcol">
+        <div class="dcol-title"><span class="dot new"></span> 一手</div>
+        <div class="drow"><span class="dname">宝安</span><div class="dbar-wrap"><div class="dbar new" style="width:70%"></div></div><span class="dcnt">342</span><span class="dpct">15%</span></div>
+        <div class="drow"><span class="dname">龙岗</span><div class="dbar-wrap"><div class="dbar new" style="width:60%"></div></div><span class="dcnt">298</span><span class="dpct">13%</span></div>
+        <div class="drow"><span class="dname">光明</span><div class="dbar-wrap"><div class="dbar new" style="width:50%"></div></div><span class="dcnt">245</span><span class="dpct">11%</span></div>
+      </div>
+      <div class="dcol">
+        <div class="dcol-title"><span class="dot used"></span> 二手</div>
+        <div class="drow"><span class="dname">南山</span><div class="dbar-wrap"><div class="dbar used" style="width:80%"></div></div><span class="dcnt">891</span><span class="dpct">14%</span></div>
+        <div class="drow"><span class="dname">福田</span><div class="dbar-wrap"><div class="dbar used" style="width:75%"></div></div><span class="dcnt">823</span><span class="dpct">13%</span></div>
+        <div class="drow"><span class="dname">罗湖</span><div class="dbar-wrap"><div class="dbar used" style="width:55%"></div></div><span class="dcnt">612</span><span class="dpct">10%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⭐ MAIN CHART: stacked bar -->
+  <div class="section">
+    <div class="section-title">月度成交走势</div>
+    <div class="range-tabs">
+      <div class="range-tab on">近1年</div>
+      <div class="range-tab">近3年</div>
+      <div class="range-tab">近5年</div>
+      <div class="range-tab">近10年</div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-area">
+        <canvas id="mainChart" width="686" height="400"></canvas>
+      </div>
+      <div class="legend-row">
+        <span><span class="dot new"></span>一手住宅</span>
+        <span><span class="dot used"></span>二手住宅</span>
+        <span style="color:#333;font-weight:600">合计</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">数据来源：深圳开放数据平台 · 含一手+二手房</div>
+</div>
+
+<script>
+// ── mini donut ──
+(function(){
+  const c = document.getElementById('donutMini');
+  const ctx = c.getContext('2d');
+  const cx=90, cy=90, r=70, sw=22;
+  const n=2268, u=6390, t=n+u;
+  const ua = (u/t)*Math.PI*2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+ua); ctx.lineWidth=sw; ctx.strokeStyle='#FF8C00'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2+ua,-Math.PI/2+Math.PI*2); ctx.lineWidth=sw; ctx.strokeStyle='#07C160'; ctx.stroke();
+  ctx.fillStyle='#333'; ctx.font='bold 18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(t+'', cx, cy-6);
+  ctx.fillStyle='#999'; ctx.font='12px sans-serif';
+  ctx.fillText('总套数', cx, cy+16);
+})();
+
+// ── main stacked bar chart ──
+(function(){
+  const c = document.getElementById('mainChart');
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio || 2;
+  const W = c.width / dpr;
+  const H = c.height / dpr;
+  c.style.width = W + 'px';
+  c.style.height = H + 'px';
+  c.width = W * dpr;
+  c.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  // data
+  const data = [
+    {label:'25/06',n:1847,u:5094},{label:'25/07',n:2039,u:5512},{label:'25/08',n:2215,u:5981},
+    {label:'25/09',n:2131,u:5763},{label:'25/10',n:2498,u:6127},{label:'25/11',n:2672,u:6834},
+    {label:'25/12',n:2913,u:7245},{label:'26/01',n:2004,u:4981},{label:'26/02',n:1942,u:4703},
+    {label:'26/03',n:1028,u:4802},{label:'26/04',n:3070,u:7457},{label:'26/05',n:2268,u:6390}
+  ];
+
+  const pad = {top: 28, right: 8, bottom: 36, left: 46};
+  const pw = W - pad.left - pad.right;
+  const ph = H - pad.top - pad.bottom;
+  const maxV = Math.max(...data.map(d => d.n + d.u)) * 1.12;
+
+  // Y axis
+  ctx.fillStyle = '#999';
+  ctx.font = '10px sans-serif';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + ph * (1 - i/4);
+    const v = Math.round(maxV * i/4);
+    ctx.fillText(v, pad.left - 6, y + 3);
+    ctx.strokeStyle = '#f0f0f0';
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+  }
+
+  // bars
+  const barW = pw / data.length * 0.55;
+  const gap = pw / data.length;
+  data.forEach((d, i) => {
+    const x = pad.left + i * gap + (gap - barW)/2;
+    const hNew = (d.n / maxV) * ph;
+    const hUsed = (d.u / maxV) * ph;
+    const yBase = pad.top + ph;
+
+    // 一手 (green, bottom)
+    const g = ctx.createLinearGradient(0, yBase - hNew, 0, yBase);
+    g.addColorStop(0, '#07C160'); g.addColorStop(1, '#06AD56');
+    ctx.fillStyle = g;
+    roundRect(ctx, x, yBase - hNew, barW, hNew, 3);
+
+    // 二手 (orange, top)
+    const g2 = ctx.createLinearGradient(0, yBase - hNew - hUsed, 0, yBase - hNew);
+    g2.addColorStop(0, '#FF8C00'); g2.addColorStop(1, '#E07800');
+    ctx.fillStyle = g2;
+    roundRect(ctx, x, yBase - hNew - hUsed, barW, hUsed, 3);
+
+    // total label
+    const total = d.n + d.u;
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 9px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(total, x + barW/2, yBase - hNew - hUsed - 6);
+
+    // X label
+    ctx.fillStyle = '#999';
+    ctx.font = '9px sans-serif';
+    ctx.fillText(d.label, x + barW/2, H - 6);
+  });
+
+  // axis line
+  ctx.strokeStyle = '#ddd';
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + ph); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top + ph); ctx.lineTo(W - pad.right, pad.top + ph); ctx.stroke();
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x, y + h);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    ctx.fill();
+  }
+})();
+</script>
+</body>
+</html>

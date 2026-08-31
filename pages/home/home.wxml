@@ -4,7 +4,137 @@
     <view class="search-box">
       <text class="search-icon">🔍</text>
       <input class="search-input" placeholder="搜项目名、开发商…" value="{{search}}"
-             bindinput="onSearchInput" bindconfirm="onSearchConfirm" confirm-type="search"/>
+             bindinput="onSearchInput" bindconfirm="onQuickSearch" confirm-type="search"
+             focus="{{searchFocus}}"/>
+    </view>
+    <view class="search-clear" wx:if="{{search}}" bindtap="onClearSearch">
+      <text>✕</text>
+    </view>
+  </view>
+
+  <!-- ═══ 瞬搜结果 ═══ -->
+  <view class="quick-results" wx:if="{{search && !searchLoading}}">
+    <view class="qr-list" wx:if="{{searchResults.length}}">
+      <view class="qr-card" wx:for="{{searchResults}}" wx:key="project_name"
+            data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+            bindtap="onQuickResultTap" hover-class="qr-card-hover">
+        <view class="qr-head">
+          <text class="qr-name">{{item.project_name}}</text>
+          <text class="qr-tag {{item.sale_type === '预售' ? 'tag-pre' : 'tag-spot'}}">{{item.sale_type}}</text>
+          <text class="qr-zone">{{item.zone}}</text>
+        </view>
+        <view class="qr-stats">
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.unsold_count}}</text>
+            <text class="qr-slabel">可售套</text>
+          </view>
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.avg_unit_w}}</text>
+            <text class="qr-slabel">万/㎡</text>
+          </view>
+          <view class="qr-stat">
+            <text class="qr-snum">{{item.price_min}}-{{item.price_max}}</text>
+            <text class="qr-slabel">万</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="qr-empty" wx:if="{{!searchResults.length && searchTapped}}">
+      <text>未找到匹配项目，试试输入区域名或开发商名</text>
+    </view>
+    <view class="qr-history" wx:if="{{!searchResults.length && !searchTapped}}">
+      <view wx:if="{{searchHistory.length}}">
+        <text class="qh-title">最近搜索</text>
+        <view class="qh-item" wx:for="{{searchHistory}}" wx:key="*this"
+              bindtap="onHistoryTap" data-kw="{{item}}">{{item}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ 用量提示 ═══ -->
+
+  <!-- ═══ 行情 Hero 卡片 ═══ -->
+  <view class="hero-card" wx:if="{{!search}}">
+    <view class="hero-title">深圳 · 一手房</view>
+    <view class="hero-stats">
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.totalListings}}</text>
+        <text class="hs-lbl">备案房源</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.permits}}</text>
+        <text class="hs-lbl">预售证</text>
+      </view>
+      <view class="hero-stat">
+        <text class="hs-val">{{hero.todayNew}}</text>
+        <text class="hs-lbl">今日新增</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ═══ 入口宫格 ═══ -->
+  <view class="entry-grid" wx:if="{{!search}}">
+    <view class="entry-item" bindtap="onEntryTap" data-page="map">
+      <view class="entry-icon ei-green">🗺️</view>
+      <text class="entry-label">地图找房</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="new">
+      <view class="entry-icon ei-blue">🏠</view>
+      <text class="entry-label">新房查询</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="upcoming">
+      <view class="entry-icon ei-orange">🔥</view>
+      <text class="entry-label">即将入市</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="trends">
+      <view class="entry-icon ei-red">📈</view>
+      <text class="entry-label">成交趋势</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="mortgage">
+      <view class="entry-icon ei-green">💰</view>
+      <text class="entry-label">房贷计算</text>
+    </view>
+    <view class="entry-item" bindtap="onEntryTap" data-page="policy">
+      <view class="entry-icon ei-blue">📋</view>
+      <text class="entry-label">政策速递</text>
+    </view>
+  </view>
+
+  <!-- ═══ 房价指数卡片 ═══ -->
+  <view class="section" wx:if="{{!search && idxItems.length}}">
+    <view class="section-head">
+      <text class="section-title">📊 深圳房价指数</text>
+    </view>
+    <view class="idx-card">
+      <!-- 新房/二手切换 -->
+      <view class="type-switch">
+        <view class="type-btn {{priceType === 'new' ? 'on-new' : ''}}" bindtap="onPriceTypeTap" data-type="new">🏠 新房</view>
+        <view class="type-btn {{priceType === 'used' ? 'on-used' : ''}}" bindtap="onPriceTypeTap" data-type="used">🏢 二手房</view>
+      </view>
+      <!-- 核心数据 -->
+      <view class="idx-stats">
+        <view class="idx-stat {{priceType === 'new' ? 'idx-new' : 'idx-used'}}">
+          <text class="idx-sval">{{idxLatest.mom || '--'}}</text>
+          <text class="idx-slbl">环比 · {{idxMonth}}月</text>
+          <text class="idx-kd" style="color:{{idxLatest.up ? '#07C160' : '#FF4D4F'}}">{{idxLatest.label}}</text>
+        </view>
+        <view class="idx-stat" style="background:#F5F9FF;border:2rpx solid #DBEAFE">
+          <text class="idx-sval" style="color:#3B82F6">{{idxLatest.yoy || '--'}}</text>
+          <text class="idx-slbl">同比</text>
+        </view>
+      </view>
+      <!-- 迷你走势条 -->
+      <view class="idx-chart">
+        <view class="idx-baseline"></view>
+        <view class="idx-bar-wrap" wx:for="{{idxItems}}" wx:key="month">
+          <text class="idx-bar-label {{item.up ? 'up' : 'down'}}">{{item.label}}</text>
+          <view class="idx-bar {{item.up ? 'up' : 'down'}}" style="height:{{item.barH}}px"></view>
+        </view>
+      </view>
+      <view class="idx-months">
+        <text class="idx-mlabel" wx:for="{{idxItems}}" wx:key="month">{{item.show ? item.month : ''}}</text>
+      </view>
+      <view class="idx-source">国家统计局 70城房价指数 · {{idxMonth}}月</view>
     </view>
   </view>
 
@@ -18,21 +148,23 @@
     <text>数据加载失败，点击重试</text>
   </view>
   <view class="overview" wx:if="{{overview}}">
-    <view class="stat-card">
-      <text class="stat-num green">{{overview.unsold}}</text>
-      <text class="stat-label">可售住宅</text>
+    <view class="stat-card stat-card-primary">
+      <text class="stat-num">{{overview.unsold_n}}<text class="stat-unit">套</text></text>
+      <text class="stat-label">总可售</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num red">{{overview.avg_total}}万</text>
-      <text class="stat-label">住宅均价</text>
+      <text class="stat-num presale">{{overview.presale_n}}<text class="stat-unit">套</text></text>
+      <text class="stat-label">预售</text>
+      <text class="stat-sub">期房</text>
     </view>
     <view class="stat-card">
-      <text class="stat-num gray">{{overview.signed}}</text>
-      <text class="stat-label">已网签</text>
+      <text class="stat-num spot">{{overview.spot_sale_n}}<text class="stat-unit">套</text></text>
+      <text class="stat-label">现售</text>
+      <text class="stat-sub">现房</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-num blue">{{overview.recent}}</text>
-      <text class="stat-label">近7日更新</text>
+    <view class="stat-card stat-card-price">
+      <text class="stat-num price">{{overview.avg_unit_price_w}}<text class="stat-unit">万/㎡</text></text>
+      <text class="stat-label">房源均价</text>
     </view>
   </view>
 
@@ -45,40 +177,48 @@
       <view class="bar-seg transferred" style="width:{{overview.transferred / overview.total * 100}}%"></view>
     </view>
     <view class="bar-legend">
-      <text class="dot unsold"></text><text>未售 {{overview.unsold}}</text>
-      <text class="dot signed"></text><text>网签 {{overview.signed}}</text>
-      <text class="dot filed"></text><text>备案 {{overview.filed}}</text>
-      <text class="dot transferred"></text><text>转移 {{overview.transferred}}</text>
-    </view>
-  </view>
-
-  <!-- ═══ P0: 区域快捷入口 ═══ -->
-  <view class="section" wx:if="{{overview}}">
-    <view class="section-head">
-      <text class="section-title">热门区域</text>
-    </view>
-    <view class="zone-chips">
-      <view class="zone-chip" wx:for="{{overview.zones}}" wx:key="name"
-            data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-chip-hover">
-        {{item.name}} {{item.count}}套
+      <view class="legend-item">
+        <text class="dot unsold"></text><text class="legend-label">未售</text>
+        <text class="legend-val">{{overview.unsold_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot signed"></text><text class="legend-label">网签</text>
+        <text class="legend-val">{{overview.signed_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot filed"></text><text class="legend-label">备案</text>
+        <text class="legend-val">{{overview.filed_w}}万</text>
+      </view>
+      <view class="legend-item">
+        <text class="dot transferred"></text><text class="legend-label">转移</text>
+        <text class="legend-val">{{overview.transferred_w}}万</text>
       </view>
     </view>
   </view>
 
-  <!-- ═══ P1: 区域对比 ═══ -->
+
+  <!-- ═══ P1: 各区新房可售房源 ═══ -->
   <view class="section" wx:if="{{overview && overview.zones.length}}">
     <view class="section-head">
-      <text class="section-title">各区对比</text>
+      <text class="section-title">各区新房可售房源</text>
     </view>
     <view class="zone-compare">
       <view class="zone-row" wx:for="{{overview.zones}}" wx:key="name"
             data-zone="{{item.name}}" bindtap="onZoneTap" hover-class="zone-row-hover">
-        <text class="zname">{{item.name}}</text>
-        <text class="zcount">{{item.count}}套</text>
-        <view class="zbar-wrap">
-          <view class="zbar" style="width:{{item.count / overview.zones[0].count * 100}}%"></view>
+        <view class="z-head">
+          <text class="zname">{{item.name}}</text>
+          <text class="zcount">{{item.count}}<text class="zunit">套</text></text>
+          <text class="zavg">{{item.avg_total}}<text class="zunit">万/套</text></text>
+          <text class="zrank">#{{index + 1}}</text>
         </view>
-        <text class="zprice">{{item.avg_total}}万</text>
+        <view class="zbar-wrap">
+          <view class="zbar-presale" style="width:{{item.presale / overview.zones[0].count * 100}}%"></view>
+          <view class="zbar-spot" style="width:{{item.spot_sale / overview.zones[0].count * 100}}%"></view>
+        </view>
+        <view class="z-foot">
+          <view class="z-tag tag-presale">期房 {{item.presale}}</view>
+          <view class="z-tag tag-spot">现房 {{item.spot_sale}}</view>
+        </view>
       </view>
     </view>
   </view>
@@ -95,16 +235,19 @@
     </view>
     <view class="rank-list">
       <block wx:if="{{rankList.length}}">
-        <view class="rank-item" wx:for="{{rankList}}" wx:key="unit_no"
+        <view class="rank-item" wx:for="{{rankList}}" wx:key="unit_api_id"
               data-item="{{item}}" bindtap="onRankItemTap" hover-class="rank-item-hover">
           <text class="rank-idx">{{index + 1}}</text>
           <view class="rank-info">
-            <text class="rank-proj">{{item.project_name}}</text>
+            <view class="rank-proj-row">
+              <text class="rank-proj">{{item.project_name}}</text>
+              <text class="rank-zone" wx:if="{{item.zone}}">{{item.zone}}</text>
+            </view>
             <text class="rank-unit">{{item.unit_no}}  |  {{item.built_area}}㎡</text>
           </view>
           <view class="rank-price">
-            <text class="rp-total">{{item.total_price}}万</text>
             <text class="rp-unit">{{item.unitPriceWan}}万/㎡</text>
+            <text class="rp-total">{{item.total_price}}万</text>
           </view>
         </view>
       </block>
@@ -113,6 +256,27 @@
         <text>排行榜加载失败，点击重试</text>
       </view>
       <view wx:else class="state-msg">加载中...</view>
+    </view>
+  </view>
+
+  <!-- ═══ 本周去化最快 ═══ -->
+  <view class="section" wx:if="{{topAbsorption.length}}">
+    <view class="section-head">
+      <text class="section-title">本周去化最快 Top 3</text>
+    </view>
+    <view class="top-list">
+      <view class="top-row" wx:for="{{topAbsorption}}" wx:key="project_name"
+            data-project="{{item.project_name}}" bindtap="onTopAbsorptionTap">
+        <view class="top-rank rk-{{index + 1}}">{{index + 1}}</view>
+        <view class="top-info">
+          <text class="top-name">{{item.project_name}}</text>
+          <text class="top-zone">{{item.zone}}</text>
+        </view>
+        <view class="top-right">
+          <text class="top-rate" style="color:{{item.pct > 90 ? '#FF4D4F' : item.pct > 50 ? '#FF8C00' : '#999'}}">{{item.pct}}%</text>
+          <text class="top-sold">{{item.sold_count}}套</text>
+        </view>
+      </view>
     </view>
   </view>
 
@@ -170,12 +334,10 @@
     </view>
   </view>
 
-  <!-- ═══ 运营入口 ═══ -->
-  <view class="section">
-    <view class="ops-entry" bindtap="onOpenOps">
-      <text>运营面板</text>
-      <text style="color:#888">查看数据同步与系统状态 →</text>
-    </view>
+  <!-- ═══ AI 每日解读 ═══ -->
+  <view class="ai-card" wx:if="{{!search && aiText}}">
+    <view class="ai-head">🤖 AI 每日解读</view>
+    <text class="ai-body">{{aiText}}</text>
   </view>
 
   <view style="height:80rpx;"></view>

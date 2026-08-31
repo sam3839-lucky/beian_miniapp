@@ -1,4 +1,11 @@
 <view class="page">
+  <!-- 搜小区，查历史成交价 -->
+  <view class="history-search-bar" bindtap="onHistorySearchTap">
+    <text class="hs-icon">🔍</text>
+    <text class="hs-text">搜小区，查历史成交价</text>
+    <text class="hs-badge">13.9万条</text>
+  </view>
+
   <view wx:if="{{loading && !summary}}" class="state-msg">加载中...</view>
   <view wx:if="{{error}}" class="err-block" bindtap="onRetry">
     <text class="err-icon">!</text><text>加载失败，点击重试</text>
@@ -7,9 +14,10 @@
   <view wx:if="{{summary}}">
     <!-- ═══ 环形图 + 图例 ═══ -->
     <view class="ring-card">
-      <view class="ring-subtitle">本月成交 · 完整度 {{summary.this_month.completeness}}%</view>
+      <view class="ring-title" wx:if="{{summary.monthTitle}}">{{summary.monthTitle}}累计成交统计</view>
+      <view class="ring-date" wx:if="{{summary.latestLabel}}">截止到 {{summary.latestLabel}}</view>
       <view class="ring-wrap">
-        <canvas type="2d" id="donutCanvas" class="donut-canvas"></canvas>
+        <canvas canvas-id="donutCanvas" class="donut-canvas"></canvas>
       </view>
       <view class="ring-legend">
         <view class="legend-item">
@@ -23,37 +31,6 @@
           <text>二手</text>
           <text class="lnum">{{summary.this_month.used}}</text>
           <text class="lpct">{{summary.usedPct}}%</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- ═══ 成交概况表格 ═══ -->
-    <view class="section">
-      <view class="section-head"><text class="section-title">成交概况</text></view>
-      <view class="data-table">
-        <view class="th-row">
-          <text class="th-label"></text>
-          <text class="th-val">套数</text>
-          <text class="th-val">环比</text>
-          <text class="th-val">同比</text>
-        </view>
-        <view class="td-row">
-          <view class="td-label"><text class="dot new"></text>一手</view>
-          <text class="td-val">{{summary.this_month.new}}</text>
-          <text class="td-val {{summary.new_mom_pct > 0 ? 'up' : 'down'}}">{{summary.new_mom_pct > 0 ? '+' : ''}}{{summary.new_mom_pct}}%</text>
-          <text class="td-val {{summary.new_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.new_yoy_pct > 0 ? '+' : ''}}{{summary.new_yoy_pct}}%</text>
-        </view>
-        <view class="td-row">
-          <view class="td-label"><text class="dot used"></text>二手</view>
-          <text class="td-val">{{summary.this_month.used}}</text>
-          <text class="td-val {{summary.used_mom_pct > 0 ? 'up' : 'down'}}">{{summary.used_mom_pct > 0 ? '+' : ''}}{{summary.used_mom_pct}}%</text>
-          <text class="td-val {{summary.used_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.used_yoy_pct > 0 ? '+' : ''}}{{summary.used_yoy_pct}}%</text>
-        </view>
-        <view class="td-row total">
-          <view class="td-label">合计</view>
-          <text class="td-val">{{summary.this_month.total}}</text>
-          <text class="td-val {{summary.total_mom_pct > 0 ? 'up' : 'down'}}">{{summary.total_mom_pct > 0 ? '+' : ''}}{{summary.total_mom_pct}}%</text>
-          <text class="td-val {{summary.total_yoy_pct > 0 ? 'up' : 'down'}}">{{summary.total_yoy_pct > 0 ? '+' : ''}}{{summary.total_yoy_pct}}%</text>
         </view>
       </view>
     </view>
@@ -83,25 +60,45 @@
       </view>
     </view>
 
+    <!-- ═══ 近30天楼盘销量排行 ═══ -->
+    <view class="section" wx:if="{{salesRanks.length || salesZones.length}}">
+      <view class="section-head"><text class="section-title">近30天楼盘销量排行</text></view>
+      <scroll-view class="sales-tabs" scroll-x enhanced show-scrollbar="{{false}}">
+        <view class="sales-tab {{salesZone === '' ? 'on' : ''}}" bindtap="onSalesZoneTap" data-zone="">全市</view>
+        <view class="sales-tab {{salesZone === item ? 'on' : ''}}" wx:for="{{salesZones}}" wx:key="*this" bindtap="onSalesZoneTap" data-zone="{{item}}">{{item}}</view>
+      </scroll-view>
+      <view class="sales-list">
+        <view class="sales-row" wx:for="{{salesRanks}}" wx:key="project_name"
+              data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+              bindtap="onSalesRankTap" hover-class="sales-row-hover">
+          <text class="sr-idx">{{index + 1}}</text>
+          <view class="sr-info">
+            <text class="sr-name">{{item.project_name}}</text>
+            <text class="sr-zone">{{item.zone}}</text>
+          </view>
+          <text class="sr-count">{{item.sold_count}}套</text>
+        </view>
+      </view>
+      <view class="sales-empty" wx:if="{{!salesRanks.length && !salesLoading}}">
+        <text>数据收集中，同步开始后累积成交数据即显示</text>
+      </view>
+      <view class="sales-note">统计周期：近30天网签数据 · 数据来源：深圳市住房和建设局</view>
+    </view>
+
     <!-- ═══ 月度成交走势 ═══ -->
     <view class="section">
       <view class="section-head"><text class="section-title">月度成交走势</text></view>
       <view class="range-bar">
         <view class="range-tab {{range === item.value ? 'on' : ''}}" wx:for="{{ranges}}" wx:key="value" data-value="{{item.value}}" bindtap="onRangeTap">{{item.label}}</view>
       </view>
-      <view class="trend-chart">
-        <view class="trend-row" wx:for="{{trends}}" wx:key="month">
-          <text class="tr-month">{{item.monthLabel}}</text>
-          <view class="tr-bar-wrap">
-            <view class="tr-bar-new" style="width:{{item.new / trends[trends.length-1].total * 100}}%"></view>
-            <view class="tr-bar-used" style="width:{{item.used / trends[trends.length-1].total * 100}}%"></view>
-          </view>
-          <text class="tr-count">{{item.total}}套</text>
+      <view class="chart-card">
+        <view class="trend-chart-wrap">
+          <canvas canvas-id="trendChartCanvas" class="trend-canvas"></canvas>
         </view>
-      </view>
-      <view class="trend-legend">
-        <text class="dot new"></text><text>一手</text>
-        <text class="dot used"></text><text>二手</text>
+        <view class="chart-legend">
+          <text class="dot new"></text><text>一手住宅</text>
+          <text class="dot used"></text><text>二手住宅</text>
+        </view>
       </view>
     </view>
 

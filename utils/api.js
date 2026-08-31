@@ -46,11 +46,44 @@ module.exports = {
     return request(url);
   },
   getOverview: () => request('/api/overview'),
-  getRankings: () => request('/api/rankings'),
+  getRankings: (tab) => request('/api/rankings?tab=' + (tab || 'cheap_total')),
   getLatestPermits: () => request('/api/latest-permits'),
   getAdminStatus: () => request('/api/admin/status'),
   getTransactionSummary: () => request('/api/transactions/summary'),
   getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
   getRecentTransactions: (days = 30) => request('/api/transactions/recent?days=' + days),
   getTransactionDistricts: () => request('/api/transactions/districts'),
+  getDashboard: (months = 12) => request('/api/dashboard?months=' + months + '&days=14'),
+  getDailyStats: (start, end) => request('/api/daily-stats?start=' + start + '&end=' + end),
+  quickSearch: (q) => request('/api/quick-search?q=' + encodeURIComponent(q)),
+  subscribe: (openid, project) => request('/api/subscribe', 'POST', { openid, project }),
+  unsubscribe: (openid, project) => request('/api/unsubscribe', 'POST', { openid, project }),
+  getMySubscriptions: (openid) => request('/api/my-subscriptions?openid=' + encodeURIComponent(openid)),
+  getUserTier: (openid) => request('/api/user-tier?openid=' + encodeURIComponent(openid)),
+  incrementUsage: (openid, counter) => request('/api/increment-usage', 'POST', { openid, counter }),
+  getProjectSalesRank: (zone, days) => request('/api/project-sales-rank?zone=' + encodeURIComponent(zone || '') + '&days=' + (days || 30)),
+  getBuildingStats: (project) => request('/api/building-stats?project=' + encodeURIComponent(project)),
+  getTopAbsorption: () => request('/api/top-absorption'),
+  getUpcoming: (zone) => request('/api/upcoming?zone=' + encodeURIComponent(zone || '')),
+  getZoneCompare: (project) => request('/api/zone-compare?project=' + encodeURIComponent(project)),
+  getPriceIndex: (city, months) => request('/api/price-index?city=' + encodeURIComponent(city || '深圳') + '&months=' + (months || 12)),
+  getPriceVolume: (city, months) => request('/api/price-volume?city=' + encodeURIComponent(city || '深圳') + '&months=' + (months || 54)),
+
+  // ── 小区历史成交价查询 ──
+  getProjectHistoryMeta: () => request('/api/project-history-search-meta'),
+  searchProjectHistory: (q, zone) => {
+    let url = '/api/project-history-search?q=' + encodeURIComponent(q || '');
+    if (zone) url += '&zone=' + encodeURIComponent(zone);
+    return request(url);
+  },
+  getProjectHistory: (project, opts = {}) => {
+    let url = '/api/project-history?project=' + encodeURIComponent(project);
+    if (opts.years) url += '&years=' + encodeURIComponent(opts.years);
+    if (opts.building) url += '&building=' + encodeURIComponent(opts.building);
+    if (opts.sort) url += '&sort=' + opts.sort;
+    if (opts.offset != null) url += '&offset=' + opts.offset;
+    if (opts.limit != null) url += '&limit=' + opts.limit;
+    return request(url);
+  },
+  getProjectHistoryDetail: (id) => request('/api/project-history-detail?id=' + id),
 };

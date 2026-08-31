@@ -1,0 +1,52 @@
+.page{background:#FAFBFC;min-height:100vh;padding-bottom:40rpx}
+.state-msg{text-align:center;padding:120rpx 32rpx;font-size:26rpx;color:#888}
+
+/* City */
+.city-bar{background:#fff;padding:24rpx 32rpx 16rpx;margin-bottom:16rpx}
+.city-sel{text-align:center;font-size:32rpx;font-weight:700;color:#07C160;padding:16rpx 0}
+.city-date{text-align:center;font-size:22rpx;color:#888;margin-top:8rpx}
+
+/* Section */
+.section{padding:0 24rpx;margin-bottom:16rpx}
+
+/* KPI */
+.kpi-row{display:flex;gap:16rpx;margin-bottom:16rpx}
+.kpi{flex:1;border-radius:16rpx;padding:24rpx 16rpx;text-align:center}
+.kpi-new{background:#F0FDF4;border:2rpx solid #6EE7B7}
+.kpi-used{background:#FFF7ED;border:2rpx solid #FED7AA}
+.kv{display:block;font-size:48rpx;font-weight:800;line-height:1.2}
+.kl{display:block;font-size:20rpx;color:#888;margin-top:4rpx}
+.kd{display:block;font-size:18rpx;margin-top:2rpx}
+.k-yoy{display:block;color:#FF4D4F;margin-top:8rpx;font-size:22rpx;font-weight:600}
+.cumul-bar{display:flex;justify-content:space-between;background:#F9FAFB;border-radius:8rpx;padding:16rpx 20rpx;font-size:22rpx;color:#888}
+
+/* Chart card */
+.chart-card{background:#fff;border:1rpx solid #EEE;border-radius:16rpx;padding:24rpx 16rpx 16rpx;box-shadow:0 1rpx 4rpx rgba(0,0,0,.04)}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16rpx}
+.ch-title{font-size:26rpx;font-weight:700;color:#333}
+.ch-tabs{display:flex;gap:6rpx}
+.ch-tab{font-size:20rpx;padding:6rpx 16rpx;border-radius:24rpx;background:#F5F5F5;color:#888}
+.ch-tab.on{background:#07C160;color:#fff;font-weight:600}
+.sz-only{font-size:18rpx;color:#BBB;font-weight:400;background:#F0FDF4;padding:2rpx 10rpx;border-radius:6rpx}
+.chart-placeholder{text-align:center;padding:60rpx 20rpx;color:#BBB;font-size:24rpx}
+.chart-placeholder-sub{display:block;font-size:20rpx;margin-top:8rpx}
+.trend-canvas{width:100%;height:320rpx}
+.vol-canvas{width:100%;height:200rpx}
+.ch-legend{display:flex;gap:24rpx;justify-content:center;font-size:20rpx;margin-top:8rpx}
+
+/* Area */
+.area-row{display:flex;gap:12rpx}
+.area-card{flex:1;border-radius:12rpx;padding:20rpx 12rpx;text-align:center;border-width:2rpx;border-style:solid}
+.area-green{background:linear-gradient(180deg,#F0FDF4,#fff);border-color:#6EE7B7}
+.area-orange{background:linear-gradient(180deg,#FFF7ED,#fff);border-color:#FED7AA}
+.area-blue{background:linear-gradient(180deg,#F5F9FF,#fff);border-color:#BFDBFE}
+.as{display:block;font-size:20rpx;font-weight:600;color:#333}
+.ay{display:block;font-size:28rpx;font-weight:700;margin:6rpx 0}
+.am{display:block;font-size:18rpx;color:#888}
+.area-note{text-align:center;font-size:20rpx;color:#888;margin-top:12rpx}
+
+/* AI */
+.ai-card{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1rpx solid #A7F3D0;border-radius:16rpx;padding:24rpx;font-size:24rpx;color:#555;line-height:1.8}
+.ai-head{font-size:28rpx;font-weight:700;color:#07C160;margin-bottom:12rpx}
+.ai-body{display:block}
+.ai-source{display:block;font-size:18rpx;color:#BBB;margin-top:16rpx;text-align:center}

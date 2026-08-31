@@ -1,0 +1,49 @@
+.page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
+
+.about-section { margin: 24rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 32rpx 28rpx; text-align: center; }
+.about-title { font-size: 32rpx; font-weight: 700; color: #333; margin-bottom: 12rpx; }
+.about-desc { font-size: 26rpx; color: #888; line-height: 1.6; }
+
+/* 会员卡片 */
+.member-card { margin: 12rpx 32rpx; background: #fff; border-radius: 12rpx; padding: 40rpx 32rpx; text-align: center; position: relative; }
+.member-card.pro { background: linear-gradient(135deg, #07C160 0%, #05A050 100%); }
+.member-card.pro .mc-tier,
+.member-card.pro .mc-expire { color: #fff; }
+.mc-badge { position: absolute; top: -16rpx; left: 50%; transform: translateX(-50%); background: #FF8C00; color: #fff; font-size: 22rpx; padding: 6rpx 24rpx; border-radius: 12rpx; letter-spacing: 2rpx; font-weight: 700; }
+.mc-tier { font-size: 36rpx; font-weight: 700; color: #333; display: block; }
+.mc-expire { font-size: 24rpx; color: #888; margin-top: 12rpx; display: block; }
+.mc-btn { display: inline-block; background: #07C160; color: #fff; font-size: 28rpx; padding: 18rpx 48rpx; border-radius: 8rpx; margin-top: 24rpx; }
+.mc-btn-hover { background: #06AD56; }
+
+.login-hint { text-align: center; padding: 60rpx 32rpx; font-size: 26rpx; color: #888; }
+
+/* 用量 */
+.section { margin: 12rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 24rpx; }
+.section-title { font-size: 26rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.usage-row { display: flex; justify-content: space-between; padding: 14rpx 0; border-bottom: 1rpx solid #F5F5F5; }
+.usage-row:last-child { border-bottom: none; }
+.ur-name { font-size: 26rpx; color: #333; }
+.ur-val { font-size: 26rpx; color: #07C160; font-weight: 600; }
+
+/* 菜单入口 */
+.menu-section { padding: 0; }
+.menu-item { display: flex; align-items: center; padding: 28rpx 32rpx; gap: 16rpx; }
+.menu-item:active { background: #F7F7F7; }
+.menu-icon { font-size: 36rpx; width: 48rpx; text-align: center; flex-shrink: 0; }
+.menu-label { flex: 1; font-size: 30rpx; color: #333; font-weight: 500; }
+.menu-arrow { font-size: 32rpx; color: #CCC; flex-shrink: 0; }
+
+/* 菜单行 */
+.menu-row { display: flex; justify-content: space-between; align-items: center; padding: 8rpx 0; font-size: 28rpx; color: #333; }
+.menu-row-hover { opacity: 0.7; }
+.menu-right { display: flex; align-items: center; gap: 8rpx; }
+.menu-badge { background: #FF4D4F; color: #fff; font-size: 20rpx; padding: 2rpx 10rpx; border-radius: 10rpx; min-width: 32rpx; text-align: center; }
+.menu-hint { font-size: 24rpx; color: #888; }
+.menu-arrow { font-size: 26rpx; color: #C0C0C0; }
+
+.ops-entry { margin-top: 32rpx; }
+.ops-text { color: #A8A8A8; font-size: 24rpx; }
+
+/* 免责声明 */
+.disclaimer { margin: 32rpx 48rpx; text-align: justify; }
+.disclaimer text { font-size: 22rpx; color: #A8A8A8; line-height: 1.8; text-indent: 2em; display: block; }

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2">
+<title>城市选择器设计</title>
+<style>
+:root{--green:#07C160;--red:#FF4D4F;--orange:#FF8C00;--text:#333;--t2:#666;--t3:#999;--bg:#F7F7F7;--card:#fff;--border:#E5E5E5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;justify-content:center;padding:20px}
+.panel{width:375px;background:var(--bg);min-height:600px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+
+/* Search */
+.search-bar{padding:12px 14px;background:var(--card);position:sticky;top:0;z-index:10}
+.search-input{width:100%;padding:10px 14px;border:1.5px solid var(--green);border-radius:10px;font-size:15px;background:var(--bg);outline:none;font-family:inherit}
+.search-placeholder{color:var(--t3)}
+
+/* Section */
+.sec{padding:0 14px;margin-bottom:12px}
+.sec-title{font-size:12px;color:var(--t3);font-weight:500;margin-bottom:6px;padding-top:4px}
+
+/* Recent chips */
+.recent-grid{display:flex;gap:8px;flex-wrap:wrap}
+.recent-chip{padding:8px 16px;border-radius:20px;background:var(--card);color:var(--text);font-size:14px;font-weight:500;border:1px solid var(--border);cursor:pointer}
+.recent-chip:active{background:#F0FDF4;border-color:var(--green)}
+
+/* City row: 4 cols */
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.city-item{text-align:center;padding:12px 8px;background:var(--card);border-radius:10px;font-size:14px;color:var(--text);font-weight:500;cursor:pointer;border:1px solid transparent}
+.city-item:active{background:#F0FDF4;border-color:var(--green)}
+.city-item.tier1{background:#F0FDF4;border-color:#6EE7B7;font-weight:600;color:#059669}
+.city-item.hot{background:#FFF7ED;border-color:#FED7AA;font-weight:500;color:#D97706}
+
+/* Divider */
+.divider{height:1px;background:var(--border);margin:4px 14px}
+
+/* All cities: letter index */
+.letter-group{margin-bottom:4px}
+.letter-header{font-size:12px;color:var(--green);font-weight:700;padding:4px 0}
+.letter-cities{display:flex;flex-wrap:wrap;gap:4px}
+.letter-chip{font-size:13px;padding:6px 10px;border-radius:6px;background:var(--card);color:var(--t2);cursor:pointer}
+.letter-chip:active{background:#E8F8EE;color:var(--green)}
+
+/* Collapse */
+.collapse-toggle{text-align:center;padding:8px;font-size:13px;color:var(--green);cursor:pointer}
+.collapse-content{display:none}
+.collapse-content.on{display:block}
+
+/* Current indicator */
+.current-badge{background:var(--green);color:#fff;font-size:10px;padding:1px 6px;border-radius:8px;margin-left:4px}
+
+/* Pin message */
+.pin-note{font-size:10px;color:var(--t4);text-align:center;padding:4px 0 8px}
+
+.nav{display:flex;align-items:center;padding:12px 14px;background:var(--card);font-size:16px;font-weight:600;gap:8px}
+.nav-back{font-size:20px;color:var(--green)}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <!-- Nav -->
+  <div class="nav"><span class="nav-back">‹</span>选择城市</div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input class="search-input" placeholder="🔍 搜索城市（支持拼音）" value="">
+  </div>
+
+  <!-- ═══ 1. 常用 ═══ -->
+  <div class="sec">
+    <div class="sec-title">📍 常用城市</div>
+    <div class="recent-grid">
+      <span class="recent-chip">深圳<span class="current-badge">当前</span></span>
+      <span class="recent-chip">北京</span>
+      <span class="recent-chip">上海</span>
+      <span class="recent-chip">广州</span>
+    </div>
+  </div>
+
+  <!-- ═══ 2. 一线城市 ═══ -->
+  <div class="sec">
+    <div class="sec-title">⭐ 一线城市</div>
+    <div class="city-grid">
+      <span class="city-item tier1">北京</span>
+      <span class="city-item tier1">上海</span>
+      <span class="city-item tier1">广州</span>
+      <span class="city-item tier1">深圳</span>
+    </div>
+  </div>
+
+  <!-- ═══ 3. 热点城市 ═══ -->
+  <div class="sec">
+    <div class="sec-title">🔥 热点城市</div>
+    <div class="city-grid">
+      <span class="city-item hot">成都</span>
+      <span class="city-item hot">杭州</span>
+      <span class="city-item hot">南京</span>
+      <span class="city-item hot">武汉</span>
+      <span class="city-item hot">西安</span>
+      <span class="city-item hot">重庆</span>
+      <span class="city-item hot">苏州</span>
+      <span class="city-item hot">天津</span>
+    </div>
+    <div class="pin-note">珠三角 + 长三角 + 成渝核心城市</div>
+  </div>
+
+  <!-- ═══ 4. 省会城市 ═══ -->
+  <div class="sec">
+    <div class="sec-title">🏙 省会城市</div>
+    <div class="city-grid">
+      <span class="city-item">长沙</span><span class="city-item">福州</span>
+      <span class="city-item">贵阳</span><span class="city-item">哈尔滨</span>
+      <span class="city-item">合肥</span><span class="city-item">济南</span>
+      <span class="city-item">昆明</span><span class="city-item">兰州</span>
+      <span class="city-item">南昌</span><span class="city-item">南宁</span>
+      <span class="city-item">沈阳</span><span class="city-item">石家庄</span>
+      <span class="city-item">太原</span><span class="city-item">长春</span>
+      <span class="city-item">郑州</span><span class="city-item">海口</span>
+    </div>
+  </div>
+
+  <!-- ═══ 5. 全部 70 城 ═══ -->
+  <div class="sec">
+    <div class="collapse-toggle" onclick="var t=this.nextElementSibling;t.classList.toggle('on');this.textContent=t.classList.contains('on')?'📋 全部 70 城 ▲':'📋 全部 70 城 ▼'">
+      📋 全部 70 城 ▼
+    </div>
+    <div class="collapse-content">
+      <div class="letter-group">
+        <div class="letter-header">A-D</div>
+        <div class="letter-cities">
+          <span class="letter-chip">安庆</span><span class="letter-chip">包头</span><span class="letter-chip">北海</span><span class="letter-chip">北京</span><span class="letter-chip">蚌埠</span><span class="letter-chip">长春</span><span class="letter-chip">长沙</span><span class="letter-chip">常德</span><span class="letter-chip">成都</span><span class="letter-chip">重庆</span><span class="letter-chip">大理</span><span class="letter-chip">大连</span><span class="letter-chip">丹东</span>
+        </div>
+      </div>
+      <div class="letter-group">
+        <div class="letter-header">F-J</div>
+        <div class="letter-cities">
+          <span class="letter-chip">福州</span><span class="letter-chip">赣州</span><span class="letter-chip">广州</span><span class="letter-chip">贵阳</span><span class="letter-chip">桂林</span><span class="letter-chip">哈尔滨</span><span class="letter-chip">海口</span><span class="letter-chip">杭州</span><span class="letter-chip">合肥</span><span class="letter-chip">呼和浩特</span><span class="letter-chip">惠州</span><span class="letter-chip">吉林</span><span class="letter-chip">济南</span><span class="letter-chip">济宁</span><span class="letter-chip">锦州</span><span class="letter-chip">九江</span>
+        </div>
+      </div>
+      <div class="letter-group">
+        <div class="letter-header">K-N</div>
+        <div class="letter-cities">
+          <span class="letter-chip">昆明</span><span class="letter-chip">兰州</span><span class="letter-chip">泸州</span><span class="letter-chip">洛阳</span><span class="letter-chip">牡丹江</span><span class="letter-chip">南昌</span><span class="letter-chip">南充</span><span class="letter-chip">南京</span><span class="letter-chip">南宁</span><span class="letter-chip">宁波</span>
+        </div>
+      </div>
+      <div class="letter-group">
+        <div class="letter-header">Q-S</div>
+        <div class="letter-cities">
+          <span class="letter-chip">秦皇岛</span><span class="letter-chip">青岛</span><span class="letter-chip">泉州</span><span class="letter-chip">三亚</span><span class="letter-chip">厦门</span><span class="letter-chip">上海</span><span class="letter-chip">韶关</span><span class="letter-chip">深圳</span><span class="letter-chip">沈阳</span><span class="letter-chip">石家庄</span><span class="letter-chip">苏州</span>
+        </div>
+      </div>
+      <div class="letter-group">
+        <div class="letter-header">T-Z</div>
+        <div class="letter-cities">
+          <span class="letter-chip">太原</span><span class="letter-chip">唐山</span><span class="letter-chip">天津</span><span class="letter-chip">温州</span><span class="letter-chip">无锡</span><span class="letter-chip">乌鲁木齐</span><span class="letter-chip">武汉</span><span class="letter-chip">西安</span><span class="letter-chip">西宁</span><span class="letter-chip">徐州</span><span class="letter-chip">烟台</span><span class="letter-chip">扬州</span><span class="letter-chip">宜昌</span><span class="letter-chip">银川</span><span class="letter-chip">岳阳</span><span class="letter-chip">湛江</span><span class="letter-chip">郑州</span><span class="letter-chip">遵义</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

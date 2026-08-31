@@ -4,7 +4,17 @@
     "pages/index/index",
     "pages/trends/trends",
     "pages/detail/detail",
-    "pages/ops/ops"
+    "pages/mine/mine",
+    "pages/history-search/history-search",
+    "pages/history-result/history-result",
+    "pages/history-detail/history-detail",
+    "pages/community-overview/overview",
+    "pages/dashboard/dashboard",
+    "pages/transaction-compare/transaction-compare",
+    "pages/upcoming/upcoming",
+    "pages/compare/compare",
+    "pages/price-index/price-index",
+    "pages/city-select/city-select"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",
@@ -20,27 +30,29 @@
     "list": [
       {
         "pagePath": "pages/home/home",
-        "text": "首页",
-        "iconPath": "assets/tabbar/home.png",
-        "selectedIconPath": "assets/tabbar/home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/index/index",
-        "text": "找房",
-        "iconPath": "assets/tabbar/search.png",
-        "selectedIconPath": "assets/tabbar/search-active.png"
+        "text": "找房"
       },
       {
         "pagePath": "pages/trends/trends",
-        "text": "成交",
-        "iconPath": "assets/tabbar/chart.png",
-        "selectedIconPath": "assets/tabbar/chart-active.png"
+        "text": "成交"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "assets/tabbar/mine.png",
+        "selectedIconPath": "assets/tabbar/mine-active.png"
       }
-    ]
+    ],
+    "custom": true
   },
   "usingComponents": {
     "price-card": "/components/price-card/price-card",
-    "range-filter": "/components/range-filter/range-filter"
+    "range-filter": "/components/range-filter/range-filter",
+    "usage-badge": "/components/usage-badge/usage-badge"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

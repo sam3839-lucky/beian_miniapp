@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2">
+<title>全国房价指数</title>
+<style>
+:root{--green:#07C160;--red:#FF4D4F;--orange:#FF8C00;--blue:#3B82F6;--text:#333;--t2:#666;--t3:#999;--bg:#FAFBFC;--card:#fff;--border:#E5E5E5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:var(--bg);max-width:420px;margin:0 auto;min-height:100vh;padding:0 0 40px}
+.card{background:var(--card);padding:16px;margin:0 0 10px;border:1px solid #EEE;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.section{padding:0 16px}
+
+/* Nav */
+.nav{display:flex;align-items:center;padding:12px 16px;background:var(--card);font-size:16px;font-weight:600;gap:8px;position:sticky;top:0;z-index:10}
+.nav-back{font-size:20px;color:var(--green)}
+
+/* City selector — single */
+.city-bar{padding:12px 16px;background:var(--card);margin-bottom:10px}
+.city-sel{width:100%;padding:12px 14px;border:1.5px solid var(--green);border-radius:10px;font-size:15px;font-weight:700;color:var(--green);background:var(--card);font-family:inherit;text-align:center;appearance:none;-webkit-appearance:none}
+.city-date{text-align:center;font-size:11px;color:var(--t3);margin-top:6px}
+
+/* KPI */
+.kpi-row{display:flex;gap:8px;margin-bottom:16px}
+.kpi{flex:1;background:var(--card);border-radius:10px;padding:14px 12px;text-align:center}
+.kpi.new{border:1.5px solid #6EE7B7;background:#F0FDF4}
+.kpi.used{border:1.5px solid #FED7AA;background:#FFF7ED}
+.kpi .kv{font-size:28px;font-weight:800;line-height:1.2}
+.kpi .kl{font-size:10px;color:var(--t3);margin-top:2px}
+.kpi .kd{font-size:10px;margin-top:1px}
+
+/* Chart */
+.chart-section{margin-bottom:20px}
+.chart-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.chart-head h3{font-size:14px;font-weight:700}
+.chart-ts{display:flex;gap:4px}
+.chart-t{font-size:11px;padding:4px 10px;border-radius:12px;background:#F5F5F5;color:var(--t2);border:none;font-family:inherit}
+.chart-t.on{background:var(--green);color:#fff}
+.chart-box{background:var(--card);border-radius:12px;padding:16px 12px 12px}
+
+.chart-area{position:relative;height:160px;margin:0 8px;border-bottom:1px solid var(--border);border-left:1px solid var(--border)}
+.y-labels{position:absolute;left:-30px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:var(--t4)}
+.x-labels{display:flex;justify-content:space-between;margin-top:4px;font-size:8px;color:var(--t4);padding:0 8px}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px}
+
+/* Vol bars */
+.vol-bars{display:flex;align-items:flex-end;gap:1px;height:60px;padding:0 8px;margin-top:4px}
+.vbar{flex:1;border-radius:1px 1px 0 0}
+.vbar.new{background:#E8F8EE}
+.vbar.used{background:#FFF3E6}
+
+/* Area */
+.area-row{display:flex;gap:8px}
+.area-card{flex:1;background:var(--card);border-radius:8px;padding:12px 10px;text-align:center;border:1px solid var(--border)}
+.area-card .as{font-size:11px;font-weight:600;color:var(--text)}
+.area-card .ay{font-size:14px;font-weight:700;margin:4px 0}
+.area-card .am{font-size:10px;color:var(--t3)}
+.area-note{font-size:10px;color:var(--t3);text-align:center;margin-top:6px}
+
+/* AI */
+.ai-card{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1px solid #A7F3D0;border-radius:12px;padding:14px 16px;font-size:13px;color:#555;line-height:1.8}
+.ai-head{font-size:14px;font-weight:700;color:var(--green);margin-bottom:8px}
+
+/* Table */
+.toggle-row{text-align:center;padding:8px 0}
+.toggle-btn{font-size:12px;color:var(--green);font-weight:600}
+.data-table{font-size:11px;width:100%;border-collapse:collapse;display:none}
+.data-table th{background:#FAFAFA;padding:8px 4px;text-align:center;font-weight:600;color:var(--t3);font-size:10px;border-bottom:1px solid var(--border)}
+.data-table td{padding:6px 4px;text-align:center;border-bottom:1px solid #F5F5F5}
+.data-table td.up{color:var(--red)}.data-table td.down{color:var(--green)}
+
+/* Source */
+.source{text-align:center;font-size:10px;color:var(--t4);padding:8px 0 16px}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <span class="nav-back">‹</span> 全国房价指数
+</div>
+
+<!-- City selector + date -->
+<div class="city-bar">
+  <select class="city-sel">
+    <option>深圳</option>
+    <option>北京</option>
+    <option>上海</option>
+    <option>广州</option>
+    <option>成都</option>
+    <option>杭州</option>
+    <option>南京</option>
+    <option>武汉</option>
+    <option>西安</option>
+    <option>重庆</option>
+  </select>
+  <div class="city-date">2026年4月数据 · 国家统计局 70城房价指数</div>
+</div>
+
+<div class="section">
+
+<!-- KPI -->
+<div class="kpi-row">
+  <div class="kpi new">
+    <div class="kv" style="color:var(--green)">100.1</div>
+    <div class="kl">新房环比 · 4月</div>
+    <div class="kd" style="color:var(--green)">↑ 0.1%</div>
+    <div class="k-yoy" style="color:var(--red);margin-top:4px;font-size:11px;font-weight:600">同比 94.7 ↓5.3%</div>
+  </div>
+  <div class="kpi used">
+    <div class="kv" style="color:var(--orange)">100.3</div>
+    <div class="kl">二手环比 · 4月</div>
+    <div class="kd" style="color:var(--orange)">↑ 0.3%</div>
+    <div class="k-yoy" style="color:var(--red);margin-top:4px;font-size:11px;font-weight:600">同比 93.5 ↓6.5%</div>
+  </div>
+</div>
+
+<!-- Chart 1: 价格走势 -->
+<div class="chart-section">
+  <div class="chart-head">
+    <h3>📈 价格走势 · 新房 vs 二手</h3>
+    <div class="chart-ts">
+      <span class="chart-t">1年</span><span class="chart-t on">3年</span><span class="chart-t">5年</span><span class="chart-t">10年</span><span class="chart-t">全部</span>
+    </div>
+  </div>
+  <div class="chart-box">
+    <div class="chart-area">
+      <div class="y-labels"><span>110</span><span>105</span><span>100</span><span>95</span><span>90</span></div>
+      <svg viewBox="0 0 340 160" style="position:absolute;inset:0;width:100%;height:100%" preserveAspectRatio="none">
+        <line x1="0" y1="40" x2="340" y2="40" stroke="#F0F0F0" stroke-width="1"/>
+        <line x1="0" y1="80" x2="340" y2="80" stroke="#E5E5E5" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="0" y1="120" x2="340" y2="120" stroke="#F0F0F0" stroke-width="1"/>
+        <polyline points="6,25 18,28 30,32 42,36 54,40 66,44 78,48 90,52 102,50 114,46 126,44 138,48 150,52 162,50 174,46 186,44 198,48 210,52 222,56 234,52 246,48 258,44 270,48 282,52 294,56 306,54 318,51 330,50 340,48"
+          fill="none" stroke="#07C160" stroke-width="2.5" stroke-linecap="round"/>
+        <polyline points="6,40 18,44 30,48 42,52 54,48 66,52 78,56 90,50 102,54 114,58 126,54 138,58 150,62 162,58 174,54 186,50 198,56 210,60 222,56 234,52 246,48 258,54 270,58 282,54 294,50 306,48 318,50 330,52 340,54"
+          fill="none" stroke="#FF8C00" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6,3"/>
+        <line x1="0" y1="80" x2="340" y2="80" stroke="#E5E5E5" stroke-width="1"/>
+      </svg>
+    </div>
+    <div class="x-labels">
+      <span>2021</span><span></span><span></span><span></span><span>2022</span><span></span><span></span><span></span><span>2023</span><span></span><span></span><span></span><span>2024</span><span></span><span></span><span></span><span>2025</span><span></span><span></span><span></span><span>2026</span>
+    </div>
+    <div class="legend">
+      <span style="color:var(--green)">━ 新房环比</span>
+      <span style="color:var(--orange)">┅ 二手环比</span>
+      <span style="color:var(--t4)">— 基准 100</span>
+    </div>
+  </div>
+</div>
+
+<!-- Chart 2: 量价关系（仅深圳有成交量数据） -->
+<div class="chart-section" id="volumeSection">
+  <div class="chart-head">
+    <h3>📊 量价关系 <span style="font-size:10px;color:var(--t4);font-weight:400;background:#F0FDF4;padding:2px 6px;border-radius:4px">深圳专属</span></h3>
+    <div class="chart-ts">
+      <span class="chart-t">1年</span><span class="chart-t on">3年</span><span class="chart-t">5年</span><span class="chart-t">全部</span>
+    </div>
+  </div>
+  <div class="chart-box">
+    <!-- 新房 -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--green)"></div>
+        <span style="font-size:12px;font-weight:600;color:var(--text)">新房成交量</span>
+      </div>
+      <span style="font-size:10px;color:var(--t3)">套</span>
+    </div>
+    <div class="vol-bars">
+      <div class="vbar new" style="height:22px"></div><div class="vbar new" style="height:26px"></div><div class="vbar new" style="height:20px"></div><div class="vbar new" style="height:30px"></div>
+      <div class="vbar new" style="height:34px"></div><div class="vbar new" style="height:42px"></div><div class="vbar new" style="height:38px"></div><div class="vbar new" style="height:36px"></div>
+      <div class="vbar new" style="height:40px"></div><div class="vbar new" style="height:46px"></div><div class="vbar new" style="height:50px"></div><div class="vbar new" style="height:44px"></div>
+    </div>
+    <div class="x-labels">
+      <span>5月</span><span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span><span>12月</span><span>1月</span><span>2月</span><span>3月</span><span>4月</span>
+    </div>
+    <!-- 分隔线 -->
+    <div style="border-top:1px dashed #EEE;margin:14px 0"></div>
+    <!-- 二手房 -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <div style="width:10px;height:10px;border-radius:2px;background:var(--orange)"></div>
+        <span style="font-size:12px;font-weight:600;color:var(--text)">二手房成交量</span>
+      </div>
+      <span style="font-size:10px;color:var(--t3)">套</span>
+    </div>
+    <div class="vol-bars">
+      <div class="vbar used" style="height:18px"></div><div class="vbar used" style="height:14px"></div><div class="vbar used" style="height:22px"></div><div class="vbar used" style="height:28px"></div>
+      <div class="vbar used" style="height:26px"></div><div class="vbar used" style="height:32px"></div><div class="vbar used" style="height:36px"></div><div class="vbar used" style="height:40px"></div>
+      <div class="vbar used" style="height:38px"></div><div class="vbar used" style="height:42px"></div><div class="vbar used" style="height:48px"></div><div class="vbar used" style="height:52px"></div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:10px">近3月成交量温和放大，价格止跌企稳</div>
+  </div>
+</div>
+
+<!-- Area breakdown -->
+<div class="chart-section">
+  <div class="chart-head"><h3>🏠 面积段分化 · 2026年4月</h3></div>
+  <div class="area-row">
+    <div class="area-card" style="background:linear-gradient(180deg,#F0FDF4,#fff);border-color:#6EE7B7;border-width:1.5px">
+      <div class="as" style="color:#059669">＜ 90㎡ 刚需</div>
+      <div class="ay" style="color:#059669">94.9</div>
+      <div class="am">环比 100.0</div>
+      <div class="am" style="color:var(--red)">同比 ↓5.1%</div>
+    </div>
+    <div class="area-card" style="background:linear-gradient(180deg,#FFF7ED,#fff);border-color:#FED7AA;border-width:1.5px">
+      <div class="as" style="color:#D97706">90-144㎡ 改善</div>
+      <div class="ay" style="color:#D97706">94.4</div>
+      <div class="am">环比 100.0</div>
+      <div class="am" style="color:var(--red)">同比 ↓5.6%</div>
+    </div>
+    <div class="area-card" style="background:linear-gradient(180deg,#F5F9FF,#fff);border-color:#BFDBFE;border-width:1.5px">
+      <div class="as" style="color:#2563EB">＞ 144㎡ 豪宅</div>
+      <div class="ay" style="color:#2563EB">94.9</div>
+      <div class="am">环比 100.0</div>
+      <div class="am" style="color:var(--red)">同比 ↓5.1%</div>
+    </div>
+  </div>
+  <div class="area-note">改善户型降幅最大（-5.6%），刚需和豪宅相对抗跌</div>
+</div>
+<!-- AI -->
+<div class="chart-section">
+  <div class="ai-card">
+    <div class="ai-head">🤖 AI 解读</div>
+    深圳新房价格指数自 2025年12月以来连续4个月在 100 附近徘徊，处于企稳筑底阶段。4月环比 100.1，基本持平。<br><br>
+    二手房方面，3月环比 100.4、4月 100.3，出现连续两个月的微幅反弹，这是自 2024年以来的首次连续上涨。但同比降幅 6.5% 仍较大，以价换量是当前市场主旋律。<br><br>
+    从量价关系看，近3个月新房和二手房成交量均在温和放大，尤其是二手房在 3-4月成交量明显回升，这是价格企稳的前置信号。<br><br>
+    面积段方面，90-144㎡改善户型同比降幅最大（-5.6%），说明中大户型议价空间仍在，换房窗口尚未关闭。
+  </div>
+</div>
+
+<!-- Data table -->
+<div class="toggle-row">
+  <span class="toggle-btn" onclick="var t=document.getElementById('dt');t.style.display=t.style.display==='block'?'none':'block';this.textContent=t.style.display==='block'?'📋 收起数据明细 ▲':'📋 展开近12月数据明细 ▼'">
+    📋 展开近12月数据明细 ▼
+  </span>
+  <table class="data-table" id="dt">
+    <tr><th>月份</th><th>新房环比</th><th>新房同比</th><th>二手环比</th><th>二手同比</th></tr>
+    <tr><td>2025-05</td><td class="down">99.1</td><td class="down">96.3</td><td class="down">—</td><td class="down">—</td></tr>
+    <tr><td>2025-06</td><td class="down">99.5</td><td class="down">95.6</td><td class="down">—</td><td class="down">—</td></tr>
+    <tr><td>2025-09</td><td class="down">99.7</td><td class="down">94.6</td><td class="down">99.8</td><td class="down">93.2</td></tr>
+    <tr><td>2025-12</td><td class="down">99.5</td><td class="down">95.6</td><td class="down">99.6</td><td class="down">93.0</td></tr>
+    <tr><td>2026-02</td><td class="down">99.7</td><td class="down">94.5</td><td class="down">99.6</td><td class="down">92.9</td></tr>
+    <tr><td>2026-03</td><td class="up">100.2</td><td class="down">94.5</td><td class="up">100.4</td><td class="down">93.0</td></tr>
+    <tr><td style="font-weight:700">2026-04</td><td class="up">100.1</td><td class="down">94.7</td><td class="up">100.3</td><td class="down">93.5</td></tr>
+  </table>
+</div>
+
+<div class="source">数据来源：国家统计局 70城房价指数 · 深圳市住房和建设局</div>
+
+</div>
+</body>
+</html>

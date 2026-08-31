@@ -1,7 +1,10 @@
 <view class="card" bindtap="onTap">
   <view class="row">
     <view class="col col-left">
-      <text class="no">{{unit.unit_no}}</text>
+      <view class="no-row">
+        <text class="no">{{unit.unit_no}}</text>
+        <text class="sale-tag {{isPresale ? 'tag-pre' : 'tag-spot'}}" wx:if="{{saleType}}">{{saleType}}</text>
+      </view>
       <text class="sub">{{bldgName}}</text>
     </view>
     <view class="col col-mid">

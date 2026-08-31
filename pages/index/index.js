@@ -21,7 +21,18 @@ Page({
     areaRanges: ['全部', '70-90㎡', '90-120㎡', '120-150㎡', '150-200㎡', '自定义'],
     areaActive: 0,
     priceFilter: { min: 0, max: 999999 },
-    areaFilter: { min: 0, max: 9999 }
+    areaFilter: { min: 0, max: 9999 },
+    // 瞬搜
+    quickSearch: '',
+    searchResults: [],
+    searchTapped: false,
+    visibleFloors: [],
+    hasMore: false,
+    quickCombo: '',
+  },
+
+  onShowAll() {
+    this.setData({ visibleFloors: this.data.floors, hasMore: false });
   },
 
   onLoad() {
@@ -31,6 +42,21 @@ Page({
   onShow() {
     const app = getApp();
     const params = app.globalData.filterParams;
+
+    // 扫码直达：海报二维码携带项目名 scene
+    const scene = app.globalData.launchScene;
+    if (scene) {
+      app.globalData.launchScene = null; // 仅消费一次
+      if (!params) {
+        // 直接用 scene 作为项目名跳转
+        this._pendingProject = scene;
+        if (this.data.zones.length > 1) {
+          this._applyPendingNav();
+        }
+        return;
+      }
+    }
+
     if (!params) return;
     app.globalData.filterParams = null;
 
@@ -95,11 +121,11 @@ Page({
   _selectProject(project) {
     // 精确匹配
     let pi = this.data.projects.findIndex(p => p.value === project);
-    // 宽松匹配：trim + 包含
+    // 宽松匹配：项目名包含搜索词（如搜"御景"→"宝昌利御景公馆"）
     if (pi <= 0) {
       const pj = project.trim();
       pi = this.data.projects.findIndex(p =>
-        p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value))
+        p.value && (p.value.trim() === pj || p.value.includes(pj))
       );
     }
     if (pi <= 0) {
@@ -122,14 +148,14 @@ Page({
       const pj = project.trim();
       let idx = data.projects.indexOf(project);
       if (idx < 0) {
-        idx = data.projects.findIndex(p => p.trim() === pj || p.includes(pj) || pj.includes(p));
+        idx = data.projects.findIndex(p => p.trim() === pj || p.includes(pj));
       }
       const items = [{name: '选择小区', value: ''}].concat(
         data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
       );
       let pi = items.findIndex(p => p.value === project);
       if (pi <= 0) {
-        pi = items.findIndex(p => p.value && (p.value.trim() === pj || p.value.includes(pj) || pj.includes(p.value)));
+        pi = items.findIndex(p => p.value && (p.value.trim() === pj || p.value.includes(pj)));
       }
       if (pi <= 0) {
         items.push({ name: `${items.length}. ${project}`, value: project });
@@ -152,16 +178,30 @@ Page({
       projects: [{name: '选择小区', value: ''}], buildings: ['全部楼栋'],
       projectName: '', buildingName: '',
       units: [], floors: [], groups: {}, stats: null });
-    if (idx === 0) return;
+    const zone = idx === 0 ? '' : this.data.zones[idx];
+    const cacheKey = 'projects_' + (zone || 'all');
+
+    // 先读缓存，即时展示
     try {
-      const [data, statsData] = await Promise.all([
-        api.getProjects(this.data.zones[idx]),
-        api.getZoneStats(this.data.zones[idx], this.data.priceFilter, this.data.areaFilter)
-      ]);
+      const cached = wx.getStorageSync(cacheKey);
+      if (cached && cached.length) {
+        this.setData({ projects: cached });
+      }
+    } catch (e) { /* ignore */ }
+
+    try {
+      const projectsData = await api.getProjects(zone);
       const items = [{name: '选择小区', value: ''}].concat(
-        data.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
+        projectsData.projects.map((p, i) => ({name: `${i + 1}. ${p}`, value: p}))
       );
-      this.setData({ projects: items, stats: statsData });
+      // 写入缓存
+      try { wx.setStorageSync(cacheKey, items); } catch (e) { /* ignore */ }
+      this.setData({ projects: items });
+
+      // 全深圳也拉统计
+      let statsData = null;
+      try { statsData = await api.getZoneStats(zone, this.data.priceFilter, this.data.areaFilter); } catch(e) { /* ignore */ }
+      this.setData({ stats: statsData });
     } catch (e) {
       wx.showToast({ title: '加载小区失败', icon: 'none' });
     }
@@ -194,7 +234,9 @@ Page({
 
   onSearchInput(e) {
     this.setData({ search: e.detail.value });
-    if (this.data.projectName) this.loadUnits();
+    if (this._searchTimer) clearTimeout(this._searchTimer);
+    if (!this.data.projectName) return;
+    this._searchTimer = setTimeout(() => this.loadUnits(), 300);
   },
 
   onPriceFilter(e) {
@@ -219,6 +261,27 @@ Page({
     this.loadUnits();
   },
 
+  // 快速筛选 combo
+  onQuickCombo(e) {
+    const combo = e.currentTarget.dataset.combo;
+    const presets = {
+      gangxu:  { price: { min: 0, max: 500 }, area: { min: 60, max: 100 }, areaActive: 1 },
+      gaishan: { price: { min: 500, max: 1200 }, area: { min: 80, max: 130 }, areaActive: 2 },
+      haozhai: { price: { min: 1200, max: 999999 }, area: { min: 100, max: 9999 }, areaActive: 3 },
+      xiaohu:  { price: { min: 0, max: 400 }, area: { min: 0, max: 80 }, areaActive: 0 },
+      daping:  { price: { min: 800, max: 999999 }, area: { min: 120, max: 9999 }, areaActive: 4 },
+    };
+    // 再次点击同一 combo 取消
+    const isSame = this.data.quickCombo === combo;
+    if (isSame) {
+      this.setData({ quickCombo: '', priceFilter: { min: 0, max: 999999 }, areaFilter: { min: 0, max: 9999 }, priceActive: 0, areaActive: 0 });
+    } else {
+      const p = presets[combo];
+      this.setData({ quickCombo: combo, priceFilter: p.price, areaFilter: p.area, priceActive: 1, areaActive: p.areaActive });
+    }
+    if (this.data.projectName) this.loadUnits();
+  },
+
   async loadUnits(projectName) {
     const pn = projectName || this.data.projectName;
     if (!pn) return;
@@ -229,7 +292,7 @@ Page({
         api.getUnits(pn, buildingName, search, priceFilter, areaFilter),
         api.getStats(pn, buildingName, priceFilter, areaFilter)
       ]);
-      this.setData({ allUnits: unitData.units, stats: statsData, loading: false });
+      this.setData({ stats: statsData, loading: false });
       this.groupAndRender(unitData.units);
     } catch (e) {
       this.setData({ loading: false });
@@ -245,7 +308,8 @@ Page({
       groups[f].push(u);
     });
     const floors = Object.keys(groups).sort((a, b) => (b === '?' ? -1 : Number(b)) - (a === '?' ? -1 : Number(a)));
-    this.setData({ units, floors, groups });
+    const visibleFloors = floors.slice(0, 3);
+    this.setData({ units, floors, groups, visibleFloors, hasMore: floors.length > 3 });
   },
 
   onCardTap(e) {
@@ -261,5 +325,76 @@ Page({
       'building=' + encodeURIComponent(this.data.buildingName || '')
     ].join('&');
     wx.navigateTo({ url: '/pages/detail/detail?' + p });
-  }
+  },
+
+  // ── 瞬搜 ──
+  onQuickSearchInput(e) {
+    const v = e.detail.value;
+    this.setData({ quickSearch: v, searchTapped: false });
+    if (this._timer) clearTimeout(this._timer);
+    if (!v.trim()) {
+      this.setData({ searchResults: [] });
+      return;
+    }
+    this._timer = setTimeout(() => this._doQuickSearch(v.trim()), 300);
+  },
+
+  onQuickSearchConfirm() {
+    const v = this.data.quickSearch.trim();
+    if (!v) return;
+    this.setData({ searchTapped: true });
+    if (this._timer) clearTimeout(this._timer);
+    this._doQuickSearch(v);
+  },
+
+  async _doQuickSearch(q) {
+    try {
+      const data = await api.quickSearch(q);
+      const results = (data.results || []).map(r => ({
+        ...r,
+        avg_unit_w: (r.avg_unit / 10000).toFixed(1),
+      }));
+      this.setData({ searchResults: results });
+    } catch (e) {
+      console.error('quick search failed', e);
+    }
+  },
+
+  onClearQuickSearch() {
+    this.setData({ quickSearch: '', searchResults: [], searchTapped: false });
+  },
+
+  onQuickResultTap(e) {
+    const { project, zone } = e.currentTarget.dataset;
+    this.setData({ quickSearch: '', searchResults: [], searchTapped: false });
+    this._quickSelectProject(project, zone);
+  },
+
+  async _quickSelectProject(project, zone) {
+    // 选择区域并加载项目
+    if (zone) {
+      let zi = this.data.zones.indexOf(zone);
+      if (zi <= 0) {
+        this.data.zones.push(zone);
+        zi = this.data.zones.length - 1;
+        this.setData({ zones: this.data.zones, zoneIdx: zi });
+      } else {
+        this.setData({ zoneIdx: zi });
+      }
+      await this.onZoneChange({ detail: { value: zi } });
+    }
+    // 区域加载完毕后再选项目
+    this._selectProject(project);
+  },
+
+  onShareAppMessage() {
+    const pn = this.data.projectName;
+    const path = pn
+      ? '/pages/index/index?project=' + encodeURIComponent(pn)
+      : '/pages/index/index';
+    return {
+      title: pn ? '看看' + pn + '的备案价' : '深圳新房备案价查询',
+      path
+    };
+  },
 });
