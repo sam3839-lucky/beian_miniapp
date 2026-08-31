@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 
 const {
   selectYears,
+  selectComparisonYears,
   resolveMetric,
   formatDelta,
   formatReferenceDelta,
@@ -79,6 +80,11 @@ test('selectYears 精确返回含今年在内的近 3 年和近 5 年', () => {
 test('selectYears 拒绝含糊的年份范围', () => {
   assert.throws(() => selectYears(2026, 4), /yearCount must be 3 or 5/);
   assert.throws(() => selectYears('2026', 3), /positive integer/);
+});
+
+test('selectComparisonYears 按业务定义返回往年两列或近三年四列', () => {
+  assert.deepEqual(selectComparisonYears(2026, 'past'), [2026, 2025]);
+  assert.deepEqual(selectComparisonYears(2026, 'recent3'), [2026, 2025, 2024, 2023]);
 });
 
 test('resolveMetric 保留真实 0 且不把缺失值当成 0', () => {
@@ -423,32 +429,35 @@ test('月度同期页面首次只请求一次5年数据，筛选切换不重复�
   assert.equal(page.data.error, '');
   assert.equal(page.data.empty, false);
   assert.equal(page.data.metric, 'total');
-  assert.equal(page.data.yearCount, 3);
-  assert.equal(page.data.yearRangeLabel, '2024—2026');
+  assert.equal(page.data.yearCount, 2);
+  assert.equal(page.data.rangeKey, 'past');
+  assert.equal(page.data.metricLabel, '汇总');
+  assert.equal(page.data.yearRangeLabel, '2025—2026');
   assert.equal(page.data.cutoffText, '数据截至 2026年8月30日');
   assert.equal(page.data.updatedText, '数据生成 2026年8月31日 09:05');
   assert.equal(page.data.monthlyCards.length, 3);
-  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024]);
+  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025]);
   assert.deepEqual(page.data.monthlyTable.months.map(item => item.month), [0, 8, 2, 1]);
 
-  page.onMetricChange({ currentTarget: { dataset: { value: 'new' } } });
-  page.onYearCountChange({ currentTarget: { dataset: { value: 5 } } });
+  page.onMetricPickerChange({ detail: { value: 1 } });
+  page.onRangeChange({ detail: { value: 1 } });
 
   assert.equal(calls, 1);
   assert.equal(page.data.metric, 'new');
   assert.equal(page.data.metricLabel, '新房');
   assert.equal(page.data.monthlyTable.months[0].cells[0].displayText, '91');
-  assert.equal(page.data.yearCount, 5);
-  assert.equal(page.data.yearRangeLabel, '2022—2026');
-  assert.equal(page.data.monthlyCards[0].rows.length, 5);
-  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024, 2023, 2022]);
+  assert.equal(page.data.yearCount, 4);
+  assert.equal(page.data.rangeKey, 'recent3');
+  assert.equal(page.data.yearRangeLabel, '2023—2026');
+  assert.equal(page.data.monthlyCards[0].rows.length, 4);
+  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024, 2023]);
 
   page.onMetricChange({ currentTarget: { dataset: { value: 'invalid' } } });
   assert.equal(page.data.metric, 'new');
   page.onMetricChange(null);
-  page.onYearCountChange(null);
+  page.onRangeChange(null);
   assert.equal(page.data.metric, 'new');
-  assert.equal(page.data.yearCount, 5);
+  assert.equal(page.data.yearCount, 4);
   const requestId = page._requestId;
   page.onUnload();
   assert.equal(page._requestId, requestId + 1);

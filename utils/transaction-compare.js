@@ -7,8 +7,8 @@ const METRIC_LABELS = {
 };
 
 function assertYearCount(yearCount) {
-  if (yearCount !== 3 && yearCount !== 5) {
-    throw new RangeError('yearCount must be 3 or 5');
+  if (![2, 3, 4, 5].includes(yearCount)) {
+    throw new RangeError('yearCount must be 2, 3, 4, or 5');
   }
 }
 
@@ -26,8 +26,28 @@ function selectYears(currentYear, yearCount) {
   if (!Number.isInteger(currentYear) || currentYear < 1) {
     throw new TypeError('currentYear must be a positive integer');
   }
-  assertYearCount(yearCount);
+  if (yearCount !== 3 && yearCount !== 5) {
+    throw new RangeError('yearCount must be 3 or 5');
+  }
 
+  return Array.from({ length: yearCount }, (_, index) => currentYear - index);
+}
+
+function selectComparisonYears(currentYear, rangeKey) {
+  if (rangeKey === 'legacy3') return selectYears(currentYear, 3);
+  if (rangeKey === 'legacy5') return selectYears(currentYear, 5);
+  if (!['past', 'recent3'].includes(rangeKey)) {
+    throw new RangeError('rangeKey must be past or recent3');
+  }
+  const count = rangeKey === 'past' ? 2 : 4;
+  if (!Number.isInteger(currentYear) || currentYear < 1) {
+    throw new TypeError('currentYear must be a positive integer');
+  }
+  return Array.from({ length: count }, (_, index) => currentYear - index);
+}
+
+function selectYearsFlexible(currentYear, yearCount) {
+  assertYearCount(yearCount);
   return Array.from({ length: yearCount }, (_, index) => currentYear - index);
 }
 
@@ -161,7 +181,7 @@ function buildMonthlyCards(payload, metric, yearCount) {
     return [];
   }
 
-  const years = selectYears(currentYear, yearCount);
+  const years = selectYearsFlexible(currentYear, yearCount);
   const cutoff = payload && payload.cutoff && typeof payload.cutoff === 'object'
     ? payload.cutoff
     : {};
@@ -246,7 +266,7 @@ function buildMonthlyTable(payload, yearCount, metric = 'total') {
     return null;
   }
 
-  const years = selectYears(currentYear, yearCount);
+  const years = selectYearsFlexible(currentYear, yearCount);
   const cutoff = payload && cutoffObject(payload.cutoff);
   if (cutoff) cutoff.year = currentYear;
   const months = groups
@@ -496,6 +516,7 @@ function formatYearRange(years) {
 
 module.exports = {
   selectYears,
+  selectComparisonYears,
   resolveMetric,
   formatDelta,
   formatReferenceDelta,

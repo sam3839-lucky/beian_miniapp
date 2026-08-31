@@ -21,36 +21,18 @@
   <block wx:else>
     <view class="table-card" wx:if="{{monthlyTable}}">
       <view class="table-controls" aria-label="历史成交对比筛选">
-        <view class="segmented segmented--year" aria-role="group" aria-label="选择对比年数">
-          <view
-            wx:for="{{yearOptions}}"
-            wx:key="value"
-            class="segment {{yearCount === item.value ? 'segment--active' : ''}}"
-            data-value="{{item.value}}"
-            bindtap="onYearCountChange"
-            hover-class="segment--pressed"
-            aria-role="button"
-            aria-label="{{item.label}}"
-            aria-checked="{{yearCount === item.value}}"
-          >
-            {{item.label}}
+        <picker class="filter-picker" mode="selector" range="{{rangeOptions}}" value="{{rangeIndex}}" bindchange="onRangeChange">
+          <view class="filter-field">
+            <text class="filter-field-label">对比范围</text>
+            <text class="filter-field-value">{{rangeOptions[rangeIndex]}} <text class="filter-arrow">▼</text></text>
           </view>
-        </view>
-        <view class="segmented segmented--metric" aria-role="group" aria-label="选择成交类型">
-          <view
-            wx:for="{{metrics}}"
-            wx:key="value"
-            class="segment {{metric === item.value ? 'segment--active' : ''}}"
-            data-value="{{item.value}}"
-            bindtap="onMetricChange"
-            hover-class="segment--pressed"
-            aria-role="button"
-            aria-label="{{item.label}}"
-            aria-checked="{{metric === item.value}}"
-          >
-            {{item.label}}
+        </picker>
+        <picker class="filter-picker" mode="selector" range="{{metricOptions}}" value="{{metricIndex}}" bindchange="onMetricPickerChange">
+          <view class="filter-field">
+            <text class="filter-field-label">成交口径</text>
+            <text class="filter-field-value">{{metricOptions[metricIndex]}} <text class="filter-arrow">▼</text></text>
           </view>
-        </view>
+        </picker>
       </view>
 
       <view class="matrix" aria-label="月份和年份成交数据表">

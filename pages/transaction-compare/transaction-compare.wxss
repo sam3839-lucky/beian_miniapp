@@ -211,6 +211,43 @@
   padding: 16rpx 16rpx 14rpx;
 }
 
+.filter-picker {
+  min-width: 0;
+  flex: 1;
+}
+
+.filter-field {
+  min-height: 72rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8rpx;
+  padding: 0 16rpx;
+  border: 1rpx solid #E1E6E3;
+  border-radius: 10rpx;
+  background: #FBFCFB;
+}
+
+.filter-field-label {
+  color: #718096;
+  font-size: 20rpx;
+  white-space: nowrap;
+}
+
+.filter-field-value {
+  color: #17212B;
+  font-size: 22rpx;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.filter-arrow {
+  margin-left: 4rpx;
+  color: #07C160;
+  font-size: 16rpx;
+}
+
 .table-controls .segmented {
   flex: 1;
   gap: 6rpx;
@@ -745,5 +782,220 @@
   .compare-delta {
     width: 112rpx;
     font-size: 18rpx;
+  }
+}
+
+.matrix-row.matrix-row--header {
+  background: #17212B !important;
+}
+
+.matrix-row.matrix-row--header .matrix-month,
+.matrix-row.matrix-row--header .matrix-year {
+  color: #FFFFFF !important;
+}
+
+/* 深圳市场数据终端视觉收敛 */
+.page {
+  padding: 16rpx 24rpx 44rpx;
+  background: #F6F7F5;
+  color: #17212B;
+}
+
+.table-card {
+  margin-top: 0;
+  border: 0;
+  border-radius: 12rpx;
+  background: #FFFFFF;
+  box-shadow: 0 4rpx 18rpx rgba(23, 33, 43, 0.06);
+}
+
+.table-controls {
+  gap: 8rpx;
+  padding: 14rpx 14rpx 12rpx;
+  background: #FFFFFF;
+  border-bottom: 1rpx solid #E6E9E7;
+}
+
+.table-controls .segmented {
+  gap: 5rpx;
+}
+
+.table-controls .segmented--year {
+  flex-basis: 150rpx;
+}
+
+.table-controls .segment {
+  min-height: 38px;
+  border: 1rpx solid #E1E6E3;
+  border-radius: 10rpx;
+  color: #718096;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.table-controls .segment--active {
+  border: 2rpx solid #07C160;
+  background: #EAF6EE;
+  color: #078A47;
+  font-weight: 800;
+}
+
+.matrix {
+  margin: 0;
+  border-top: 0;
+  border-left: 0;
+}
+
+.matrix-row {
+  min-height: 104rpx;
+  border-bottom: 1rpx solid #E8ECEA;
+}
+
+.matrix-row:nth-child(odd) {
+  background: #FBFCFB;
+}
+
+.matrix-row--header {
+  min-height: 62rpx;
+  background: #17212B;
+  border-bottom: 0;
+}
+
+.matrix-row--cumulative {
+  min-height: 114rpx;
+  background: #F0FBF5 !important;
+  border-bottom: 2rpx solid #A9DDBD;
+}
+
+.matrix-month,
+.matrix-year,
+.matrix-cell {
+  border-right: 1rpx solid #E8ECEA;
+}
+
+.matrix-row--header .matrix-month,
+.matrix-row--header .matrix-year {
+  border-right-color: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF;
+}
+
+.matrix-month {
+  width: 76rpx;
+  flex-basis: 76rpx;
+  padding: 8rpx 5rpx;
+}
+
+.matrix-month-label {
+  color: #17212B;
+  font-size: 23rpx;
+  font-weight: 800;
+}
+
+.matrix-row--header .matrix-month {
+  color: #FFFFFF;
+}
+
+.matrix-row--header .matrix-month-label {
+  color: #FFFFFF;
+  font-size: 22rpx;
+}
+
+.matrix-month-status {
+  margin-top: 3rpx;
+  padding: 2rpx 5rpx;
+  border-radius: 5rpx;
+  background: #FFF1D6;
+  color: #A45D00;
+  font-size: 15rpx;
+}
+
+.matrix-year {
+  color: #718096;
+  font-size: 21rpx;
+  font-weight: 800;
+}
+
+.matrix-cell {
+  padding: 10rpx 3rpx;
+  gap: 5rpx;
+}
+
+.matrix-cell--current {
+  background: #EFF8F2;
+  box-shadow: inset 2rpx 0 0 #C7E8D2, inset -2rpx 0 0 #C7E8D2;
+}
+
+.matrix-row--header .matrix-year:first-of-type {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.matrix-row--cumulative .matrix-month-label {
+  color: #078A47;
+}
+
+.cell-value {
+  font-size: 23rpx;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.5rpx;
+}
+
+.cell-delta {
+  color: #51616D;
+  font-size: 18rpx;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.cell-delta--muted {
+  color: #A0A8AE;
+  font-weight: 500;
+}
+
+.page-note {
+  padding: 16rpx 8rpx 0;
+  color: #9AA4AA;
+  font-size: 18rpx;
+}
+
+@media (max-width: 340px) {
+  .page {
+    padding-right: 16rpx;
+    padding-left: 16rpx;
+  }
+
+  .table-controls {
+    padding-right: 8rpx;
+    padding-left: 8rpx;
+  }
+
+  .filter-field {
+    padding-right: 10rpx;
+    padding-left: 10rpx;
+  }
+
+  .filter-field-label {
+    font-size: 18rpx;
+  }
+
+  .filter-field-value {
+    font-size: 20rpx;
+  }
+
+  .table-controls .segmented--year {
+    flex-basis: 142rpx;
+  }
+
+  .matrix-month {
+    width: 64rpx;
+    flex-basis: 64rpx;
+  }
+
+  .cell-value {
+    font-size: 20rpx;
+  }
+
+  .cell-delta {
+    font-size: 16rpx;
   }
 }

@@ -1,6 +1,6 @@
 const api = require('../../utils/api');
 const {
-  selectYears,
+  selectComparisonYears,
   buildMonthlyCards,
   buildMonthlyTable,
   formatCutoff,
@@ -11,17 +11,18 @@ const {
 Page({
   data: {
     metric: 'total',
-    metricLabel: '总成交',
+    metricLabel: '汇总',
     metrics: [
-      { value: 'total', label: '总成交' },
+      { value: 'total', label: '汇总' },
       { value: 'new', label: '新房' },
       { value: 'used', label: '二手房' },
     ],
-    yearCount: 3,
-    yearOptions: [
-      { value: 3, label: '近3年' },
-      { value: 5, label: '近5年' },
-    ],
+    rangeKey: 'past',
+    rangeIndex: 0,
+    rangeOptions: ['往年', '近三年'],
+    metricIndex: 0,
+    metricOptions: ['汇总', '新房', '二手房'],
+    yearCount: 2,
     yearRangeLabel: '',
     cutoffText: '',
     updatedText: '',
@@ -82,7 +83,7 @@ Page({
       ? payload.years[0]
       : null;
     const selectedYears = Number.isInteger(currentYear)
-      ? selectYears(currentYear, this.data.yearCount)
+      ? selectComparisonYears(currentYear, this.data.rangeKey)
       : [];
     const monthlyCards = buildMonthlyCards(
       payload,
@@ -114,6 +115,25 @@ Page({
     this.setData({ metric }, () => this.rebuildMonthlyCards());
   },
 
+  onRangeChange(event) {
+    const rawIndex = event && event.detail && event.detail.value;
+    if (rawIndex === undefined || rawIndex === null) return;
+    const index = Number(rawIndex);
+    if (![0, 1].includes(index) || index === this.data.rangeIndex) return;
+    const rangeKey = index === 0 ? 'past' : 'recent3';
+    const yearCount = index === 0 ? 2 : 4;
+    this.setData({ rangeIndex: index, rangeKey, yearCount }, () => this.rebuildMonthlyCards());
+  },
+
+  onMetricPickerChange(event) {
+    const rawIndex = event && event.detail && event.detail.value;
+    if (rawIndex === undefined || rawIndex === null) return;
+    const index = Number(rawIndex);
+    if (![0, 1, 2].includes(index) || index === this.data.metricIndex) return;
+    const metric = ['total', 'new', 'used'][index];
+    this.setData({ metricIndex: index, metric }, () => this.rebuildMonthlyCards());
+  },
+
   onYearCountChange(event) {
     const value = event
       && event.currentTarget
@@ -121,7 +141,8 @@ Page({
       && event.currentTarget.dataset.value;
     const yearCount = Number(value);
     if (![3, 5].includes(yearCount) || yearCount === this.data.yearCount) return;
-    this.setData({ yearCount }, () => this.rebuildMonthlyCards());
+    const rangeKey = yearCount === 3 ? 'recent3' : 'legacy5';
+    this.setData({ yearCount, rangeKey }, () => this.rebuildMonthlyCards());
   },
 
   onRetry() {
