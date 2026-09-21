@@ -1,0 +1,33 @@
+.page { min-height: 100vh; box-sizing: border-box; padding: 20rpx 24rpx 48rpx; background: #F5F5F5; color: #1A1A1A; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; }
+.card { background: #FFFFFF; border-radius: 12rpx; }
+.hero { padding: 36rpx 32rpx 32rpx; text-align: center; }
+.eyebrow { display: block; color: #666; font-size: 26rpx; font-weight: 600; }
+.hero-value { margin: 18rpx 0 12rpx; color: #1A1A1A; font-size: 76rpx; font-weight: 800; letter-spacing: -2rpx; }
+.unit, .small-unit { margin-left: 6rpx; font-size: 26rpx; font-weight: 500; letter-spacing: 0; }
+.status-pill { display: inline-block; padding: 8rpx 18rpx; border-radius: 9999rpx; color: #D97706; background: #FFF4E5; font-size: 24rpx; }
+.hero-note, .as-of { display: block; margin-top: 18rpx; color: #666; font-size: 23rpx; }
+.as-of { margin-top: 8rpx; color: #999; font-size: 21rpx; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 32rpx 4rpx 16rpx; }
+.section-title { font-size: 30rpx; font-weight: 700; }
+.section-hint { color: #999; font-size: 21rpx; }
+.district-list { display: flex; flex-direction: column; gap: 16rpx; }
+.district-card { padding: 24rpx; }
+.card-hover { opacity: .72; transform: scale(.985); }
+.district-top, .district-meta { display: flex; align-items: center; }
+.district-name { flex: 1; font-size: 30rpx; font-weight: 700; }
+.district-months { font-size: 38rpx; font-weight: 800; }
+.district-status { margin-top: 8rpx; color: #D97706; font-size: 22rpx; }
+.progress-track { height: 10rpx; margin: 18rpx 0 16rpx; overflow: hidden; border-radius: 9999rpx; background: #EEE; }
+.progress-bar { height: 100%; border-radius: inherit; background: #FF8C00; }
+.district-meta { color: #999; font-size: 21rpx; gap: 18rpx; }
+.arrow { margin-left: auto; color: #CCC; font-size: 38rpx; line-height: 20rpx; }
+.explain { margin-top: 24rpx; padding: 24rpx; }
+.explain-title { display: block; margin-bottom: 12rpx; font-size: 26rpx; font-weight: 700; }
+.explain-text, .explain-foot { display: block; color: #666; font-size: 22rpx; line-height: 1.8; }
+.explain-foot { margin-top: 10rpx; color: #999; }
+.state-card { margin-top: 160rpx; padding: 48rpx 28rpx; border-radius: 12rpx; background: #FFF; color: #666; text-align: center; font-size: 26rpx; }
+.state-error { color: #FF4D4F; }
+.state-title, .state-desc { display: block; }
+.state-title { color: #333; font-weight: 700; }
+.state-desc { margin-top: 12rpx; color: #999; font-size: 23rpx; }
+.retry { width: 240rpx; margin-top: 24rpx; color: #FFF; background: #07C160; border-radius: 8rpx; font-size: 24rpx; }

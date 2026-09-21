@@ -7,6 +7,12 @@
       <text class="menu-arrow">›</text>
     </view>
     <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="onOpenDestocking" hover-class="menu-item-hover">
+      <text class="menu-icon">⏱️</text>
+      <text class="menu-label">新房去化周期</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
     <view class="menu-item" bindtap="onOpenTransactionCompare" hover-class="menu-item-hover">
       <text class="menu-icon">🗓️</text>
       <text class="menu-label">历史成交对比</text>

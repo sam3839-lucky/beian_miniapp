@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.0.0] - 2026-09-22
+
+### Added
+
+- Added the new-house destocking cycle entry and page with citywide and district metrics.
+- Added live API loading, quality-state labels, sorting, fixed progress scale, and district-to-search navigation.
+- Added frontend tests for formatting, sorting, status mapping, and payload preparation.
+
 ## [1.9.0] - 2026-09-21
 
 ### Added

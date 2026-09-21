@@ -10,6 +10,7 @@
     "pages/history-detail/history-detail",
     "pages/community-overview/overview",
     "pages/dashboard/dashboard",
+    "pages/destocking/destocking",
     "pages/transaction-compare/transaction-compare",
     "pages/upcoming/upcoming",
     "pages/compare/compare",

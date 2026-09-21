@@ -73,6 +73,10 @@ Page({
     wx.navigateTo({ url: '/pages/dashboard/dashboard' });
   },
 
+  onOpenDestocking() {
+    wx.navigateTo({ url: '/pages/destocking/destocking' });
+  },
+
   onOpenTransactionCompare() {
     wx.navigateTo({ url: '/pages/transaction-compare/transaction-compare' });
   },
