@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.9.0] - 2026-09-21
+## [1.10.0] - 2026-09-21
 
 ### Added
 
@@ -19,4 +19,5 @@
 ### Fixed
 
 - Prevented incomplete or inconsistent transaction summary payloads from rendering invalid daily-average or forecast values.
-- Added regression coverage for calendar-month boundaries, pre-day-10 forecast hiding, request failures, mortgage branches, tab navigation, and collection submission states.
+- Corrected the daily-average hero order so the metric label appears above the value, matching the approved mobile design.
+- Added regression coverage for calendar-month boundaries, month-end forecasts, pre-day-10 forecast hiding, request failures, mortgage branches, tab navigation, and collection submission states.
