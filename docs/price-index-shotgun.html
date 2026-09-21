@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>房价指数 — 3个视觉方向</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;flex-wrap:wrap;gap:20px;justify-content:center;padding:20px}
+
+.head{width:100%;text-align:center;padding:20px}
+.head h1{font-size:18px;margin-bottom:4px}
+.head p{font-size:13px;color:#888}
+
+.phone{width:375px;border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);flex-shrink:0}
+.phone-status{display:flex;justify-content:space-between;padding:10px 20px 4px;font-size:11px;font-weight:600}
+.label{text-align:center;font-size:13px;font-weight:700;padding:8px 0 12px;color:#555}
+.nav{display:flex;align-items:center;padding:10px 14px;font-size:15px;font-weight:600;gap:6px}
+.nav-back{font-size:18px}
+.sel{padding:10px 14px;margin:0 0 8px}
+.sel select{width:100%;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:600;text-align:center}
+.section{padding:0 14px;margin-bottom:8px}
+.card{padding:14px;border-radius:12px;margin-bottom:8px}
+
+/* ═══ VARIANT A: Dark Dashboard ═══ */
+.v-a{background:#0d1117;color:#c9d1d9}
+.v-a .nav{background:#0d1117;color:#c9d1d9}
+.v-a .nav-back{color:#58a6ff}
+.v-a .sel select{background:#161b22;color:#c9d1d9;border:1px solid #30363d}
+.v-a .card{background:#161b22;border:1px solid #30363d}
+.v-a .kpi-row{display:flex;gap:8px}
+.v-a .kpi{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px 10px;text-align:center}
+.v-a .kpi .kv{font-size:24px;font-weight:800}
+.v-a .kpi .kl{font-size:10px;color:#8b949e;margin-top:2px}
+.v-a .kpi .kd{font-size:9px;margin-top:1px}
+.v-a .chart-box{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px 10px 10px}
+.v-a .ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.v-a .ch-head h3{font-size:13px;color:#c9d1d9}
+.v-a .ch-tabs{display:flex;gap:3px}
+.v-a .ch-tab{font-size:10px;padding:3px 8px;border-radius:10px;background:#21262d;color:#8b949e;border:none}
+.v-a .ch-tab.on{background:#238636;color:#fff}
+.v-a .chart-area{position:relative;height:140px;border-bottom:1px solid #30363d;border-left:1px solid #30363d;margin:0 6px}
+.v-a .chart-area svg{position:absolute;inset:0;width:100%;height:100%}
+.v-a .x-labels{display:flex;justify-content:space-between;font-size:7px;color:#484f58;margin-top:4px;padding:0 6px}
+.v-a .legend{display:flex;gap:14px;justify-content:center;font-size:10px;margin-top:6px}
+.v-a .vol-bars{display:flex;align-items:flex-end;gap:1px;height:50px;padding:0 6px}
+.v-a .vbar{flex:1;border-radius:1px 1px 0 0}
+.v-a .area-row{display:flex;gap:6px}
+.v-a .area-card{flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px;text-align:center}
+.v-a .area-card .as{font-size:10px;color:#8b949e;font-weight:600}
+.v-a .area-card .ay{font-size:13px;font-weight:700;margin:3px 0}
+.v-a .ai-card{background:#161b22;border:1px solid #30363d;border-left:3px solid #238636;border-radius:0 10px 10px 0;padding:12px;font-size:12px;color:#8b949e;line-height:1.7}
+.v-a .ai-card .ai-h{color:#7ee787;font-weight:700;font-size:13px;margin-bottom:6px}
+.v-a .tgl{text-align:center;padding:8px;font-size:11px;color:#58a6ff}
+.v-a .src{text-align:center;font-size:9px;color:#484f58;padding:8px}
+
+/* ═══ VARIANT B: Clean Report ═══ */
+.v-b{background:#FAFBFC}
+.v-b .nav{background:#fff;color:#333}
+.v-b .nav-back{color:#07C160}
+.v-b .sel{background:#fff}
+.v-b .sel select{background:#F7F7F7;border:1.5px solid #E5E5E5;color:#333;font-size:15px;font-weight:600}
+.v-b .card{background:#fff;border:1px solid #EEE;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.v-b .kpi-row{display:flex;gap:10px}
+.v-b .kpi{flex:1;text-align:center;padding:14px 10px;border-radius:8px}
+.v-b .kpi.new{background:#F0FDF4;border:1.5px solid #6EE7B7}
+.v-b .kpi.used{background:#FFF7ED;border:1.5px solid #FED7AA}
+.v-b .kpi .kv{font-size:26px;font-weight:800}
+.v-b .kpi .kl{font-size:10px;color:#888;margin-top:2px}
+.v-b .kpi .kd{font-size:9px}
+.v-b .chart-box{background:#fff;padding:14px 10px 10px}
+.v-b .ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.v-b .ch-head h3{font-size:13px;font-weight:700;color:#333}
+.v-b .ch-tabs{display:flex;gap:4px}
+.v-b .ch-tab{font-size:10px;padding:4px 10px;border-radius:12px;background:#F5F5F5;color:#888;border:none}
+.v-b .ch-tab.on{background:#07C160;color:#fff}
+.v-b .chart-area{position:relative;height:140px;border-bottom:1px solid #EEE;border-left:1px solid #EEE;margin:0 6px}
+.v-b .chart-area svg{position:absolute;inset:0;width:100%;height:100%}
+.v-b .x-labels{display:flex;justify-content:space-between;font-size:7px;color:#BBB;margin-top:4px;padding:0 6px}
+.v-b .legend{display:flex;gap:14px;justify-content:center;font-size:10px;margin-top:6px}
+.v-b .vol-bars{display:flex;align-items:flex-end;gap:1px;height:50px;padding:0 6px}
+.v-b .vbar{flex:1;border-radius:1px 1px 0 0}
+.v-b .area-row{display:flex;gap:10px}
+.v-b .area-card{flex:1;background:#fff;border:1px solid #EEE;border-radius:8px;padding:12px 10px;text-align:center}
+.v-b .area-card .as{font-size:11px;font-weight:600;color:#333}
+.v-b .area-card .ay{font-size:16px;font-weight:700;margin:4px 0}
+.v-b .ai-card{background:#fff;border-left:3px solid #07C160;border-radius:4px 10px 10px 4px;padding:14px;font-size:13px;color:#666;line-height:1.8}
+.v-b .ai-card .ai-h{font-size:14px;font-weight:700;color:#07C160;margin-bottom:6px}
+.v-b .tgl{text-align:center;padding:8px;font-size:11px;color:#07C160}
+.v-b .src{text-align:center;font-size:9px;color:#CCC;padding:8px}
+
+/* ═══ VARIANT C: Card Flow ═══ */
+.v-c{background:#F7F7F7}
+.v-c .nav{background:#fff;color:#333}
+.v-c .nav-back{color:#07C160}
+.v-c .sel-gradient{background:linear-gradient(135deg,#07C160,#059669);padding:16px 14px;margin:0 14px 8px;border-radius:16px;color:#fff;text-align:center}
+.v-c .sel-gradient select{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.3);padding:8px 12px;border-radius:8px;font-size:14px;font-weight:700;width:100%;text-align:center}
+.v-c .card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:10px}
+.v-c .kpi-row{display:flex;gap:8px}
+.v-c .kpi{flex:1;text-align:center;padding:12px 8px;border-radius:12px}
+.v-c .kpi.new{background:linear-gradient(135deg,#F0FDF4,#E8F8EE)}
+.v-c .kpi.used{background:linear-gradient(135deg,#FFF7ED,#FFF3E6)}
+.v-c .kpi .kv{font-size:24px;font-weight:800}
+.v-c .kpi .kl{font-size:10px;color:#888;margin-top:4px}
+.v-c .kpi .kd{font-size:9px;margin-top:2px}
+.v-c .chart-box{background:#fff;padding:12px 8px 8px}
+.v-c .ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.v-c .ch-head h3{font-size:13px;font-weight:700}
+.v-c .ch-tabs{display:flex;gap:3px}
+.v-c .ch-tab{font-size:10px;padding:4px 8px;border-radius:10px;background:#F5F5F5;color:#888;border:none}
+.v-c .ch-tab.on{background:#FFF3E6;color:#D97706;font-weight:600}
+.v-c .chart-area{position:relative;height:140px;border-bottom:1px solid #EEE;border-left:1px solid #EEE;margin:0 6px}
+.v-c .chart-area svg{position:absolute;inset:0;width:100%;height:100%}
+.v-c .x-labels{display:flex;justify-content:space-between;font-size:7px;color:#CCC;margin-top:4px;padding:0 6px}
+.v-c .legend{display:flex;gap:14px;justify-content:center;font-size:10px;margin-top:6px}
+.v-c .vol-bars{display:flex;align-items:flex-end;gap:2px;height:50px;padding:0 6px}
+.v-c .vbar{flex:1;border-radius:2px 2px 0 0}
+.v-c .area-row{display:flex;gap:8px}
+.v-c .area-card{flex:1;background:#F9FAFB;border-radius:12px;padding:12px 10px;text-align:center}
+.v-c .area-card .as{font-size:10px;font-weight:600;color:#666}
+.v-c .area-card .ay{font-size:15px;font-weight:700;margin:4px 0}
+.v-c .ai-card{background:linear-gradient(135deg,#F0FDF4,#FFF);border-radius:16px;padding:14px;font-size:12px;color:#555;line-height:1.7}
+.v-c .ai-card .ai-h{font-size:14px;font-weight:700;color:#07C160;margin-bottom:6px}
+.v-c .tgl{text-align:center;padding:8px;font-size:11px;color:#07C160}
+.v-c .src{text-align:center;font-size:9px;color:#CCC;padding:8px}
+</style>
+</head>
+<body>
+
+<div class="head"><h1>房价指数页 — 3个视觉方向</h1><p>同一个内容，三种完全不同的视觉风格</p></div>
+
+<!-- ═══ VARIANT A: Dark Dashboard ═══ -->
+<div style="text-align:center">
+  <div class="label">A · 深色仪表盘</div>
+  <div class="phone v-a">
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="nav"><span class="nav-back">‹</span>全国房价指数</div>
+    <div class="sel"><select><option>深圳</option></select></div>
+    <div class="section">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kv" style="color:#3fb950">100.1</div><div class="kl">新房环比</div><div class="kd" style="color:#3fb950">↑0.1%</div></div>
+        <div class="kpi"><div class="kv" style="color:#d29922">100.3</div><div class="kl">二手环比</div><div class="kd" style="color:#d29922">↑0.3%</div></div>
+        <div class="kpi"><div class="kv" style="color:#f85149">94.7</div><div class="kl">新房同比</div><div class="kd" style="color:#f85149">↓5.3%</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="chart-box">
+        <div class="ch-head"><h3>📈 价格走势</h3><div class="ch-tabs"><span class="ch-tab">1年</span><span class="ch-tab on">3年</span><span class="ch-tab">5年</span><span class="ch-tab">全部</span></div></div>
+        <div class="chart-area">
+          <svg viewBox="0 0 310 140" style="position:absolute;inset:0;width:100%;height:100%" preserveAspectRatio="none">
+            <line x1="0" y1="35" x2="310" y2="35" stroke="#21262d"/><line x1="0" y1="70" x2="310" y2="70" stroke="#30363d" stroke-dasharray="3,3"/><line x1="0" y1="105" x2="310" y2="105" stroke="#21262d"/>
+            <polyline points="5,40 25,44 45,48 65,52 85,46 105,50 125,54 145,48 165,52 185,56 205,52 225,48 245,44 265,48 285,52 305,50" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round"/>
+            <polyline points="5,55 25,58 45,62 65,66 85,60 105,64 125,68 145,62 165,66 185,70 205,66 225,62 245,58 265,62 285,66 305,64" fill="none" stroke="#d29922" stroke-width="2" stroke-linecap="round" stroke-dasharray="4,2"/>
+            <line x1="0" y1="70" x2="310" y2="70" stroke="#30363d" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="x-labels"><span>2021</span><span></span><span>2022</span><span></span><span>2023</span><span></span><span>2024</span><span></span><span>2025</span><span></span><span>2026</span></div>
+        <div class="legend"><span style="color:#3fb950">━ 新房</span><span style="color:#d29922">┅ 二手</span><span style="color:#484f58">— 基准</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="chart-box">
+        <div class="ch-head"><h3>📊 量价关系</h3><div class="ch-tabs"><span class="ch-tab on">12月</span><span class="ch-tab">24月</span></div></div>
+        <div class="vol-bars">
+          <div class="vbar" style="height:20px;background:#3fb95033"></div><div class="vbar" style="height:24px;background:#3fb95033"></div><div class="vbar" style="height:18px;background:#3fb95033"></div><div class="vbar" style="height:28px;background:#3fb95033"></div><div class="vbar" style="height:32px;background:#3fb95033"></div><div class="vbar" style="height:38px;background:#3fb95033"></div><div class="vbar" style="height:34px;background:#3fb95033"></div><div class="vbar" style="height:36px;background:#3fb95033"></div><div class="vbar" style="height:40px;background:#3fb95033"></div><div class="vbar" style="height:44px;background:#3fb95033"></div><div class="vbar" style="height:48px;background:#3fb95033"></div><div class="vbar" style="height:42px;background:#3fb95033"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="ai-card"><div class="ai-h">🤖 AI 解读</div>深圳新房连续4月在100附近徘徊，处于企稳筑底阶段。二手环比100.3首次反弹，但同比仍跌6.5%。近3月成交量温和放大，是价格企稳的前置信号。</div>
+    </div>
+    <div class="tgl">📋 展开数据明细 ▼</div>
+    <div class="src">国家统计局 · 2026年4月</div>
+  </div>
+</div>
+
+<!-- ═══ VARIANT B: Clean Report ═══ -->
+<div style="text-align:center">
+  <div class="label">B · 轻量报告</div>
+  <div class="phone v-b">
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="nav"><span class="nav-back">‹</span>全国房价指数</div>
+    <div class="sel"><select><option>深圳</option></select></div>
+    <div class="section">
+      <div class="kpi-row">
+        <div class="kpi new"><div class="kv" style="color:#07C160">100.1</div><div class="kl">新房环比</div><div class="kd" style="color:#07C160">↑ 0.1%</div></div>
+        <div class="kpi used"><div class="kv" style="color:#FF8C00">100.3</div><div class="kl">二手环比</div><div class="kd" style="color:#FF8C00">↑ 0.3%</div></div>
+        <div class="kpi" style="background:#F5F9FF;border:1.5px solid #DBEAFE"><div class="kv" style="color:#3B82F6">94.7</div><div class="kl">新房同比</div><div class="kd" style="color:#FF4D4F">↓ 5.3%</div></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="chart-box">
+        <div class="ch-head"><h3>📈 价格走势 · 新房 vs 二手</h3><div class="ch-tabs"><span class="ch-tab">1年</span><span class="ch-tab on">3年</span><span class="ch-tab">5年</span><span class="ch-tab">全部</span></div></div>
+        <div class="chart-area">
+          <svg viewBox="0 0 310 140" preserveAspectRatio="none"><line x1="0" y1="35" x2="310" y2="35" stroke="#F5F5F5"/><line x1="0" y1="70" x2="310" y2="70" stroke="#EEE" stroke-dasharray="3,3"/><line x1="0" y1="105" x2="310" y2="105" stroke="#F5F5F5"/><polyline points="5,40 25,44 45,48 65,52 85,46 105,50 125,54 145,48 165,52 185,56 205,52 225,48 245,44 265,48 285,52 305,50" fill="none" stroke="#07C160" stroke-width="2.5" stroke-linecap="round"/><polyline points="5,55 25,58 45,62 65,66 85,60 105,64 125,68 145,62 165,66 185,70 205,66 225,62 245,58 265,62 285,66 305,64" fill="none" stroke="#FF8C00" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5,2"/><line x1="0" y1="70" x2="310" y2="70" stroke="#EEE"/></svg>
+        </div>
+        <div class="x-labels"><span>2021</span><span></span><span>2022</span><span></span><span>2023</span><span></span><span>2024</span><span></span><span>2025</span><span></span><span>2026</span></div>
+        <div class="legend"><span style="color:#07C160">━ 新房环比</span><span style="color:#FF8C00">┅ 二手环比</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="chart-box">
+        <div class="ch-head"><h3>📊 量价关系</h3><div class="ch-tabs"><span class="ch-tab on">12月</span><span class="ch-tab">24月</span></div></div>
+        <div style="font-size:10px;color:#888;margin-bottom:6px">新房成交量（套）</div>
+        <div class="vol-bars">
+          <div class="vbar" style="height:18px;background:#E8F8EE"></div><div class="vbar" style="height:22px;background:#E8F8EE"></div><div class="vbar" style="height:16px;background:#E8F8EE"></div><div class="vbar" style="height:26px;background:#E8F8EE"></div><div class="vbar" style="height:30px;background:#E8F8EE"></div><div class="vbar" style="height:36px;background:#E8F8EE"></div><div class="vbar" style="height:32px;background:#E8F8EE"></div><div class="vbar" style="height:34px;background:#E8F8EE"></div><div class="vbar" style="height:38px;background:#E8F8EE"></div><div class="vbar" style="height:42px;background:#E8F8EE"></div><div class="vbar" style="height:46px;background:#E8F8EE"></div><div class="vbar" style="height:40px;background:#E8F8EE"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card" style="padding:14px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px">🏠 面积段分化</div>
+        <div class="area-row">
+          <div class="area-card"><div class="as">＜90㎡</div><div class="ay" style="color:#FF4D4F">94.9</div><div style="font-size:10px;color:#888">同比 ↓5.1%</div></div>
+          <div class="area-card"><div class="as">90-144㎡</div><div class="ay" style="color:#FF8C00">94.4</div><div style="font-size:10px;color:#888">同比 ↓5.6%</div></div>
+          <div class="area-card"><div class="as">＞144㎡</div><div class="ay" style="color:#3B82F6">94.9</div><div style="font-size:10px;color:#888">同比 ↓5.1%</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="ai-card"><div class="ai-h">🤖 AI 解读</div>深圳新房价格连续4月在100附近企稳。二手环比3-4月首次出现连续微幅反弹（100.4、100.3），但同比降幅6.5%仍大。近3月成交量温和放大，尤其是二手房成交回升明显。改善户型（90-144㎡）降幅最大。</div>
+    </div>
+    <div class="tgl">📋 展开近12月数据明细 ▼</div>
+    <div class="src">数据来源：国家统计局 · 2026年4月</div>
+  </div>
+</div>
+
+<!-- ═══ VARIANT C: Card Flow ═══ -->
+<div style="text-align:center">
+  <div class="label">C · 移动优先卡片流</div>
+  <div class="phone v-c">
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="nav"><span class="nav-back">‹</span>全国房价指数</div>
+    <div class="sel-gradient"><select><option>📍 深圳</option></select></div>
+    <div class="section">
+      <div class="card">
+        <div class="kpi-row">
+          <div class="kpi new"><div class="kv" style="color:#07C160">100.1</div><div class="kl">新房环比</div><div class="kd" style="color:#07C160">↑0.1% 企稳</div></div>
+          <div class="kpi used"><div class="kv" style="color:#FF8C00">100.3</div><div class="kl">二手环比</div><div class="kd" style="color:#FF8C00">↑0.3% 反弹</div></div>
+        </div>
+        <div style="text-align:center;margin-top:8px;font-size:11px;color:#888">54个月数据 · 2021-2026</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div class="ch-head"><h3>📈 价格走势 · 新房 vs 二手</h3><div class="ch-tabs"><span class="ch-tab">1年</span><span class="ch-tab on">3年</span><span class="ch-tab">5年</span><span class="ch-tab">全部</span></div></div>
+        <div class="chart-area">
+          <svg viewBox="0 0 310 140" preserveAspectRatio="none"><line x1="0" y1="35" x2="310" y2="35" stroke="#F5F5F5"/><line x1="0" y1="70" x2="310" y2="70" stroke="#EEE" stroke-dasharray="3,3"/><line x1="0" y1="105" x2="310" y2="105" stroke="#F5F5F5"/><polyline points="5,40 25,44 45,48 65,52 85,46 105,50 125,54 145,48 165,52 185,56 205,52 225,48 245,44 265,48 285,52 305,50" fill="none" stroke="#07C160" stroke-width="2.5" stroke-linecap="round"/><polyline points="5,55 25,58 45,62 65,66 85,60 105,64 125,68 145,62 165,66 185,70 205,66 225,62 245,58 265,62 285,66 305,64" fill="none" stroke="#FF8C00" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5,2"/><line x1="0" y1="70" x2="310" y2="70" stroke="#EEE"/></svg>
+        </div>
+        <div class="x-labels"><span>2021</span><span></span><span>2022</span><span></span><span>2023</span><span></span><span>2024</span><span></span><span>2025</span><span></span><span>2026</span></div>
+        <div class="legend"><span style="color:#07C160">━ 新房环比</span><span style="color:#FF8C00">┅ 二手环比</span></div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div class="ch-head"><h3>📊 量价关系 · 成交量趋势</h3><div class="ch-tabs"><span class="ch-tab on">12月</span><span class="ch-tab">24月</span></div></div>
+        <div class="vol-bars">
+          <div class="vbar" style="height:18px;background:#E8F8EE"></div><div class="vbar" style="height:22px;background:#E8F8EE"></div><div class="vbar" style="height:16px;background:#E8F8EE"></div><div class="vbar" style="height:26px;background:#A7F3D0"></div><div class="vbar" style="height:30px;background:#A7F3D0"></div><div class="vbar" style="height:36px;background:#6EE7B7"></div><div class="vbar" style="height:32px;background:#6EE7B7"></div><div class="vbar" style="height:34px;background:#6EE7B7"></div><div class="vbar" style="height:38px;background:#34D399"></div><div class="vbar" style="height:42px;background:#34D399"></div><div class="vbar" style="height:46px;background:#07C160"></div><div class="vbar" style="height:40px;background:#07C160"></div>
+        </div>
+        <div style="text-align:center;font-size:10px;color:#888;margin-top:6px">近3月成交量明显放大 ↑</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px">🏠 面积段分化 · 4月</div>
+        <div class="area-row">
+          <div class="area-card"><div class="as">＜90㎡</div><div class="ay" style="color:#FF4D4F">94.9</div><div style="font-size:9px;color:#888">↓5.1%</div></div>
+          <div class="area-card"><div class="as">90-144㎡</div><div class="ay" style="color:#FF8C00">94.4</div><div style="font-size:9px;color:#888">↓5.6%</div></div>
+          <div class="area-card"><div class="as">＞144㎡</div><div class="ay" style="color:#3B82F6">94.9</div><div style="font-size:9px;color:#888">↓5.1%</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="ai-card"><div class="ai-h">🤖 AI 解读</div>深圳新房连续4月在100附近企稳。二手环比首次出现连续微幅反弹。近3月成交量温和放大，是价格企稳的前置信号。改善户型降幅最大。</div>
+    </div>
+    <div class="tgl">📋 展开近12月数据明细 ▼</div>
+    <div class="src">国家统计局 · 2026年4月</div>
+  </div>
+</div>
+
+</body>
+</html>

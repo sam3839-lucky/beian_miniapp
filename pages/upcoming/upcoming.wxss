@@ -1,0 +1,18 @@
+.page { background:#F7F7F7; min-height:100vh; }
+.search-bar { background:#fff; padding:16rpx 32rpx; }
+.picker-val { font-size:28rpx; color:#333; padding:16rpx 0; }
+.state-msg { text-align:center; padding:80rpx 32rpx; font-size:26rpx; color:#888; }
+
+.up-card {
+  background:#fff; margin:16rpx 24rpx; border-radius:16rpx;
+  padding:24rpx; box-shadow:0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+.up-card:active { background:#F9FAFB; }
+.up-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16rpx; }
+.up-name { font-size:30rpx; font-weight:700; color:#333; }
+.up-zone { font-size:22rpx; color:#07C160; background:rgba(7,193,96,0.08); padding:4rpx 12rpx; border-radius:8rpx; }
+.up-body { display:flex; gap:16rpx; margin-bottom:16rpx; }
+.up-stat { flex:1; text-align:center; background:#F7F7F7; border-radius:8rpx; padding:16rpx 8rpx; }
+.up-sval { display:block; font-size:28rpx; font-weight:700; color:#333; }
+.up-slbl { display:block; font-size:20rpx; color:#888; margin-top:4rpx; }
+.up-foot { display:flex; justify-content:space-between; font-size:22rpx; color:#999; }

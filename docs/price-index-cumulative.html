@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2">
+<title>累积走势图设计</title>
+<style>
+:root{--green:#07C160;--red:#FF4D4F;--orange:#FF8C00;--blue:#3B82F6;--text:#333;--t2:#666;--t3:#999;--bg:#FAFBFC;--card:#fff;--border:#E5E5E5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;gap:20px;justify-content:center;padding:40px 20px;flex-wrap:wrap}
+.phone{width:375px;background:var(--card);border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15),0 0 0 2px #222;position:relative;flex-shrink:0}
+.phone-status{display:flex;justify-content:space-between;padding:12px 24px 6px;font-size:12px;font-weight:600}
+.phone-content{background:var(--bg);min-height:400px;padding-bottom:20px}
+.page-label{position:absolute;top:-26px;left:12px;font-size:11px;color:#BBB;font-weight:500;white-space:nowrap}
+.flow-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:28px;color:#CCC;padding:0 8px}
+.flow-label{font-size:10px;color:var(--green);text-align:center;font-weight:600}
+
+.section{padding:0 14px;margin-bottom:10px}
+.chart-box{background:var(--card);padding:16px 12px 12px;border:1px solid #EEE;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ch-head h3{font-size:13px;font-weight:700;color:var(--text)}
+.ch-tabs{display:flex;gap:4px}
+.ch-tab{font-size:10px;padding:4px 10px;border-radius:12px;background:#F5F5F5;color:var(--t3);border:none;font-family:inherit}
+.ch-tab.on{background:var(--green);color:#fff}
+
+/* ═══ 累积走势图 ═══ */
+.cumul-chart{position:relative;height:180px;margin:0 4px}
+/* Y轴 */
+.cumul-chart .y-axis{position:absolute;left:0;top:0;bottom:0;width:30px;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:var(--t4);text-align:right;padding-right:4px}
+.cumul-chart .y-axis span{line-height:1}
+/* 绘图区 */
+.cumul-plot{position:absolute;left:32px;right:0;top:0;bottom:20px}
+/* 背景色块区 */
+.cumul-bg{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:stretch}
+.cumul-bg-bar{flex:1;opacity:0.25}
+.cumul-bg-bar.up{background:var(--green)}
+.cumul-bg-bar.down{background:var(--red)}
+/* SVG线 */
+.cumul-plot svg{position:absolute;inset:0;width:100%;height:100%}
+/* X轴 */
+.x-axis{position:absolute;left:32px;right:0;bottom:0;display:flex;justify-content:space-between;font-size:7px;color:var(--t4);padding:0 4px}
+/* 基准线标签 */
+.baseline-label{position:absolute;left:0;font-size:8px;color:var(--t4);white-space:nowrap}
+/* 数据标签 */
+.data-point{position:absolute;font-size:8px;font-weight:700;transform:translate(-50%,-50%);white-space:nowrap}
+/* 图例 */
+.legend{display:flex;gap:14px;justify-content:center;margin-top:8px;font-size:10px}
+
+/* ═══ 对比：旧版 ═══ */
+.old-chart{position:relative;height:160px;margin:0 4px;border-bottom:1px solid var(--border);border-left:1px solid var(--border)}
+.old-chart svg{position:absolute;inset:0;width:100%;height:100%}
+.y-labels{position:absolute;left:-30px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:var(--t4)}
+.x-labels{display:flex;justify-content:space-between;font-size:7px;color:var(--t4);padding:0 4px;margin-top:2px}
+
+/* KPI summary */
+.kpi-row{display:flex;gap:8px;margin-bottom:12px}
+.kpi{flex:1;text-align:center;padding:14px 10px;border-radius:8px}
+.kpi.new{background:#F0FDF4;border:1.5px solid #6EE7B7}
+.kpi.used{background:#FFF7ED;border:1.5px solid #FED7AA}
+.kpi .kv{font-size:24px;font-weight:800;line-height:1.2}
+.kpi .kl{font-size:10px;color:var(--t3);margin-top:2px}
+.kpi .kd{font-size:9px;margin-top:1px}
+
+.city-bar{padding:12px 14px;background:var(--card);margin-bottom:8px}
+.city-sel{width:100%;padding:10px 14px;border:1.5px solid var(--green);border-radius:10px;font-size:15px;font-weight:700;color:var(--green);background:var(--card);font-family:inherit;text-align:center}
+.city-date{text-align:center;font-size:11px;color:var(--t3);margin-top:6px}
+.nav{display:flex;align-items:center;padding:12px 14px;background:var(--card);font-size:15px;font-weight:600;gap:6px}
+.nav-back{font-size:18px;color:var(--green)}
+
+/* 切换按钮 */
+.mode-switch{display:flex;background:#F5F5F5;border-radius:8px;padding:2px;margin-bottom:8px}
+.mode-btn{flex:1;text-align:center;padding:6px;border-radius:6px;font-size:11px;font-weight:600;color:var(--t3);border:none;font-family:inherit}
+.mode-btn.on{background:var(--card);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* 累积数值标签 */
+.cumul-label{position:absolute;right:4px;font-size:9px;font-weight:700;color:var(--red);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- ═══ 旧版：环比图 ═══ -->
+<div style="text-align:center">
+  <div class="page-label">现在的图 — 每个月独立环比</div>
+  <div class="phone">
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="nav"><span class="nav-back">‹</span>全国房价指数</div>
+    <div class="city-bar"><select class="city-sel"><option>深圳</option></select><div class="city-date">2026年4月 · 国家统计局</div></div>
+    <div class="phone-content">
+      <div class="section">
+        <div class="chart-box">
+          <div class="ch-head"><h3>📈 价格走势 · 新房 vs 二手 （环比）</h3><div class="ch-tabs"><span class="ch-tab on">3年</span></div></div>
+          <div class="old-chart">
+            <div class="y-labels"><span>110</span><span>105</span><span>100</span><span>95</span><span>90</span></div>
+            <svg viewBox="0 0 300 160"><line x1="0" y1="80" x2="300" y2="80" stroke="#EEE" stroke-dasharray="3,3"/>
+              <polyline points="5,90 20,92 35,95 50,98 65,94 80,96 95,100 110,94 125,98 140,102 155,98 170,94 185,90 200,94 215,98 230,102 245,98 260,94 275,90 290,94 300,92" fill="none" stroke="#07C160" stroke-width="2"/>
+              <polyline points="5,100 20,102 35,105 50,108 65,104 80,106 95,110 110,104 125,108 140,112 155,108 170,104 185,100 200,104 215,108 230,112 245,108 260,104 275,100 290,104 300,102" fill="none" stroke="#FF8C00" stroke-width="2" stroke-dasharray="4,2"/>
+            </svg>
+          </div>
+          <div class="x-labels"><span>21</span><span></span><span>22</span><span></span><span>23</span><span></span><span>24</span><span></span><span>25</span><span></span><span>26</span></div>
+          <div class="legend">
+            <span style="color:var(--green)">━ 新房环比</span><span style="color:var(--orange)">┅ 二手环比</span><span style="color:var(--t4)">— 100基准</span>
+          </div>
+          <div style="font-size:9px;color:var(--t3);text-align:center;margin-top:6px">问题：柱子都在 100 附近，看不出累计跌了多少</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flow-arrow"><span>→</span><span class="flow-label">改成累积</span></div>
+
+<!-- ═══ 新版：累积走势 ═══ -->
+<div style="text-align:center">
+  <div class="page-label">新设计 — 累积走势 + 月度色块</div>
+  <div class="phone">
+    <div class="phone-status"><span>9:41</span><span>5G</span></div>
+    <div class="nav"><span class="nav-back">‹</span>全国房价指数</div>
+    <div class="city-bar"><select class="city-sel"><option>深圳</option></select><div class="city-date">2026年4月 · 国家统计局</div></div>
+    <div class="phone-content">
+
+      <!-- KPI -->
+      <div class="section">
+        <div class="kpi-row">
+          <div class="kpi new">
+            <div class="kv" style="color:var(--green)">100.1</div>
+            <div class="kl">新房环比 · 4月</div>
+            <div class="kd" style="color:var(--green)">↑0.1%</div>
+            <div style="color:var(--red);margin-top:4px;font-size:11px;font-weight:600">3年累计 ↓5.5%</div>
+          </div>
+          <div class="kpi used">
+            <div class="kv" style="color:var(--orange)">100.3</div>
+            <div class="kl">二手环比 · 4月</div>
+            <div class="kd" style="color:var(--orange)">↑0.3%</div>
+            <div style="color:var(--red);margin-top:4px;font-size:11px;font-weight:600">3年累计 ↓7.2%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ 新版图表 ═══ -->
+      <div class="section">
+        <div class="chart-box">
+          <div class="ch-head">
+            <h3>📈 价格走势 · 累积变化</h3>
+            <div class="ch-tabs"><span class="ch-tab">1年</span><span class="ch-tab on">3年</span><span class="ch-tab">5年</span></div>
+          </div>
+
+          <!-- 累积走势图 -->
+          <div class="cumul-chart">
+            <div class="y-axis">
+              <span>105</span><span>102</span><span>100</span><span>98</span><span>96</span><span>94</span><span>92</span>
+            </div>
+            <div class="cumul-plot">
+              <!-- 背景色块 -->
+              <div class="cumul-bg">
+                <div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div>
+                <div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div>
+                <div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div>
+                <div class="cumul-bg-bar down"></div><div class="cumul-bg-bar down"></div>
+                <div class="cumul-bg-bar down"></div><div class="cumul-bg-bar up"></div>
+                <div class="cumul-bg-bar up"></div><div class="cumul-bg-bar up"></div><div class="cumul-bg-bar up"></div>
+                <div class="cumul-bg-bar up"></div><div class="cumul-bg-bar up"></div><div class="cumul-bg-bar up"></div>
+                <div class="cumul-bg-bar up"></div><div class="cumul-bg-bar up"></div>
+              </div>
+              <!-- SVG线 -->
+              <svg viewBox="0 0 280 160" preserveAspectRatio="none">
+                <!-- 基准线 100 -->
+                <line x1="0" y1="48" x2="280" y2="48" stroke="#EEE" stroke-width="1"/>
+                <!-- 新房累积线 -->
+                <polyline points="0,48 15,52 30,56 45,60 60,64 75,68 90,72 105,76 120,80 135,84 150,88 165,86 180,84 195,82 210,80 225,78 240,76 255,74 270,72 280,70"
+                  fill="none" stroke="#07C160" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- 二手累积线 -->
+                <polyline points="0,48 16,54 32,60 48,66 64,72 80,78 96,84 112,90 128,96 144,102 160,108 176,106 192,104 208,102 224,100 240,98 256,96 272,94 280,93"
+                  fill="none" stroke="#FF8C00" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5,2"/>
+                <!-- 终点标注 -->
+                <circle cx="280" cy="70" r="3" fill="#07C160"/>
+                <circle cx="280" cy="93" r="3" fill="#FF8C00"/>
+                <text x="280" y="66" text-anchor="end" font-size="9" fill="#07C160" font-weight="700">94.5</text>
+                <text x="280" y="103" text-anchor="end" font-size="9" fill="#FF8C00" font-weight="700">92.8</text>
+              </svg>
+            </div>
+            <div class="x-axis">
+              <span>21</span><span></span><span></span><span>22</span><span></span><span></span><span>23</span><span></span><span></span><span>24</span><span></span><span></span><span>25</span><span></span><span></span><span></span><span></span><span></span><span>26</span>
+            </div>
+          </div>
+
+          <div class="legend" style="margin-top:4px">
+            <span style="color:var(--green)">━ 新房累计</span><span style="color:var(--orange)">┅ 二手累计</span>
+            <span style="color:var(--red);font-size:9px">▊ 月度环比跌</span>
+            <span style="color:var(--green);font-size:9px">▊ 月度环比涨</span>
+          </div>
+
+          <!-- 一句话总结 -->
+          <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px dashed #EEE;font-size:11px;color:var(--t2)">
+            <span>起始：2023年6月 = 100</span>
+            <span>新房累计 <b style="color:var(--red)">-5.5%</b> · 二手累计 <b style="color:var(--red)">-7.2%</b></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+.page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
+
+/* 小区头部 */
+.cm-header { background: #fff; padding: 16rpx 32rpx; display: flex; align-items: baseline; gap: 12rpx; }
+.cm-name { font-size: 36rpx; font-weight: 700; color: #333; }
+.cm-zone { font-size: 24rpx; color: #07C160; background: rgba(7,193,96,0.08); padding: 4rpx 14rpx; border-radius: 4rpx; }
+
+/* section */
+.sec { margin: 12rpx 32rpx 0; }
+.sec-title { font-size: 30rpx; font-weight: 700; color: #333; margin-bottom: 10rpx; }
+
+/* 统计网格 */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8rpx; }
+.stat { background: #fff; border-radius: 8rpx; padding: 18rpx 10rpx; text-align: center; }
+.sv { font-size: 32rpx; font-weight: 700; color: #FF8C00; display: block; }
+.sl { font-size: 20rpx; color: #888; margin-top: 2rpx; }
+
+/* 卡片 */
+.card { background: #fff; border-radius: 8rpx; padding: 20rpx; }
+.card.no-pad { padding: 0; }
+.chart-canvas { width: 100%; height: 300rpx; }
+.no-data { text-align: center; padding: 40rpx 0; color: #888; font-size: 24rpx; }
+
+/* 户型分布 */
+.layout-row { display: flex; align-items: center; gap: 12rpx; padding: 12rpx 0; }
+.layout-row + .layout-row { border-top: 1rpx solid #F0F0F0; }
+.l-name { font-size: 26rpx; font-weight: 600; color: #333; width: 100rpx; white-space: nowrap; }
+.l-bar-wrap { flex: 1; height: 24rpx; background: #F0F0F0; border-radius: 4rpx; overflow: hidden; }
+.l-bar { height: 100%; background: linear-gradient(90deg, #FF8C00, #FFB84D); border-radius: 4rpx; }
+.l-info { font-size: 24rpx; color: #888; white-space: nowrap; }
+
+/* 最近成交 */
+/* 成交记录卡片 */
+.trade-row { padding: 20rpx 24rpx; border-bottom: 1rpx solid #F0F0F0; }
+.trade-row:last-of-type { border-bottom: none; }
+.tr-line { display: flex; justify-content: space-between; align-items: baseline; padding: 4rpx 0; }
+.tr-left { font-size: 26rpx; color: #333; }
+.tr-right { font-size: 26rpx; color: #333; text-align: right; }
+.tr-price { font-size: 30rpx; font-weight: 700; color: #FF4D4F; }
+.tr-meta { font-size: 22rpx; color: #888; }
+.view-all-row { text-align: center; padding: 18rpx; color: #07C160; font-size: 26rpx; }
+
+/* 骨架 */
+.loading-skel { padding: 32rpx; }
+.skel-row { height: 60rpx; background: #E5E5E5; border-radius: 8rpx; margin-bottom: 12rpx; }
+
+/* 错误 */
+.err-block { background: #FFF7E6; border-radius: 8rpx; padding: 32rpx; text-align: center; color: #FAAD14; font-size: 28rpx; margin: 32rpx; display: flex; align-items: center; justify-content: center; gap: 12rpx; }
+.err-icon { width: 40rpx; height: 40rpx; line-height: 40rpx; border-radius: 50%; background: #FAAD14; color: #fff; font-size: 24rpx; font-weight: 700; text-align: center; }

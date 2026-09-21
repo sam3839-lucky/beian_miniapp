@@ -1,0 +1,33 @@
+.page { background: #F7F7F7; min-height: 100vh; padding-bottom: 60rpx; }
+
+/* 会员卡片 */
+.member-card { margin: 12rpx 32rpx; background: #fff; border-radius: 12rpx; padding: 40rpx 32rpx; text-align: center; position: relative; }
+.member-card.pro { background: linear-gradient(135deg, #07C160 0%, #05A050 100%); }
+.member-card.pro .mc-tier,
+.member-card.pro .mc-expire { color: #fff; }
+.mc-badge { position: absolute; top: -16rpx; left: 50%; transform: translateX(-50%); background: #FF8C00; color: #fff; font-size: 22rpx; padding: 6rpx 24rpx; border-radius: 12rpx; letter-spacing: 2rpx; font-weight: 700; }
+.mc-tier { font-size: 36rpx; font-weight: 700; color: #333; display: block; }
+.mc-expire { font-size: 24rpx; color: #888; margin-top: 12rpx; display: block; }
+.mc-upgrade { background: #07C160; color: #fff; font-size: 28rpx; padding: 20rpx; border-radius: 8rpx; margin-top: 24rpx; }
+.mc-upgrade-hover { background: #06AD56; }
+
+/* 今日用量 */
+.usage-section { margin: 24rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 24rpx; }
+.us-title { font-size: 26rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.us-row { display: flex; justify-content: space-between; padding: 14rpx 0; border-bottom: 1rpx solid #F5F5F5; }
+.us-row:last-child { border-bottom: none; }
+.usr-name { font-size: 26rpx; color: #333; }
+.usr-val { font-size: 26rpx; color: #07C160; font-weight: 600; }
+
+/* 权益对比 */
+.benefits-section { margin: 24rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 24rpx; }
+.bs-title { font-size: 26rpx; font-weight: 600; color: #333; display: block; margin-bottom: 16rpx; }
+.benefit-row { display: flex; justify-content: space-between; align-items: center; padding: 16rpx 0; border-bottom: 1rpx solid #F5F5F5; }
+.benefit-row:last-child { border-bottom: none; }
+.br-name { font-size: 26rpx; color: #333; }
+.br-check { font-size: 28rpx; font-weight: 700; }
+.br-check.have { color: #07C160; }
+.br-check.lack { color: #E5E5E5; }
+
+.bottom-cta { margin: 32rpx; background: #07C160; color: #fff; font-size: 28rpx; text-align: center; padding: 24rpx; border-radius: 8rpx; }
+.bottom-cta-hover { background: #06AD56; }

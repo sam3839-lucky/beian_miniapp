@@ -21,7 +21,7 @@ Page({
       const data = await api.getAdminStatus();
       // 转换 statuses 对象为数组供 wx:for 使用
       const statusList = Object.entries(data.statuses || {}).map(([k, v]) => ({ key: k, count: v }));
-      const order = ['未售', '已网签', '已备案', '已转移登记'];
+      const order = ['期房待售', '在建抵押', '已签认购书', '已签合同', '已录入合同', '已备案', '首次登记', '安居房', '共有产权房', '自动锁定', '区局锁定', '市局锁定', '司法查封'];
       statusList.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
       this.setData({ status: data, statusList, loading: false });
     } catch (e) {
@@ -32,5 +32,12 @@ Page({
 
   onRetry() {
     this.loadStatus();
-  }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '深圳备案价查询 - 运营面板',
+      path: '/pages/ops/ops'
+    };
+  },
 });

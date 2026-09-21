@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2">
+<title>房价指数 UI 设计</title>
+<style>
+:root{--green:#07C160;--red:#FF4D4F;--orange:#FF8C00;--blue:#3B82F6;--text:#333;--t2:#666;--t3:#999;--bg:#F7F7F7;--card:#fff;--border:#E5E5E5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;justify-content:center;padding:40px 20px;min-height:100vh}
+.page-container{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;align-items:flex-start;max-width:1800px}
+.phone{width:375px;background:var(--card);border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15),0 0 0 2px #222;position:relative;flex-shrink:0}
+.phone-status{display:flex;justify-content:space-between;padding:12px 24px 6px;font-size:12px;font-weight:600}
+.phone-content{background:var(--bg);min-height:400px;overflow-y:auto}
+.page-label{position:absolute;top:-26px;left:12px;font-size:11px;color:#BBB;font-weight:500;white-space:nowrap}
+.flow-arrow{display:flex;flex-direction:column;align-items:center;font-size:24px;color:#CCC;flex-shrink:0;padding:0 4px}
+.flow-label{font-size:10px;color:var(--green);text-align:center;font-weight:600}
+
+/* ═══ 现有组件 ═══ */
+.hero{background:linear-gradient(135deg,#1a2e1a,#0d1f0d);color:#fff;padding:16px;margin:16rpx 28rpx;border-radius:24rpx}
+.hero .h-title{font-size:13px;font-weight:600;opacity:.8}
+.hero .h-stats{display:flex;gap:8px;margin-top:8px}
+.hero .hs{flex:1;text-align:center}
+.hero .hs .hv{font-size:18px;font-weight:800}
+.hero .hs .hl{font-size:10px;opacity:.5}
+.entry-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 14px}
+.entry-item{background:var(--card);border-radius:8px;padding:12px 8px;text-align:center}
+.entry-icon{width:36px;height:36px;border-radius:10px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.entry-label{font-size:10px;color:var(--text)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:0 14px 4px;padding-top:8px}
+.sh-title{font-size:13px;font-weight:700}
+.sh-more{font-size:11px;color:var(--green);cursor:pointer}
+.top-list{background:var(--card);margin:0 14px 10px;border-radius:12px;padding:10px 14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.top-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid #F0F0F0;font-size:12px}
+.top-row:last-child{border-bottom:none}
+.top-rank{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.rk-1{background:#FFE5E5;color:#E53E3E}.rk-2{background:#FFF3E6;color:#D97706}.rk-3{background:#FFF7ED;color:#C2410C}
+.top-name{flex:1;font-weight:500}
+.top-rate{font-weight:700;font-size:13px}
+
+/* ═══ 方案1：价格指数卡片 ═══ */
+.idx-section{margin:0 14px 10px}
+.idx-card{background:var(--card);border-radius:12px;padding:14px 16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.idx-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.idx-title{font-size:13px;font-weight:700}
+.idx-sub{font-size:10px;color:var(--t3)}
+.idx-stats{display:flex;gap:8px;margin-bottom:12px}
+.idx-stat{flex:1;background:#F9FAFB;border-radius:8px;padding:10px 8px;text-align:center}
+.idx-sval{font-size:20px;font-weight:800;display:block;line-height:1.1}
+.idx-slbl{font-size:10px;color:var(--t3);display:block;margin-top:2px}
+.idx-sup{font-size:9px;font-weight:500;display:block}
+.idx-sup.up{color:var(--red)}.idx-sup.down{color:var(--green)}
+.idx-sup.flat{color:var(--t3)}
+
+/* 迷你走势条（纯CSS） */
+.idx-chart{height:60px;display:flex;align-items:flex-end;gap:3px;padding:2px 0}
+.idx-bar{flex:1;border-radius:2px 2px 0 0;min-width:5px;transition:height .3s}
+.idx-bar:hover{opacity:.8}
+.idx-legend{display:flex;gap:12px;justify-content:center;margin-top:8px}
+.idx-lg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t2)}
+.idx-ldot{width:8px;height:8px;border-radius:2px}
+
+/* ═══ 方案2：AI解读增强 ═══ */
+.ai-card{background:linear-gradient(135deg,#F0FDF4,#ECFEFF);border:1px solid #A7F3D0;margin:10px 14px;border-radius:12px;padding:12px 14px;font-size:12px;color:#444;line-height:1.7}
+.ai-head{font-weight:700;color:var(--green);margin-bottom:4px}
+.ai-highlight{background:rgba(7,193,96,.1);padding:1px 4px;border-radius:3px;font-weight:600}
+.ai-red{color:var(--red);font-weight:600}
+.ai-green{color:var(--green);font-weight:600}
+
+/* ═══ 可点击跳转 ═══ */
+.idx-cta{display:flex;justify-content:flex-end;align-items:center;gap:4px;margin-top:8px;font-size:11px;color:var(--green);cursor:pointer}
+.tab-bar{display:flex;background:var(--card);border-top:.5px solid #F0F0F0;padding:6px 0 20px}
+.tab-item{flex:1;text-align:center;font-size:10px;color:var(--t3)}
+.tab-item.active{color:var(--green)}
+.tab-icon{font-size:20px;display:block;margin-bottom:2px}
+
+/* 面积段标签切换 */
+.seg-tabs{display:flex;gap:4px;margin-bottom:8px}
+.seg-tab{font-size:10px;padding:3px 10px;border-radius:20px;background:#F5F5F5;color:var(--t2);cursor:pointer;border:none;font-family:inherit}
+.seg-tab.on{background:var(--green);color:#fff;font-weight:600}
+
+/* 叠加同比的迷你图 */
+.idx-dual-chart{height:50px;display:flex;align-items:flex-end;gap:3px;padding:2px 0;position:relative}
+.idx-bg-bar{position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--border)}
+.idx-bg-bar.dashed{border-top:1px dashed var(--border)}
+.idx-point-group{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.idx-point{width:4px;border-radius:1px;min-height:2px}
+.idx-point.mom{background:var(--green)}
+.idx-point.yoy{background:var(--orange)}
+.idx-marker{position:absolute;bottom:0;width:1px;height:8px;background:var(--t4)}
+.idx-label-row{display:flex;gap:3px;margin-top:4px}
+.idx-label{flex:1;text-align:center;font-size:7px;color:var(--t4)}
+
+/* 环比变化指示器 */
+.idx-mom-badges{display:flex;gap:4px;margin-top:6px}
+.idx-mom-badge{font-size:9px;padding:2px 6px;border-radius:4px;font-weight:600}
+.idx-mom-badge.up{background:#FFE5E5;color:var(--red)}
+.idx-mom-badge.down{background:#E8F8EE;color:#059669}
+.idx-mom-badge.flat{background:#F5F5F5;color:var(--t2)}
+
+/* 数据来源标注 */
+.idx-source{font-size:9px;color:var(--t4);text-align:center;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="page-container">
+
+<!-- ═══════════ 方案1：首页嵌入价格指数卡片 ═══════════ -->
+<div class="phone">
+  <div class="page-label">方案1 — 首页嵌入价格指数卡片</div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="phone-content">
+    <div style="padding:14px 16px 8px;font-size:18px;font-weight:800">深圳楼市行情</div>
+
+    <!-- Hero（现有） -->
+    <div class="hero">
+      <div class="h-title">深圳 · 一手房</div>
+      <div class="h-stats">
+        <div class="hs"><div class="hv">38.6<small style="font-size:12px">万</small></div><div class="hl">备案房源</div></div>
+        <div class="hs"><div class="hv">4,402</div><div class="hl">预售证</div></div>
+        <div class="hs"><div class="hv">127</div><div class="hl">今日新增</div></div>
+      </div>
+    </div>
+
+    <!-- 入口宫格（现有） -->
+    <div class="entry-grid">
+      <div class="entry-item"><div class="entry-icon" style="background:#E8F8EE;color:var(--green)">🗺️</div><div class="entry-label">地图找房</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#DBEAFE;color:var(--blue)">🏠</div><div class="entry-label">新房查询</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#FFF3E6;color:var(--orange)">🔥</div><div class="entry-label">即将入市</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#FFE5E5;color:var(--red)">📈</div><div class="entry-label">成交趋势</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#E8F8EE;color:var(--green)">💰</div><div class="entry-label">房贷计算</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#DBEAFE;color:var(--blue)">📋</div><div class="entry-label">政策速递</div></div>
+    </div>
+
+    <!-- ═══ 新增：价格指数卡片 ═══ -->
+    <div class="idx-section">
+      <div class="section-head">
+        <span class="sh-title">📊 深圳房价指数</span>
+        <span class="sh-more">详情 ›</span>
+      </div>
+      <div class="idx-card">
+        <!-- 四个核心数据 -->
+        <div class="idx-stats">
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--orange)">94.7</span>
+            <span class="idx-slbl">新房同比</span>
+            <span class="idx-sup down">↓ 5.3%</span>
+          </div>
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--green)">100.1</span>
+            <span class="idx-slbl">新房环比</span>
+            <span class="idx-sup up">↑ 0.1%</span>
+          </div>
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--t3)">—</span>
+            <span class="idx-slbl">二手同比</span>
+            <span class="idx-sup flat">待更新</span>
+          </div>
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--t3)">—</span>
+            <span class="idx-slbl">二手环比</span>
+            <span class="idx-sup flat">待更新</span>
+          </div>
+        </div>
+
+        <!-- 迷你柱状图：近12个月新房环比 -->
+        <div style="font-size:10px;color:var(--t3);margin-bottom:4px">近12月新房环比走势</div>
+        <div class="idx-chart">
+          <div class="idx-bar" style="height:20px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:25px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:22px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:18px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:15px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:12px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:10px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:8px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:6px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:5px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:18px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:22px;background:var(--green)"></div>
+        </div>
+        <div class="idx-label-row">
+          <span class="idx-label">5月</span><span class="idx-label">6月</span><span class="idx-label">7月</span><span class="idx-label">8月</span>
+          <span class="idx-label">9月</span><span class="idx-label">10月</span><span class="idx-label">11月</span><span class="idx-label">12月</span>
+          <span class="idx-label">1月</span><span class="idx-label">2月</span><span class="idx-label">3月</span><span class="idx-label">4月</span>
+        </div>
+        <div class="idx-legend">
+          <div class="idx-lg"><div class="idx-ldot" style="background:var(--red)"></div>环比下跌</div>
+          <div class="idx-lg"><div class="idx-ldot" style="background:var(--green)"></div>环比上涨</div>
+          <div class="idx-lg"><div class="idx-ldot" style="background:#FFE5E5;border:1px solid var(--red)"></div>基准线100</div>
+        </div>
+        <div class="idx-source">数据来源：国家统计局 70城房价指数 · 2026年4月</div>
+      </div>
+    </div>
+
+    <!-- AI解读增强（现有 + 指数分析） -->
+    <div class="ai-card">
+      <div class="ai-head">🤖 AI 每日解读</div>
+      深圳目前在售住宅约<span class="ai-highlight">8.4万套</span>，均价5.1万/㎡。近期备案量高于网签量，市场活跃度较高。<br>
+      <span style="display:block;margin-top:6px;padding-top:6px;border-top:1px dashed #A7F3D0">
+      📊 <b>价格指数</b>：4月新房环比<span class="ai-green">+0.1%</span>，同比<span class="ai-red">-5.3%</span>。自2025年12月以来降幅持续收窄，近4个月环比趋于平稳。<span class="ai-highlight">90-144㎡改善户型</span>同比降幅最小（-5.6%），刚需小户降幅最大（-5.1%）。
+      </span>
+    </div>
+
+    <!-- 去化排行（现有） -->
+    <div class="section-head"><span class="sh-title">本周去化最快</span></div>
+    <div class="top-list">
+      <div class="top-row"><span class="top-rank rk-1">1</span><span class="top-name">汉京湾雅居</span><span class="top-rate" style="color:var(--red)">100%</span></div>
+      <div class="top-row"><span class="top-rank rk-2">2</span><span class="top-name">传承启元府</span><span class="top-rate" style="color:var(--red)">100%</span></div>
+      <div class="top-row"><span class="top-rank rk-3">3</span><span class="top-name">嘉宏湾花园二期</span><span class="top-rate" style="color:var(--red)">100%</span></div>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item active"><span class="tab-icon">📊</span>行情</div>
+    <div class="tab-item"><span class="tab-icon">🔍</span>找房</div>
+    <div class="tab-item"><span class="tab-icon">📈</span>成交</div>
+    <div class="tab-item"><span class="tab-icon">👤</span>我的</div>
+  </div>
+</div>
+
+<div class="flow-arrow"><span>→</span><span class="flow-label">展开面积段</span></div>
+
+<!-- ═══════════ 方案1扩展：面积段切换 ═══════════ -->
+<div class="phone">
+  <div class="page-label">方案1 — 点击面积段切换</div>
+  <div class="phone-status"><span>9:41</span><span>5G</span></div>
+  <div class="phone-content">
+    <div style="padding:14px 16px 8px;font-size:18px;font-weight:800">深圳楼市行情</div>
+    <div class="hero">
+      <div class="h-title">深圳 · 一手房</div>
+      <div class="h-stats">
+        <div class="hs"><div class="hv">38.6万</div><div class="hl">备案房源</div></div>
+        <div class="hs"><div class="hv">4,402</div><div class="hl">预售证</div></div>
+        <div class="hs"><div class="hv">127</div><div class="hl">今日新增</div></div>
+      </div>
+    </div>
+    <div class="entry-grid">
+      <div class="entry-item"><div class="entry-icon" style="background:#E8F8EE;color:var(--green)">🗺️</div><div class="entry-label">地图找房</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#DBEAFE;color:var(--blue)">🏠</div><div class="entry-label">新房查询</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#FFF3E6;color:var(--orange)">🔥</div><div class="entry-label">即将入市</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#FFE5E5;color:var(--red)">📈</div><div class="entry-label">成交趋势</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#E8F8EE;color:var(--green)">💰</div><div class="entry-label">房贷计算</div></div>
+      <div class="entry-item"><div class="entry-icon" style="background:#DBEAFE;color:var(--blue)">📋</div><div class="entry-label">政策速递</div></div>
+    </div>
+
+    <div class="idx-section">
+      <div class="section-head"><span class="sh-title">📊 深圳房价指数</span><span class="sh-more">详情 ›</span></div>
+      <div class="idx-card">
+        <!-- 面积段切换 -->
+        <div class="seg-tabs">
+          <button class="seg-tab on">全部</button>
+          <button class="seg-tab">90㎡以下</button>
+          <button class="seg-tab">90-144㎡</button>
+          <button class="seg-tab">144㎡以上</button>
+        </div>
+
+        <div class="idx-stats">
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--orange)">94.7</span>
+            <span class="idx-slbl">同比</span>
+            <span class="idx-sup down">↓ 5.3%</span>
+          </div>
+          <div class="idx-stat">
+            <span class="idx-sval" style="color:var(--green)">100.1</span>
+            <span class="idx-slbl">环比</span>
+            <span class="idx-sup up">↑ 0.1%</span>
+          </div>
+          <div class="idx-stat">
+            <span class="idx-sval">94.8</span>
+            <span class="idx-slbl">定基</span>
+            <span class="idx-sup flat">↓5.2%</span>
+          </div>
+        </div>
+
+        <!-- 12月环比走势 -->
+        <div style="font-size:10px;color:var(--t3);margin-bottom:4px">近12月环比走势</div>
+        <div class="idx-chart">
+          <div class="idx-bar" style="height:16px;background:var(--red)"></div><div class="idx-bar" style="height:20px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:18px;background:var(--red)"></div><div class="idx-bar" style="height:14px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:12px;background:var(--red)"></div><div class="idx-bar" style="height:10px;background:var(--red)"></div>
+          <div class="idx-bar" style="height:8px;background:var(--red)"></div><div class="idx-bar" style="height:6px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:4px;background:var(--green)"></div><div class="idx-bar" style="height:3px;background:var(--green)"></div>
+          <div class="idx-bar" style="height:14px;background:var(--green)"></div><div class="idx-bar" style="height:18px;background:var(--green)"></div>
+        </div>
+        <div class="idx-label-row">
+          <span class="idx-label">5月</span><span class="idx-label">6月</span><span class="idx-label">7月</span><span class="idx-label">8月</span>
+          <span class="idx-label">9月</span><span class="idx-label">10月</span><span class="idx-label">11月</span><span class="idx-label">12月</span>
+          <span class="idx-label">1月</span><span class="idx-label">2月</span><span class="idx-label">3月</span><span class="idx-label">4月</span>
+        </div>
+
+        <!-- 面积段对比表 -->
+        <div style="margin-top:10px;border-top:.5px solid #F0F0F0;padding-top:8px">
+          <div style="font-size:10px;color:var(--t3);margin-bottom:6px">各面积段 4月对比</div>
+          <div class="idx-mom-badges">
+            <span style="flex:1;font-size:10px;color:var(--t3)">＜90㎡</span>
+            <span class="idx-mom-badge flat">环比 100.0</span>
+            <span class="idx-mom-badge down">同比 94.9</span>
+          </div>
+          <div class="idx-mom-badges">
+            <span style="flex:1;font-size:10px;color:var(--t3)">90-144㎡</span>
+            <span class="idx-mom-badge flat">环比 100.0</span>
+            <span class="idx-mom-badge down">同比 94.4</span>
+          </div>
+          <div class="idx-mom-badges">
+            <span style="flex:1;font-size:10px;color:var(--t3)">＞144㎡</span>
+            <span class="idx-mom-badge flat">环比 100.0</span>
+            <span class="idx-mom-badge down">同比 94.9</span>
+          </div>
+        </div>
+        <div class="idx-source">数据来源：国家统计局 · 2026年4月</div>
+      </div>
+    </div>
+
+    <!-- AI解读 -->
+    <div class="ai-card">
+      <div class="ai-head">🤖 AI 每日解读</div>
+      深圳目前在售住宅约<span class="ai-highlight">8.4万套</span>，均价5.1万/㎡。<br>
+      <span style="display:block;margin-top:6px;padding-top:6px;border-top:1px dashed #A7F3D0">
+      📊 <b>价格指数</b>：4月环比平稳（<span class="ai-green">+0.1%</span>）。<span class="ai-highlight">90-144㎡改善户型</span>同比降幅最小（-5.6%），需求韧性最强。
+      </span>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-item active"><span class="tab-icon">📊</span>行情</div>
+    <div class="tab-item"><span class="tab-icon">🔍</span>找房</div>
+    <div class="tab-item"><span class="tab-icon">📈</span>成交</div>
+    <div class="tab-item"><span class="tab-icon">👤</span>我的</div>
+  </div>
+</div>
+
+</div><!-- /page-container -->
+</body>
+</html>

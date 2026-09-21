@@ -1,0 +1,36 @@
+<view class="page">
+  <!-- 成交数据 -->
+  <view class="section menu-section">
+    <view class="menu-item" bindtap="onOpenDashboard" hover-class="menu-item-hover">
+      <text class="menu-icon">📊</text>
+      <text class="menu-label">成交概览</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-divider"></view>
+    <view class="menu-item" bindtap="onOpenTransactionCompare" hover-class="menu-item-hover">
+      <text class="menu-icon">🗓️</text>
+      <text class="menu-label">历史成交对比</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 全国房价指数 -->
+  <view class="section menu-section" bindtap="onOpenPriceIndex">
+    <view class="menu-item">
+      <text class="menu-icon">📈</text>
+      <text class="menu-label">全国房价指数</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="section about-section">
+    <view class="about-title">关于备案价查询</view>
+    <text class="about-desc">深圳在售房源备案价格查询工具，数据来源于深圳市住房和建设局公示信息，每日更新。</text>
+  </view>
+
+  <!-- 免责声明 -->
+  <view class="disclaimer">
+    <text>本平台数据均为工作人员人工整理的房产市场公开价格参考，仅作行情分析、置业参考使用。所有房源相关实景、权属、业主信息均未采集，不存储任何个人隐私数据。本平台未抓取、复制任何第三方平台原创内容及版权素材，如需实地看房、房源对接，请联系本机构工作人员线下办理正规手续。本平台不对第三方房源信息真实性做担保。</text>
+  </view>
+</view>

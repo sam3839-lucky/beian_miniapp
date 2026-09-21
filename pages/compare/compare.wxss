@@ -1,0 +1,20 @@
+.page { background:#F7F7F7; min-height:100vh; }
+.zone-bar { padding:16rpx 32rpx; font-size:24rpx; color:#888; }
+.state-msg { text-align:center; padding:80rpx 32rpx; font-size:26rpx; color:#888; }
+
+.cmp-scroll { margin:16rpx 24rpx; }
+.cmp-table { background:#fff; border-radius:16rpx; overflow:hidden; min-width:600rpx; }
+.cmp-row { display:flex; border-bottom:1rpx solid #F0F0F0; }
+.cmp-row:last-child { border-bottom:none; }
+.cmp-head { background:#FAFAFA; }
+.cmp-head .cmp-pname { font-weight:700; color:#333; padding:20rpx 12rpx; }
+.cmp-pname.hl { color:#07C160; }
+.cmp-label { width:120rpx; flex-shrink:0; padding:16rpx 12rpx; font-size:24rpx; color:#888; display:flex; align-items:center; }
+.cmp-val, .cmp-col { flex:1; padding:16rpx 12rpx; font-size:24rpx; color:#333; text-align:center; display:flex; align-items:center; justify-content:center; min-width:120rpx; }
+.cmp-pname { font-size:24rpx; text-align:center; display:block; }
+.cmp-val.price { font-weight:700; }
+.cmp-col { flex-direction:column; }
+
+.cmp-ai { margin:24rpx; background:linear-gradient(135deg,#F0FDF4,#ECFEFF); border:1px solid #A7F3D0; border-radius:16rpx; padding:24rpx; }
+.cmp-ai-head { font-size:26rpx; font-weight:700; color:#07C160; margin-bottom:12rpx; }
+.cmp-ai-body { font-size:24rpx; color:#555; line-height:1.8; }

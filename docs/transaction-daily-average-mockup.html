@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>深圳楼市成交分析 · 日均成交效果图</title>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --card: #fff;
+      --text: #1a1a1a;
+      --secondary: #666;
+      --hint: #999;
+      --line: #eeeeee;
+      --green: #07c160;
+      --blue: #3b82f6;
+      --orange: #ff8c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #ececec;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    .phone {
+      width: 390px;
+      min-height: 844px;
+      overflow: hidden;
+      border: 8px solid #202020;
+      border-radius: 34px;
+      background: var(--bg);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, .18);
+    }
+
+    .status-bar {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: #fff;
+      color: #222;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .nav {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .content {
+      height: 760px;
+      overflow: hidden;
+      padding: 12px 16px 30px;
+    }
+
+    .search {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: #fff;
+      color: #b5b5b5;
+      font-size: 13px;
+    }
+
+    .search-badge {
+      margin-left: auto;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #effaf3;
+      color: #079b50;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .section { margin-top: 12px; }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--card);
+    }
+
+    .ring-card {
+      padding: 16px 16px 14px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--secondary);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .subline {
+      margin-top: 4px;
+      color: var(--hint);
+      font-size: 11px;
+    }
+
+    .ring-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .donut {
+      width: 128px;
+      height: 128px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--orange) 0 79.2%, var(--green) 79.2% 100%);
+      position: relative;
+    }
+
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .donut-center { position: relative; z-index: 1; }
+    .donut-total { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+    .donut-unit { margin-left: 3px; color: var(--hint); font-size: 11px; }
+    .donut-label { margin-top: 3px; color: var(--hint); font-size: 10px; }
+
+    .ring-values { min-width: 116px; text-align: left; }
+    .ring-value { display: flex; align-items: center; gap: 6px; margin: 9px 0; font-size: 12px; }
+    .dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
+    .dot.new { background: var(--green); }
+    .dot.used { background: var(--orange); }
+    .ring-number { margin-left: auto; font-weight: 800; }
+    .ring-pct { width: 34px; color: var(--hint); text-align: right; font-size: 11px; }
+
+    .average-card { padding: 16px; }
+
+    .average-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .average-title { font-size: 16px; font-weight: 800; }
+    .average-note { margin-top: 4px; color: var(--hint); font-size: 11px; }
+
+    .status {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #fff7e6;
+      color: #d97706;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .hero {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      margin-top: 13px;
+    }
+
+    .hero-number { font-size: 30px; font-weight: 800; letter-spacing: -1px; }
+    .hero-unit { color: var(--secondary); font-size: 13px; }
+    .hero-label { margin-left: auto; color: var(--secondary); font-size: 11px; }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      padding: 11px 12px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfbfb;
+    }
+
+    .metric-label { display: flex; align-items: center; gap: 6px; color: var(--secondary); font-size: 11px; }
+    .metric-number { margin-top: 5px; font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .metric-number span { margin-left: 3px; color: var(--secondary); font-size: 11px; font-weight: 500; }
+    .metric.new .metric-number { color: var(--blue); }
+    .metric.used .metric-number { color: var(--orange); }
+
+    .forecast {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid #dbeafe;
+      border-radius: 8px;
+      background: #f5f9ff;
+    }
+
+    .forecast-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .forecast-label { color: #53657d; font-size: 11px; font-weight: 700; }
+    .forecast-tag { color: var(--blue); font-size: 10px; font-weight: 700; }
+    .forecast-value { margin-top: 4px; color: #1a1a1a; font-size: 25px; font-weight: 800; letter-spacing: -.5px; }
+    .forecast-value span { margin-left: 4px; color: var(--secondary); font-size: 11px; font-weight: 500; }
+    .forecast-formula { margin-top: 4px; color: #718096; font-size: 10px; line-height: 1.45; }
+    .forecast-track { height: 5px; overflow: hidden; margin-top: 10px; border-radius: 999px; background: #dbeafe; }
+    .forecast-progress { width: 60%; height: 100%; border-radius: inherit; background: var(--blue); }
+    .forecast-foot { display: flex; justify-content: space-between; margin-top: 5px; color: #8090a5; font-size: 10px; }
+
+    .section-title { margin: 18px 0 9px; font-size: 15px; font-weight: 800; }
+
+    .district-card { padding: 14px 16px; }
+    .district-row { display: grid; grid-template-columns: 42px 1fr 36px 38px; align-items: center; gap: 7px; padding: 7px 0; border-bottom: 1px solid #f3f3f3; font-size: 11px; }
+    .district-row:last-child { border-bottom: 0; }
+    .district-name { color: var(--secondary); }
+    .district-bar { height: 6px; overflow: hidden; border-radius: 999px; background: #f0f0f0; }
+    .district-bar i { display: block; height: 100%; border-radius: inherit; background: var(--blue); }
+    .district-count { text-align: right; font-weight: 700; }
+    .district-pct { color: var(--hint); text-align: right; }
+
+    .annotation {
+      margin-top: 12px;
+      padding: 9px 11px;
+      border-left: 3px solid var(--blue);
+      background: #f5f8ff;
+      color: #5d6b86;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .caption { margin-top: 12px; color: #aaa; font-size: 10px; text-align: center; }
+
+    @media (max-width: 430px) {
+      body { padding: 0; background: var(--bg); }
+      .phone { width: 100%; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+      .content { height: calc(100vh - 76px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <div class="status-bar"><span>9:41</span><span>▮▮▮　Wi-Fi　▰</span></div>
+    <div class="nav">深圳楼市成交分析</div>
+    <div class="content">
+      <div class="search"><span>⌕</span><span>搜小区，查历史成交价</span><span class="search-badge">13.9万条</span></div>
+
+      <section class="section card ring-card">
+        <div class="eyebrow">2026年9月累计成交统计</div>
+        <div class="subline">数据截至 9月18日</div>
+        <div class="ring-row">
+          <div class="donut">
+            <div class="donut-center"><span class="donut-total">4450</span><span class="donut-unit">套</span><div class="donut-label">本月累计</div></div>
+          </div>
+          <div class="ring-values">
+            <div class="ring-value"><i class="dot new"></i><span>一手</span><b class="ring-number">926</b><span class="ring-pct">20.8%</span></div>
+            <div class="ring-value"><i class="dot used"></i><span>二手</span><b class="ring-number">3524</b><span class="ring-pct">79.2%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section card average-card">
+        <div class="average-head">
+          <div><div class="average-title">本月日均成交</div><div class="average-note">9月1日—9月18日 · 按自然日计算</div></div>
+          <span class="status">进行中</span>
+        </div>
+        <div class="hero"><strong class="hero-number">247.2</strong><span class="hero-unit">套/日</span><span class="hero-label">总成交日均</span></div>
+        <div class="metric-grid">
+          <div class="metric new"><div class="metric-label"><i class="dot new"></i>新房</div><div class="metric-number">51.4<span>套/日</span></div></div>
+          <div class="metric used"><div class="metric-label"><i class="dot used"></i>二手房</div><div class="metric-number">195.8<span>套/日</span></div></div>
+        </div>
+        <div class="forecast" id="forecast-card">
+          <div class="forecast-head"><span class="forecast-label">本月预估总成交</span><span class="forecast-tag">按当前速度测算</span></div>
+          <div class="forecast-value" id="forecast-value">约 7,416<span>套</span></div>
+          <div class="forecast-formula" id="forecast-formula">已成交 4,450 套 + 当前日均 247.2 套 × 剩余 12 天</div>
+          <div class="forecast-track"><div class="forecast-progress" id="forecast-progress"></div></div>
+          <div class="forecast-foot"><span id="forecast-complete">当前完成约 60%</span><span id="forecast-month-days">本月共 30 天</span></div>
+        </div>
+      </section>
+
+      <section class="section-title">各区成交占比</section>
+      <section class="card district-card">
+        <div class="district-row"><span class="district-name">龙华</span><span class="district-bar"><i style="width: 82%"></i></span><b class="district-count">243</b><span class="district-pct">26.2%</span></div>
+        <div class="district-row"><span class="district-name">宝安</span><span class="district-bar"><i style="width: 69%"></i></span><b class="district-count">206</b><span class="district-pct">22.2%</span></div>
+        <div class="district-row"><span class="district-name">光明</span><span class="district-bar"><i style="width: 58%"></i></span><b class="district-count">173</b><span class="district-pct">18.7%</span></div>
+        <div class="district-row"><span class="district-name">龙岗</span><span class="district-bar"><i style="width: 49%"></i></span><b class="district-count">148</b><span class="district-pct">16.0%</span></div>
+      </section>
+
+      <div class="annotation">日均值只反映截至当前数据日的实际成交速度，不包含整月预测。</div>
+      <div class="caption">数据来源：深圳市住房和建设局公开信息</div>
+    </div>
+  </main>
+  <script>
+    // 预览数据模拟接口 latest_date；正式实现使用接口返回的实际日期。
+    const sample = {
+      year: 2026,
+      month: 9,
+      dataDay: 18,
+      currentTotal: 4450,
+      dailyAverage: 247.2
+    };
+    const daysInMonth = new Date(sample.year, sample.month, 0).getDate();
+    const remainingDays = Math.max(0, daysInMonth - sample.dataDay);
+    const forecastCard = document.getElementById('forecast-card');
+
+    // 每月 1—9 号不展示预估成交总套数。
+    if (sample.dataDay < 10) {
+      forecastCard.remove();
+    } else {
+      const forecastTotal = Math.round(sample.currentTotal + sample.dailyAverage * remainingDays);
+      const completePct = Math.round(sample.currentTotal / forecastTotal * 100);
+      document.getElementById('forecast-value').firstChild.textContent = '约 ' + forecastTotal.toLocaleString();
+      document.getElementById('forecast-formula').textContent = '已成交 ' + sample.currentTotal.toLocaleString() + ' 套 + 当前日均 ' + sample.dailyAverage.toFixed(1) + ' 套 × 剩余 ' + remainingDays + ' 天';
+      document.getElementById('forecast-progress').style.width = completePct + '%';
+      document.getElementById('forecast-complete').textContent = '当前完成约 ' + completePct + '%';
+      document.getElementById('forecast-month-days').textContent = '本月共 ' + daysInMonth + ' 天';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<view class="card" bindtap="onTap">
+  <view class="main-row">
+    <view class="info">
+      <text class="layout">{{layout || '--'}}</text>
+      <text class="area" wx:if="{{area}}">{{area}}㎡</text>
+    </view>
+    <view class="price-col">
+      <text class="price">{{total_price}}<text class="price-unit">万</text></text>
+    </view>
+  </view>
+  <view class="sub-row">
+    <text class="meta">{{orientation}}{{orientation && buildingType ? ' · ' : ''}}{{buildingType || ''}}</text>
+    <text class="date">{{date || ''}}</text>
+  </view>
+  <view class="bottom-row">
+    <text class="unit-price" wx:if="{{unit_price}}">{{unit_price}}元/㎡</text>
+    <text class="source">{{source ? ' · ' + source : ''}}</text>
+  </view>
+</view>

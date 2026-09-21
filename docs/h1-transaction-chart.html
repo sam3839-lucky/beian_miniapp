@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 H1 深圳楼市成交</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#F7F7F7;display:flex;justify-content:center;padding:20px}
+.card{width:700px;background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h2{font-size:18px;margin-bottom:20px;text-align:center}
+.chart-wrap{height:380px;margin-bottom:16px}
+.summary{display:flex;gap:12px;margin-top:16px}
+.sbox{flex:1;text-align:center;padding:14px;border-radius:10px}
+.sbox.new{background:#F0FDF4;border:1.5px solid #6EE7B7}
+.sbox.used{background:#FFF7ED;border:1.5px solid #FED7AA}
+.sbox.total{background:#F5F9FF;border:1.5px solid #DBEAFE}
+.sbox .sv{font-size:24px;font-weight:800}
+.sbox .sl{font-size:11px;color:#888;margin-top:4px}
+.source{text-align:center;font-size:10px;color:#CCC;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h2>📊 深圳市 2026年1~6月 新房/二手房成交走势</h2>
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+  </div>
+  <div class="summary">
+    <div class="sbox new">
+      <div class="sv" style="color:#07C160">11,554<span style="font-size:14px;font-weight:400"> 套</span></div>
+      <div class="sl">新房半年合计</div>
+    </div>
+    <div class="sbox used">
+      <div class="sv" style="color:#FF8C00">37,917<span style="font-size:14px;font-weight:400"> 套</span></div>
+      <div class="sl">二手房半年合计</div>
+    </div>
+    <div class="sbox total">
+      <div class="sv" style="color:#3B82F6">49,471<span style="font-size:14px;font-weight:400"> 套</span></div>
+      <div class="sl">总成交</div>
+    </div>
+  </div>
+  <div class="source">数据来源：深圳市住房和建设局 · 统计截止 2026-06-30</div>
+</div>
+
+<script>
+const ctx = document.getElementById('chart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['1月','2月','3月','4月','5月','6月'],
+    datasets: [{
+      label: '新房成交',
+      data: [1610,694,1028,3070,2548,2604],
+      borderColor: '#07C160',
+      backgroundColor: 'rgba(7,193,96,0.1)',
+      borderWidth: 3,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: '#07C160'
+    }, {
+      label: '二手房成交',
+      data: [6879,3083,6929,7457,6863,6706],
+      borderColor: '#FF8C00',
+      backgroundColor: 'rgba(255,140,0,0.08)',
+      borderWidth: 3,
+      tension: 0.3,
+      pointRadius: 5,
+      pointBackgroundColor: '#FF8C00',
+      borderDash: [6,3]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { size: 13 } } },
+      tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw.toLocaleString() + ' 套' } }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => (v/1000).toFixed(1) + 'k', font: { size: 11 } },
+        grid: { color: '#F0F0F0' }
+      },
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>

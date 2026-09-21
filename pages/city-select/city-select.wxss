@@ -1,0 +1,24 @@
+.page{background:#F7F7F7;min-height:100vh;padding-bottom:40rpx}
+.search-bar{padding:24rpx 28rpx;background:#fff;position:sticky;top:0;z-index:10}
+.search-input{width:100%;padding:20rpx 28rpx;border:2rpx solid #07C160;border-radius:20rpx;font-size:28rpx;background:#F7F7F7;color:#333}
+.empty{text-align:center;padding:80rpx 32rpx;font-size:26rpx;color:#888}
+
+.sec{padding:0 28rpx;margin-bottom:16rpx}
+.sec-title{font-size:24rpx;color:#888;font-weight:500;margin-bottom:12rpx;padding-top:8rpx}
+
+.recent-grid{display:flex;gap:16rpx;flex-wrap:wrap}
+.recent-chip{padding:16rpx 28rpx;border-radius:40rpx;background:#fff;color:#333;font-size:28rpx;font-weight:500;border:1rpx solid #E5E5E5}
+.recent-chip:active{background:#F0FDF4;border-color:#07C160}
+
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12rpx}
+.city-item{text-align:center;padding:20rpx 12rpx;background:#fff;border-radius:16rpx;font-size:28rpx;color:#333;font-weight:500;border:1rpx solid transparent}
+.city-item:active{background:#F0FDF4;border-color:#07C160}
+.city-item.tier1{background:#F0FDF4;border-color:#6EE7B7;font-weight:600;color:#059669}
+.city-item.hot{background:#FFF7ED;border-color:#FED7AA;font-weight:500;color:#D97706}
+
+.collapse-toggle{text-align:center;padding:16rpx;font-size:26rpx;color:#07C160}
+.letter-group{margin-bottom:12rpx}
+.letter-header{font-size:22rpx;color:#07C160;font-weight:700;padding:8rpx 0}
+.letter-cities{display:flex;flex-wrap:wrap;gap:10rpx}
+.letter-chip{font-size:24rpx;padding:12rpx 18rpx;border-radius:10rpx;background:#fff;color:#666}
+.letter-chip:active{background:#E8F8EE;color:#07C160}

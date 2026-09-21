@@ -1,0 +1,141 @@
+<!-- ═══ 房贷计算器 ═══ -->
+<view class="wrapper">
+
+  <!-- 模式切换 -->
+  <view class="mode-bar">
+    <view class="mode-item {{mode == 'installment' ? 'on' : ''}}"
+          bindtap="switchMode" data-mode="installment">等额本息</view>
+    <view class="mode-item {{mode == 'principal' ? 'on' : ''}}"
+          bindtap="switchMode" data-mode="principal">等额本金</view>
+  </view>
+
+  <!-- 输入区 -->
+  <view class="card">
+    <!-- 房屋总价 -->
+    <view class="field">
+      <text class="field-label">房屋总价（万）</text>
+      <input class="field-input" type="digit" placeholder="如 500"
+             value="{{housePrice}}" bindinput="onHousePriceInput"/>
+    </view>
+
+    <!-- 首付比例 -->
+    <view class="field">
+      <text class="field-label">首付比例</text>
+      <view class="chip-row">
+        <view wx:for="{{downChips}}" wx:key="v"
+              class="chip {{downRatio == item.v ? 'on' : ''}}"
+              bindtap="onDownChip" data-v="{{item.v}}">{{item.label}}</view>
+      </view>
+      <view class="pct-row">
+        <input class="pct-input" type="number" value="{{downRatio}}"
+               bindinput="onDownInput" placeholder="30"/>
+        <text class="pct-suffix">%</text>
+      </view>
+    </view>
+
+    <!-- 贷款年限 -->
+    <view class="field">
+      <text class="field-label">贷款年限</text>
+      <view class="chip-row">
+        <view wx:for="{{yearChips}}" wx:key="v"
+              class="chip {{years == item.v ? 'on' : ''}}"
+              bindtap="onYearChip" data-v="{{item.v}}">{{item.label}}</view>
+      </view>
+      <view class="pct-row">
+        <input class="pct-input" type="number" value="{{years}}"
+               bindinput="onYearInput" placeholder="30"/>
+        <text class="pct-suffix">年</text>
+      </view>
+    </view>
+
+    <!-- 利率 -->
+    <view class="field">
+      <text class="field-label">年化利率（LPR）</text>
+      <view class="pct-row">
+        <input class="pct-input" type="digit" value="{{rate}}"
+               bindinput="onRateInput" placeholder="3.05"/>
+        <text class="pct-suffix">%</text>
+      </view>
+    </view>
+
+    <view class="calc-btn" bindtap="onCalc">开始计算</view>
+  </view>
+
+  <!-- 结果区 -->
+  <view class="result-card" wx:if="{{result}}">
+    <view class="result-head">
+      <text class="result-title">计算结果</text>
+      <text class="result-sub">总价{{result.housePrice}}万 · 首付{{result.downRatio}}% · {{result.years}}年 · 利率{{result.rate}}%</text>
+    </view>
+
+    <view class="result-grid" wx:if="{{result.mode == 'installment'}}">
+      <view class="rg-item hero">
+        <text class="rg-label">月供</text>
+        <text class="rg-value primary">{{result.monthlyText}}</text>
+      </view>
+      <view class="rg-row">
+        <view class="rg-item">
+          <text class="rg-label">贷款总额</text>
+          <text class="rg-value">{{result.loan}}万</text>
+        </view>
+        <view class="rg-item">
+          <text class="rg-label">首付</text>
+          <text class="rg-value">{{result.downPayment}}万</text>
+        </view>
+      </view>
+      <view class="rg-row">
+        <view class="rg-item">
+          <text class="rg-label">利息总额</text>
+          <text class="rg-value warn">{{result.totalInterest}}万</text>
+        </view>
+        <view class="rg-item">
+          <text class="rg-label">还款总额</text>
+          <text class="rg-value">{{result.totalPayment}}万</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="result-grid" wx:else>
+      <view class="rg-item hero">
+        <text class="rg-label">首月月供</text>
+        <text class="rg-value primary">{{result.firstMonthText}}</text>
+      </view>
+      <view class="rg-row">
+        <view class="rg-item">
+          <text class="rg-label">末月月供</text>
+          <text class="rg-value">{{result.lastMonthText}}</text>
+        </view>
+        <view class="rg-item">
+          <text class="rg-label">每月递减</text>
+          <text class="rg-value">{{result.monthlyDeclineText}}</text>
+        </view>
+      </view>
+      <view class="rg-row">
+        <view class="rg-item">
+          <text class="rg-label">首付</text>
+          <text class="rg-value">{{result.downPayment}}万</text>
+        </view>
+        <view class="rg-item">
+          <text class="rg-label">贷款总额</text>
+          <text class="rg-value">{{result.loan}}万</text>
+        </view>
+      </view>
+      <view class="rg-row">
+        <view class="rg-item">
+          <text class="rg-label">利息总额</text>
+          <text class="rg-value warn">{{result.totalInterest}}万</text>
+        </view>
+        <view class="rg-item">
+          <text class="rg-label">还款总额</text>
+          <text class="rg-value">{{result.totalPayment}}万</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="result-note">
+      <text wx:if="{{result.mode == 'installment'}}">💡 等额本息：每月还款额固定，前期利息占比高。适合收入稳定的购房者。</text>
+      <text wx:else>💡 等额本金：每月还本金固定，月供逐月递减。总利息更少，但前期还款压力大。</text>
+    </view>
+  </view>
+
+</view>
