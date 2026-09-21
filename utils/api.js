@@ -50,6 +50,13 @@ module.exports = {
   getLatestPermits: () => request('/api/latest-permits'),
   getAdminStatus: () => request('/api/admin/status'),
   getTransactionSummary: () => request('/api/transactions/summary'),
+  getTransactionComparison: (years = 5) => {
+    const safeYears = Number(years);
+    if (![3, 5].includes(safeYears)) {
+      return Promise.reject(new RangeError('years must be 3 or 5'));
+    }
+    return request('/api/transactions/comparison?years=' + safeYears);
+  },
   getTransactionTrends: (months = 12) => request('/api/transactions/trends?months=' + months),
   getRecentTransactions: (days = 30) => request('/api/transactions/recent?days=' + days),
   getTransactionDistricts: () => request('/api/transactions/districts'),

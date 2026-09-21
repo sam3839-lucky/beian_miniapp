@@ -15,7 +15,8 @@ App({
     mortgageRate: MORTGAGE_RATE,
     launchScene: null,  // 扫码进入时携带的项目名
     tier: 'free',       // 会员等级
-    tierLimits: {}      // 用量限制
+    tierLimits: {},     // 用量限制
+    isAdmin: false      // 爆款文案入库权限
   },
 
   onLaunch(options) {
@@ -48,6 +49,9 @@ App({
             success: resp => {
               if (resp.data && resp.data.openid) {
                 this.globalData.openid = resp.data.openid;
+                this.globalData.isAdmin = !!resp.data.is_admin;
+                // 通知 tab-bar 刷新
+                if (this.swipeTabBar) this.swipeTabBar();
                 this.loadTier(resp.data.openid);
               }
             },

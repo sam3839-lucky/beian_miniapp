@@ -35,6 +35,42 @@
       </view>
     </view>
 
+    <!-- ═══ 日均成交与全月预估 ═══ -->
+    <view class="section card average-card" wx:if="{{dailyAverage}}">
+      <view class="average-head">
+        <view class="average-heading">
+          <text class="average-title">本月日均成交</text>
+          <text class="average-note">{{dailyAverage.periodLabel}}</text>
+        </view>
+        <text class="average-status">{{dailyAverage.statusLabel}}</text>
+      </view>
+
+      <view class="average-hero">
+        <text class="average-hero-number">{{dailyAverage.daily.total}}</text>
+        <text class="average-hero-unit">套/日</text>
+        <text class="average-hero-label">总成交日均</text>
+      </view>
+
+      <view class="average-metrics">
+        <view class="average-metric average-metric--new">
+          <view class="average-metric-label"><text class="average-dot average-dot--new"></text><text>新房</text></view>
+          <view><text class="average-metric-number">{{dailyAverage.daily.new}}</text><text class="average-metric-unit">套/日</text></view>
+        </view>
+        <view class="average-metric average-metric--used">
+          <view class="average-metric-label"><text class="average-dot average-dot--used"></text><text>二手房</text></view>
+          <view><text class="average-metric-number">{{dailyAverage.daily.used}}</text><text class="average-metric-unit">套/日</text></view>
+        </view>
+      </view>
+
+      <view class="forecast-card" wx:if="{{dailyAverage.showForecast}}">
+        <view class="forecast-head"><text class="forecast-label">本月预估总成交</text><text class="forecast-tag">按当前速度测算</text></view>
+        <view class="forecast-value"><text>约 {{dailyAverage.forecastTotalText}}</text><text class="forecast-unit">套</text></view>
+        <text class="forecast-formula">{{dailyAverage.forecastFormula}}</text>
+        <view class="forecast-track"><view class="forecast-progress" style="width:{{dailyAverage.forecastProgress}}%"></view></view>
+        <view class="forecast-foot"><text>当前完成约 {{dailyAverage.forecastProgress}}%</text><text>本月共 {{dailyAverage.monthDays}} 天</text></view>
+      </view>
+    </view>
+
     <!-- ═══ 各区成交占比 ═══ -->
     <view class="section" wx:if="{{districts}}">
       <view class="section-head"><text class="section-title">各区成交占比</text></view>

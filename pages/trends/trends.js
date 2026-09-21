@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { buildTransactionAverage } = require('../../utils/transaction-average');
 
 Page({
   data: {
@@ -10,6 +11,7 @@ Page({
       { label: '近10年', value: 120 }
     ],
     summary: null,
+    dailyAverage: null,
     trends: [],
     districts: null,
     dailyItems: [],
@@ -25,6 +27,10 @@ Page({
   },
 
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 2 });
+    }
+
     if (!this._loaded) { this._loaded = true; this.loadAll(); }
   },
 
@@ -50,7 +56,11 @@ Page({
         s.usedPct = (s.this_month.used / t * 100).toFixed(1);
       }
       if (s && s.this_month) {
-        s.monthTitle = s.this_month.month + '月';
+        const monthText = String(s.this_month.month || '').split('-').pop();
+        const monthNumber = parseInt(monthText, 10);
+        s.monthTitle = Number.isInteger(monthNumber)
+          ? (s.this_month.year || '') + '年' + monthNumber + '月'
+          : String(s.this_month.month || '');
       }
       if (s && s.latest_date) {
         const parts = s.latest_date.split('-');
@@ -58,7 +68,11 @@ Page({
           s.latestLabel = parseInt(parts[1]) + '月' + parseInt(parts[2]) + '日';
         }
       }
-      this.setData({ summary: s, loading: false }, () => {
+      this.setData({
+        summary: s,
+        dailyAverage: buildTransactionAverage(s),
+        loading: false
+      }, () => {
         this.drawDonut(s);
       });
 
@@ -72,7 +86,7 @@ Page({
         this.buildAndDrawChart(rawTrends);
       });
     } catch (e) {
-      console.error(e); this.setData({ loading: false, error: true });
+      console.error(e); this.setData({ loading: false, error: true, dailyAverage: null });
     }
   },
 

@@ -21,6 +21,39 @@
 .lnum { font-weight: 700; }
 .lpct { color: #888; font-size: 24rpx; }
 
+/* ═══ 日均成交与全月预估 ═══ */
+.average-card { padding: 28rpx 32rpx; }
+.average-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.average-heading { min-width: 0; }
+.average-title { display: block; font-size: 32rpx; font-weight: 800; color: #1A1A1A; }
+.average-note { display: block; margin-top: 8rpx; color: #999; font-size: 22rpx; line-height: 1.35; }
+.average-status { flex: 0 0 auto; padding: 6rpx 12rpx; border-radius: 999rpx; background: #FFF7E6; color: #D97706; font-size: 20rpx; font-weight: 700; white-space: nowrap; }
+.average-hero { display: flex; align-items: baseline; gap: 6rpx; margin-top: 24rpx; }
+.average-hero-number { font-size: 60rpx; line-height: 1; font-weight: 800; letter-spacing: -2rpx; color: #1A1A1A; }
+.average-hero-unit { color: #666; font-size: 24rpx; }
+.average-hero-label { margin-left: auto; color: #666; font-size: 22rpx; }
+.average-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; margin-top: 24rpx; }
+.average-metric { padding: 20rpx 24rpx 18rpx; border: 1rpx solid #EEE; border-radius: 16rpx; background: #FBFBFB; }
+.average-metric-label { display: flex; align-items: center; gap: 10rpx; color: #666; font-size: 22rpx; }
+.average-dot { width: 14rpx; height: 14rpx; border-radius: 50%; }
+.average-dot--new { background: #3B82F6; }
+.average-dot--used { background: #FF8C00; }
+.average-metric-number { display: inline-block; margin-top: 8rpx; font-size: 40rpx; line-height: 1.15; font-weight: 800; letter-spacing: -1rpx; }
+.average-metric--new .average-metric-number { color: #3B82F6; }
+.average-metric--used .average-metric-number { color: #FF8C00; }
+.average-metric-unit { margin-left: 6rpx; color: #666; font-size: 20rpx; }
+.forecast-card { margin-top: 20rpx; padding: 20rpx 24rpx 18rpx; border: 1rpx solid #DBEAFE; border-radius: 16rpx; background: #F5F9FF; }
+.forecast-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
+.forecast-label { color: #53657D; font-size: 22rpx; font-weight: 700; }
+.forecast-tag { color: #3B82F6; font-size: 20rpx; font-weight: 700; }
+.forecast-value { display: flex; align-items: baseline; gap: 6rpx; margin-top: 6rpx; }
+.forecast-value > text:first-child { color: #1A1A1A; font-size: 48rpx; line-height: 1.1; font-weight: 800; letter-spacing: -1rpx; }
+.forecast-unit { color: #666; font-size: 22rpx; }
+.forecast-formula { display: block; margin-top: 8rpx; color: #718096; font-size: 20rpx; line-height: 1.45; }
+.forecast-track { height: 10rpx; overflow: hidden; margin-top: 16rpx; border-radius: 999rpx; background: #DBEAFE; }
+.forecast-progress { height: 100%; border-radius: inherit; background: #3B82F6; }
+.forecast-foot { display: flex; justify-content: space-between; margin-top: 6rpx; color: #8090A5; font-size: 20rpx; }
+
 /* ═══ Section ═══ */
 .section { margin: 32rpx 32rpx 0; }
 .section-head { margin-bottom: 20rpx; }

@@ -16,6 +16,10 @@ Page({
   },
 
   onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 3 });
+    }
+
     this.loadData();
   },
 
@@ -67,6 +71,10 @@ Page({
 
   onOpenDashboard() {
     wx.navigateTo({ url: '/pages/dashboard/dashboard' });
+  },
+
+  onOpenTransactionCompare() {
+    wx.navigateTo({ url: '/pages/transaction-compare/transaction-compare' });
   },
 
   onOpenOps() {

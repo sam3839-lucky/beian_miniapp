@@ -14,7 +14,9 @@
     "pages/upcoming/upcoming",
     "pages/compare/compare",
     "pages/price-index/price-index",
-    "pages/city-select/city-select"
+    "pages/city-select/city-select",
+    "pages/mortgage/mortgage",
+    "pages/swipe-collect/swipe-collect"
   ],
   "window": {
     "navigationBarTitleText": "备案价查询",
@@ -42,9 +44,11 @@
       },
       {
         "pagePath": "pages/mine/mine",
-        "text": "我的",
-        "iconPath": "assets/tabbar/mine.png",
-        "selectedIconPath": "assets/tabbar/mine-active.png"
+        "text": "我的"
+      },
+      {
+        "pagePath": "pages/swipe-collect/swipe-collect",
+        "text": "入库"
       }
     ],
     "custom": true
