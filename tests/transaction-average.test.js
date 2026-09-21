@@ -81,3 +81,45 @@ test('returns no card data when the summary date is inconsistent', () => {
   assert.equal(buildTransactionAverage(summary({ date: '2026-10-01' })), null);
   assert.equal(buildTransactionAverage({ latest_date: 'bad', this_month: {} }), null);
 });
+
+test('accepts a year-month string and falls back to latest date year', () => {
+  const result = buildTransactionAverage(summary({
+    date: '2026-02-10',
+    month: '2026-2',
+    year: undefined,
+    total: 100,
+    newCount: 40,
+    used: 60
+  }));
+
+  assert.equal(result.year, 2026);
+  assert.equal(result.month, 2);
+  assert.equal(result.monthDays, 28);
+  assert.equal(result.showForecast, true);
+});
+
+test('rejects missing or non-numeric summary values', () => {
+  assert.equal(buildTransactionAverage(null), null);
+  assert.equal(buildTransactionAverage({ latest_date: '2026-09-18' }), null);
+  assert.equal(buildTransactionAverage(summary({ total: '4450' })), null);
+  assert.equal(buildTransactionAverage(summary({ newCount: Infinity })), null);
+});
+
+test('rejects invalid calendar dates and malformed month values', () => {
+  assert.equal(buildTransactionAverage(summary({ date: '2026-02-30', month: 2 })), null);
+  assert.equal(buildTransactionAverage(summary({ date: '2026-09-18', month: 'bad' })), null);
+  assert.equal(buildTransactionAverage(summary({ date: 20260918 })), null);
+});
+
+test('keeps zero forecast progress when there are no completed transactions', () => {
+  const result = buildTransactionAverage(summary({
+    date: '2026-09-10',
+    total: 0,
+    newCount: 0,
+    used: 0
+  }));
+
+  assert.equal(result.showForecast, true);
+  assert.equal(result.forecastTotal, 0);
+  assert.equal(result.forecastProgress, 0);
+});

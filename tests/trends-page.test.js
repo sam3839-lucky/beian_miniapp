@@ -2,6 +2,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const api = require('../utils/api');
 
@@ -95,4 +97,13 @@ test('成交分析页面将摘要请求失败转换为错误状态', async t => 
   assert.equal(page.data.loading, false);
   assert.equal(page.data.error, true);
   assert.equal(page.data.dailyAverage, null);
+});
+
+test('成交分析日均主指标按标签、数字、单位顺序渲染', () => {
+  const template = fs.readFileSync(path.join(__dirname, '..', 'pages/trends/trends.wxml'), 'utf8');
+  const hero = template.match(/<view class="average-hero">([\s\S]*?)<\/view>/);
+
+  assert.ok(hero, '日均成交主指标节点应存在');
+  assert.ok(hero[1].indexOf('average-hero-label') < hero[1].indexOf('average-hero-number'));
+  assert.ok(hero[1].indexOf('average-hero-number') < hero[1].indexOf('average-hero-unit'));
 });

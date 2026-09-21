@@ -46,9 +46,9 @@
       </view>
 
       <view class="average-hero">
+        <text class="average-hero-label">总成交日均</text>
         <text class="average-hero-number">{{dailyAverage.daily.total}}</text>
         <text class="average-hero-unit">套/日</text>
-        <text class="average-hero-label">总成交日均</text>
       </view>
 
       <view class="average-metrics">
