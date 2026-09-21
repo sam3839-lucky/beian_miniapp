@@ -123,3 +123,20 @@ test('keeps zero forecast progress when there are no completed transactions', ()
   assert.equal(result.forecastTotal, 0);
   assert.equal(result.forecastProgress, 0);
 });
+
+test('uses zero remaining days at month end without changing the completed total', () => {
+  const result = buildTransactionAverage(summary({
+    date: '2026-09-30',
+    total: 3000,
+    newCount: 1200,
+    used: 1800
+  }));
+
+  assert.equal(result.remainingDays, 0);
+  assert.equal(result.forecastTotal, 3000);
+  assert.equal(result.forecastProgress, 100);
+});
+
+test('rejects a numeric month outside the calendar range', () => {
+  assert.equal(buildTransactionAverage(summary({ month: 13 })), null);
+});
