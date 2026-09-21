@@ -74,7 +74,7 @@
     <!-- ═══ 各区成交占比 ═══ -->
     <view class="section" wx:if="{{districts}}">
       <view class="section-head"><text class="section-title">各区成交占比</text></view>
-      <view class="two-col">
+      <view class="two-col district-card">
         <view class="dcol">
           <view class="dcol-title"><text class="dcdot new"></text>一手</view>
           <view wx:for="{{districts.new.items}}" wx:key="zone" wx:for-item="d" class="drow">
