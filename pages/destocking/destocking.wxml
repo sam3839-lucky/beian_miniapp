@@ -1,0 +1,49 @@
+<view class="page">
+  <view wx:if="{{loading}}" class="state-card">正在加载去化数据…</view>
+  <view wx:elif="{{error}}" class="state-card state-error">
+    <text>{{error}}</text>
+    <button class="retry" bindtap="onRetry">重新加载</button>
+  </view>
+  <view wx:elif="{{empty}}" class="state-card">
+    <text class="state-title">暂无可用数据</text>
+    <text class="state-desc">当前没有可展示的去化周期快照，请稍后再试。</text>
+    <button class="retry" bindtap="onRetry">重新加载</button>
+  </view>
+  <block wx:else>
+    <view class="hero card" wx:if="{{citywide}}">
+      <text class="eyebrow">全市新房去化周期</text>
+      <view class="hero-value"><text>{{citywide.monthsText}}</text><text class="unit">个月</text></view>
+      <view class="status-pill">{{citywide.conclusion || citywide.statusText}}</view>
+      <text class="hero-note">按最近90天成交速度估算</text>
+      <text class="as-of">数据截至：{{dataAsOf}}</text>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">各区去化周期</text>
+      <text class="section-hint">周期越短，库存周转越快</text>
+    </view>
+
+    <view class="district-list">
+      <view class="district-card card" wx:for="{{districts}}" wx:key="district_name" data-index="{{index}}" bindtap="onDistrictTap" hover-class="card-hover">
+        <view class="district-top">
+          <text class="district-name">{{item.district_name}}</text>
+          <text class="district-months">{{item.monthsText}}<text class="small-unit">月</text></text>
+        </view>
+        <view class="district-status">{{item.conclusion || item.statusText}}</view>
+        <view class="progress-track"><view class="progress-bar" style="width:{{item.progress}}%"></view></view>
+        <view class="district-meta">
+          <text>库存 {{item.inventory_count || 0}} 套</text>
+          <text>90天成交 {{item.deal_90d || 0}} 套</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="explain card">
+      <text class="explain-title">口径说明</text>
+      <text class="explain-text">最近90天日均成交 = 最近90天新房成交套数 ÷ 90</text>
+      <text class="explain-text">估算去化周期 = 当前可售库存 ÷ 日均成交 ÷ 30</text>
+      <text class="explain-foot">这是按当前库存和近期成交速度做的静态估算，不代表实际售罄日期。</text>
+    </view>
+  </block>
+</view>
