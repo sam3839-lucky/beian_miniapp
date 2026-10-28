@@ -268,7 +268,17 @@ function buildMonthlyTable(payload, yearCount, metric = 'total') {
     return null;
   }
 
-  const years = selectYearsFlexible(currentYear, yearCount);
+  // 列只渲染真正有数据的年份：后端少返年份时不得渲染整列破折号。
+  const presentYears = new Set();
+  groups.forEach(group => {
+    if (!group || !Array.isArray(group.rows)) return;
+    group.rows.forEach(row => {
+      if (row && Number.isInteger(row.year)) presentYears.add(row.year);
+    });
+  });
+  const years = selectYearsFlexible(currentYear, yearCount)
+    .filter(year => presentYears.has(year));
+  if (years.length === 0) return null;
   const cutoff = payload && cutoffObject(payload.cutoff);
   if (cutoff) cutoff.year = currentYear;
   const months = groups

@@ -312,6 +312,45 @@ test('buildMonthlyTable 对缺失的新房、二手房和总成交保留破折�
   assert.equal(missing.totalHasValue, false);
 });
 
+// Regression: ISSUE-001 — 后端少返年份时仍按请求年数渲染整列破折号的幽灵列
+// Found by /qa on 2026-10-29
+// Report: .gstack/qa-reports/run-20261028T233925Z/qa-report-transaction-compare-2026-10-29.md
+test('buildMonthlyTable 只渲染实际有数据的年份列', () => {
+  const source = payload();
+  source.years = [2026, 2025, 2024];
+  source.monthly_same_period.forEach(group => {
+    group.rows = group.rows.filter(item => item.year >= 2024);
+  });
+
+  const table = buildMonthlyTable(source, 5);
+
+  assert.deepEqual(table.years, [2026, 2025, 2024]);
+  assert.equal(table.months.length, 4);
+  table.months.forEach(month => {
+    assert.equal(month.cells.length, 3);
+  });
+});
+
+test('buildMonthlyTable 保留有行但字段缺失的年份，只剔除完全无行的年份', () => {
+  const source = payload();
+  source.monthly_same_period.forEach(group => {
+    group.rows.forEach(row => {
+      if (row.year === 2022) {
+        row.total = null;
+        row.used = null;
+      }
+    });
+  });
+
+  const table = buildMonthlyTable(source, 5);
+  const january = table.months.find(item => item.month === 1);
+  const year2022 = january.cells.find(item => item.year === 2022);
+
+  assert.deepEqual(table.years, [2026, 2025, 2024, 2023, 2022]);
+  assert.equal(year2022.totalText, '—');
+  assert.equal(year2022.newText, '40');
+});
+
 test('formatCutoff 严格格式化后端 latest_date，不依赖手机当天日期', () => {
   assert.equal(formatCutoff({ latest_date: '2026-08-30' }), '数据截至 2026年8月30日');
   assert.equal(formatCutoff({ latest_date: '2024-02-29' }), '数据截至 2024年2月29日');

@@ -1,6 +1,5 @@
 const api = require('../../utils/api');
 const {
-  selectComparisonYears,
   buildMonthlyCards,
   buildMonthlyTable,
   formatCutoff,
@@ -87,12 +86,6 @@ Page({
     const payload = this._payload;
     if (!payload) return;
 
-    const currentYear = Array.isArray(payload.years) && payload.years.length
-      ? payload.years[0]
-      : null;
-    const selectedYears = Number.isInteger(currentYear)
-      ? selectComparisonYears(currentYear, this.data.rangeKey)
-      : [];
     const monthlyCards = buildMonthlyCards(
       payload,
       this.data.metric,
@@ -104,11 +97,11 @@ Page({
     this.setData({
       loading: false,
       error: '',
-      empty: monthlyCards.length === 0,
+      empty: !monthlyTable,
       monthlyCards,
       monthlyTable,
       metricLabel: this.data.metrics.find(item => item.value === this.data.metric).label,
-      yearRangeLabel: formatYearRange(selectedYears),
+      yearRangeLabel: formatYearRange(monthlyTable ? monthlyTable.years : []),
       cutoffText,
       updatedText: formatUpdatedAt(payload),
     });
