@@ -8,6 +8,14 @@ const {
   formatYearRange,
 } = require('../../utils/transaction-compare');
 
+// 对比范围档位：默认“往年”两列，其后依次为含今年在内的近三、近四、近五年。
+const RANGE_OPTIONS = [
+  { label: '往年', rangeKey: 'past', yearCount: 2 },
+  { label: '近三年', rangeKey: 'recent3', yearCount: 3 },
+  { label: '近四年', rangeKey: 'recent4', yearCount: 4 },
+  { label: '近五年', rangeKey: 'recent5', yearCount: 5 },
+];
+
 Page({
   data: {
     metric: 'total',
@@ -19,7 +27,7 @@ Page({
     ],
     rangeKey: 'past',
     rangeIndex: 0,
-    rangeOptions: ['往年', '近三年'],
+    rangeOptions: RANGE_OPTIONS.map(option => option.label),
     metricIndex: 0,
     metricOptions: ['汇总', '新房', '二手房'],
     yearCount: 2,
@@ -119,10 +127,13 @@ Page({
     const rawIndex = event && event.detail && event.detail.value;
     if (rawIndex === undefined || rawIndex === null) return;
     const index = Number(rawIndex);
-    if (![0, 1].includes(index) || index === this.data.rangeIndex) return;
-    const rangeKey = index === 0 ? 'past' : 'recent3';
-    const yearCount = index === 0 ? 2 : 4;
-    this.setData({ rangeIndex: index, rangeKey, yearCount }, () => this.rebuildMonthlyCards());
+    if (!Number.isInteger(index) || index < 0 || index >= RANGE_OPTIONS.length) return;
+    if (index === this.data.rangeIndex) return;
+    const option = RANGE_OPTIONS[index];
+    this.setData(
+      { rangeIndex: index, rangeKey: option.rangeKey, yearCount: option.yearCount },
+      () => this.rebuildMonthlyCards()
+    );
   },
 
   onMetricPickerChange(event) {
@@ -165,7 +176,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '深圳历史成交对比 - 同月看近3年/5年变化',
+      title: '深圳历史成交对比 - 同月跨年成交量对照',
       path: '/pages/transaction-compare/transaction-compare',
     };
   },

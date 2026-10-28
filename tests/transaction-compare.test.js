@@ -72,19 +72,31 @@ function payload() {
   };
 }
 
-test('selectYears 精确返回含今年在内的近 3 年和近 5 年', () => {
+test('selectYears 精确返回含今年在内的近 2 至 5 年', () => {
+  assert.deepEqual(selectYears(2026, 2), [2026, 2025]);
   assert.deepEqual(selectYears(2026, 3), [2026, 2025, 2024]);
+  assert.deepEqual(selectYears(2026, 4), [2026, 2025, 2024, 2023]);
   assert.deepEqual(selectYears(2026, 5), [2026, 2025, 2024, 2023, 2022]);
 });
 
 test('selectYears 拒绝含糊的年份范围', () => {
-  assert.throws(() => selectYears(2026, 4), /yearCount must be 3 or 5/);
+  assert.throws(() => selectYears(2026, 1), /yearCount must be 2, 3, 4, or 5/);
+  assert.throws(() => selectYears(2026, 6), /yearCount must be 2, 3, 4, or 5/);
+  assert.throws(() => selectYears(2026, '4'), /yearCount must be 2, 3, 4, or 5/);
   assert.throws(() => selectYears('2026', 3), /positive integer/);
 });
 
-test('selectComparisonYears 按业务定义返回往年两列或近三年四列', () => {
+test('selectComparisonYears 按业务定义返回往年两列到近五年五列', () => {
   assert.deepEqual(selectComparisonYears(2026, 'past'), [2026, 2025]);
-  assert.deepEqual(selectComparisonYears(2026, 'recent3'), [2026, 2025, 2024, 2023]);
+  assert.deepEqual(selectComparisonYears(2026, 'recent3'), [2026, 2025, 2024]);
+  assert.deepEqual(selectComparisonYears(2026, 'recent4'), [2026, 2025, 2024, 2023]);
+  assert.deepEqual(selectComparisonYears(2026, 'recent5'), [2026, 2025, 2024, 2023, 2022]);
+});
+
+test('selectComparisonYears 近三年严格三列，不吞掉额外一年', () => {
+  assert.equal(selectComparisonYears(2026, 'recent3').length, 3);
+  assert.throws(() => selectComparisonYears(2026, 'recent6'), /rangeKey must be/);
+  assert.throws(() => selectComparisonYears(2026, ''), /rangeKey must be/);
 });
 
 test('resolveMetric 保留真实 0 且不把缺失值当成 0', () => {
@@ -431,6 +443,7 @@ test('月度同期页面首次只请求一次5年数据，筛选切换不重复�
   assert.equal(page.data.metric, 'total');
   assert.equal(page.data.yearCount, 2);
   assert.equal(page.data.rangeKey, 'past');
+  assert.deepEqual(page.data.rangeOptions, ['往年', '近三年', '近四年', '近五年']);
   assert.equal(page.data.metricLabel, '汇总');
   assert.equal(page.data.yearRangeLabel, '2025—2026');
   assert.equal(page.data.cutoffText, '数据截至 2026年8月30日');
@@ -446,18 +459,40 @@ test('月度同期页面首次只请求一次5年数据，筛选切换不重复�
   assert.equal(page.data.metric, 'new');
   assert.equal(page.data.metricLabel, '新房');
   assert.equal(page.data.monthlyTable.months[0].cells[0].displayText, '91');
-  assert.equal(page.data.yearCount, 4);
+  assert.equal(page.data.yearCount, 3);
   assert.equal(page.data.rangeKey, 'recent3');
+  assert.equal(page.data.yearRangeLabel, '2024—2026');
+  assert.equal(page.data.monthlyCards[0].rows.length, 3);
+  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024]);
+
+  page.onRangeChange({ detail: { value: 2 } });
+  assert.equal(page.data.yearCount, 4);
+  assert.equal(page.data.rangeKey, 'recent4');
   assert.equal(page.data.yearRangeLabel, '2023—2026');
-  assert.equal(page.data.monthlyCards[0].rows.length, 4);
   assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024, 2023]);
+
+  page.onRangeChange({ detail: { value: '3' } });
+  assert.equal(page.data.yearCount, 5);
+  assert.equal(page.data.rangeKey, 'recent5');
+  assert.equal(page.data.yearRangeLabel, '2022—2026');
+  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025, 2024, 2023, 2022]);
+  assert.equal(calls, 1);
+
+  page.onRangeChange({ detail: { value: 4 } });
+  assert.equal(page.data.yearCount, 5);
+  assert.equal(page.data.rangeKey, 'recent5');
+
+  page.onRangeChange({ detail: { value: 0 } });
+  assert.equal(page.data.yearCount, 2);
+  assert.equal(page.data.rangeKey, 'past');
+  assert.deepEqual(page.data.monthlyTable.years, [2026, 2025]);
 
   page.onMetricChange({ currentTarget: { dataset: { value: 'invalid' } } });
   assert.equal(page.data.metric, 'new');
   page.onMetricChange(null);
   page.onRangeChange(null);
   assert.equal(page.data.metric, 'new');
-  assert.equal(page.data.yearCount, 4);
+  assert.equal(page.data.yearCount, 2);
   const requestId = page._requestId;
   page.onUnload();
   assert.equal(page._requestId, requestId + 1);

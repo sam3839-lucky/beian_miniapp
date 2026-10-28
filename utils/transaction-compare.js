@@ -26,24 +26,26 @@ function selectYears(currentYear, yearCount) {
   if (!Number.isInteger(currentYear) || currentYear < 1) {
     throw new TypeError('currentYear must be a positive integer');
   }
-  if (yearCount !== 3 && yearCount !== 5) {
-    throw new RangeError('yearCount must be 3 or 5');
-  }
+  assertYearCount(yearCount);
 
   return Array.from({ length: yearCount }, (_, index) => currentYear - index);
 }
 
+// 对比范围档位到年份数的唯一映射；“近三年”严格等于今年＋前两年，共 3 列。
+const RANGE_YEAR_COUNTS = {
+  past: 2,
+  recent3: 3,
+  recent4: 4,
+  recent5: 5,
+  legacy3: 3,
+  legacy5: 5
+};
+
 function selectComparisonYears(currentYear, rangeKey) {
-  if (rangeKey === 'legacy3') return selectYears(currentYear, 3);
-  if (rangeKey === 'legacy5') return selectYears(currentYear, 5);
-  if (!['past', 'recent3'].includes(rangeKey)) {
-    throw new RangeError('rangeKey must be past or recent3');
+  if (!Object.prototype.hasOwnProperty.call(RANGE_YEAR_COUNTS, rangeKey)) {
+    throw new RangeError('rangeKey must be past, recent3, recent4, recent5, legacy3 or legacy5');
   }
-  const count = rangeKey === 'past' ? 2 : 4;
-  if (!Number.isInteger(currentYear) || currentYear < 1) {
-    throw new TypeError('currentYear must be a positive integer');
-  }
-  return Array.from({ length: count }, (_, index) => currentYear - index);
+  return selectYears(currentYear, RANGE_YEAR_COUNTS[rangeKey]);
 }
 
 function selectYearsFlexible(currentYear, yearCount) {
