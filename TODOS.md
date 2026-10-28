@@ -40,4 +40,16 @@
 **Priority:** P2
 **Depends on:** Product scope decision and backend ownership
 
+### Monthly comparison cards still build by requested year count
+
+**What:** `buildMonthlyCards` 仍按请求年数生成行，后端少返年份时会产生整行 `—`。该视图当前不渲染（`empty` 已改为看 `monthlyTable`），线上不受影响。
+
+**Why:** ISSUE-001 的修复只加固了实际渲染的表格（`buildMonthlyTable`）。卡片视图真正启用前，需要做同样的"只保留有数据的年份"过滤。
+
+**Context:** 由 /qa 于 2026-10-29 记录。报告：`.gstack/qa-reports/run-20261028T233925Z/qa-report-transaction-compare-2026-10-29.md`。
+
+**Effort:** S
+**Priority:** P3
+**Depends on:** 无（启用卡片视图时一并处理）
+
 ## Completed
