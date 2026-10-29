@@ -1,0 +1,40 @@
+<view class="page">
+  <view class="header">
+    <text class="header-title">我的关注</text>
+    <text class="header-sub" wx:if="{{subscriptions.length}}">{{subscriptions.length}}/5 个项目</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-msg">加载中...</view>
+
+  <view wx:elif="{{error}}" class="err-block" bindtap="onRetry">
+    <text class="err-icon">!</text><text>加载失败，点击重试</text>
+  </view>
+
+  <view wx:elif="{{!subscriptions.length}}" class="empty">
+    <text class="empty-icon">🔔</text>
+    <text class="empty-title">还没有关注任何项目</text>
+    <text class="empty-desc">在项目详情页点击"关注"</text>
+    <text class="empty-desc">有新预售证或变动时第一时间通知你</text>
+  </view>
+
+  <view wx:else class="sub-list">
+    <view class="sub-card" wx:for="{{subscriptions}}" wx:key="project_name"
+          data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+          bindtap="onTapProject" hover-class="sub-card-hover">
+      <view class="sub-info">
+        <text class="sub-name">{{item.project_name}}</text>
+        <text class="sub-zone">{{item.zone}}</text>
+      </view>
+      <view class="sub-stats">
+        <text class="sub-count">可售 {{item.unsold_count}} 套</text>
+        <text class="sub-price">{{item.avg_total}} 万/套</text>
+      </view>
+      <view class="sub-actions">
+        <text class="sub-goto">查看房源 →</text>
+        <view class="sub-unsub" catchtap="onUnsubscribe" data-project="{{item.project_name}}">
+          <text>取消关注</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

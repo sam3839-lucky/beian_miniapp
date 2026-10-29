@@ -1,6 +1,57 @@
 <view class="container">
-  <!-- 筛选栏 -->
-  <view class="filters">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <input class="search-keyword" placeholder="搜项目名、开发商…" value="{{quickSearch}}"
+             bindinput="onQuickSearchInput" bindconfirm="onQuickSearchConfirm" confirm-type="search"/>
+    </view>
+    <view class="search-clear" wx:if="{{quickSearch}}" bindtap="onClearQuickSearch">
+      <text>✕</text>
+    </view>
+  </view>
+
+  <!-- 瞬搜结果 -->
+  <view class="quick-results" wx:if="{{quickSearch && searchResults.length}}">
+    <view class="qr-card" wx:for="{{searchResults}}" wx:key="project_name"
+          data-project="{{item.project_name}}" data-zone="{{item.zone}}"
+          bindtap="onQuickResultTap" hover-class="qr-card-hover">
+      <view class="qr-head">
+        <text class="qr-name">{{item.project_name}}</text>
+        <text class="qr-tag {{item.sale_type === '预售' ? 'tag-pre' : 'tag-spot'}}">{{item.sale_type}}</text>
+        <text class="qr-zone">{{item.zone}}</text>
+      </view>
+      <view class="qr-stats">
+        <view class="qr-stat">
+          <text class="qr-snum">{{item.unsold_count}}</text>
+          <text class="qr-slabel">可售套</text>
+        </view>
+        <view class="qr-stat">
+          <text class="qr-snum">{{item.avg_unit_w}}</text>
+          <text class="qr-slabel">万/㎡</text>
+        </view>
+        <view class="qr-stat">
+          <text class="qr-snum">{{item.price_min}}-{{item.price_max}}</text>
+          <text class="qr-slabel">万</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="qr-empty" wx:if="{{quickSearch && searchTapped && !searchResults.length}}">
+    <text>未找到匹配项目，试试输入区域名</text>
+  </view>
+
+  <!-- 快速筛选 combo -->
+  <scroll-view class="quick-bar" scroll-x enhanced show-scrollbar="{{false}}" wx:if="{{!quickSearch || !searchTapped}}">
+    <view class="quick-chip {{quickCombo === 'gangxu' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="gangxu">刚需两房</view>
+    <view class="quick-chip {{quickCombo === 'gaishan' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="gaishan">改善三房</view>
+    <view class="quick-chip {{quickCombo === 'haozhai' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="haozhai">豪宅四房+</view>
+    <view class="quick-chip {{quickCombo === 'xiaohu' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="xiaohu">小户一房</view>
+    <view class="quick-chip {{quickCombo === 'daping' ? 'on' : ''}}" bindtap="onQuickCombo" data-combo="daping">大平层</view>
+  </scroll-view>
+
+  <!-- 筛选栏（无搜索时显示） -->
+  <view class="filters" wx:if="{{!quickSearch || !searchTapped}}">
     <view class="filter-row">
       <picker mode="selector" range="{{zones}}" value="{{zoneIdx}}" bindchange="onZoneChange">
         <view class="picker-val">{{zoneIdx === 0 ? '全深圳' : zones[zoneIdx]}}</view>
@@ -32,12 +83,13 @@
     />
 
     <!-- 统计栏（跟随所有筛选） -->
-    <view class="stat-bar" wx:if="{{stats}}">
+    <view class="stat-bar" wx:if="{{stats && stats.total > 0}}">
       <view class="item"><text class="val t">{{stats.total}}</text><text class="lbl">总套数</text></view>
       <view class="sep"></view>
-      <view class="item"><text class="val s">{{stats.sold}}</text><text class="lbl">已售</text><text class="pct">{{stats.sold_pct}}%</text></view>
+      <view class="item"><text class="val s">{{stats.sold}}</text><text class="lbl">已售</text></view>
       <view class="sep"></view>
-      <view class="item"><text class="val u">{{stats.unsold}}</text><text class="lbl">可售</text><text class="pct">{{stats.unsold_pct}}%</text></view>
+      <view class="item" wx:if="{{!stats.sold_out}}"><text class="val u">{{stats.unsold}}</text><text class="lbl">可售</text></view>
+      <view class="item" wx:else><text class="val" style="color:#FF4D4F;">0</text><text class="lbl" style="color:#FF4D4F;">已售罄</text></view>
     </view>
   </view>
 
@@ -54,21 +106,24 @@
     </block>
 
     <block wx:else>
-      <block wx:for="{{floors}}" wx:for-item="floor" wx:key="*this">
+      <block wx:for="{{visibleFloors}}" wx:for-item="floor" wx:key="*this">
         <view class="floor-sep">
           <view class="line"></view>
           <text class="num">{{floor}}F</text>
           <view class="line"></view>
         </view>
-        <price-card 
-          wx:for="{{groups[floor]}}" 
-          wx:for-item="unit" 
-          wx:key="unit_no"
+        <price-card
+          wx:for="{{groups[floor]}}"
+          wx:for-item="unit"
+          wx:key="unit_api_id"
           unit="{{unit}}"
           project="{{projectName}}"
           bind:tap="onCardTap"
         />
       </block>
+      <view class="show-more" wx:if="{{hasMore}}" bindtap="onShowAll">
+        <text>展开全部 {{floors.length}} 层楼栋 →</text>
+      </view>
     </block>
 
     <view style="height: 32px;"></view>

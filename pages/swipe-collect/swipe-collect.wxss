@@ -1,0 +1,19 @@
+.page { padding: 32rpx; padding-bottom: 140rpx; }
+.header { margin-bottom: 40rpx; }
+.title { font-size: 40rpx; font-weight: 700; color: #1A1A1A; display: block; }
+.subtitle { font-size: 26rpx; color: #888; margin-top: 8rpx; display: block; }
+.form { background: #fff; border-radius: 16rpx; padding: 32rpx; }
+.field { margin-bottom: 28rpx; }
+.field-row { display: flex; gap: 24rpx; }
+.field.half { flex: 1; }
+.label { font-size: 26rpx; color: #666; display: block; margin-bottom: 12rpx; }
+.input { border: 1rpx solid #E5E5E5; border-radius: 12rpx; padding: 20rpx 24rpx; font-size: 28rpx; }
+.textarea { border: 1rpx solid #E5E5E5; border-radius: 12rpx; padding: 20rpx 24rpx; font-size: 28rpx; min-height: 300rpx; width: 100%; box-sizing: border-box; }
+.picker { border: 1rpx solid #E5E5E5; border-radius: 12rpx; padding: 20rpx 24rpx; font-size: 28rpx; color: #333; }
+.submit-btn { margin-top: 40rpx; background: #07C160; color: #fff; border-radius: 12rpx; font-size: 32rpx; height: 88rpx; line-height: 88rpx; }
+.submit-btn[disabled] { opacity: 0.6; }
+.recent { margin-top: 40rpx; }
+.recent-title { font-size: 28rpx; color: #666; font-weight: 600; display: block; margin-bottom: 16rpx; }
+.recent-item { display: flex; justify-content: space-between; align-items: center; padding: 20rpx 24rpx; background: #fff; border-radius: 12rpx; margin-bottom: 12rpx; }
+.recent-text { font-size: 26rpx; color: #333; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-time { font-size: 22rpx; color: #aaa; margin-left: 16rpx; }

@@ -1,11 +1,18 @@
 /* ═══ 成交分析 — WeUI 规范 ═══ */
 .page { background: #F7F7F7; min-height: 100vh; padding-bottom: 40rpx; }
 
+/* ═══ 搜小区入口 ═══ */
+.history-search-bar { margin: 16rpx 32rpx; background: #fff; border-radius: 8rpx; padding: 0 24rpx; height: 84rpx; display: flex; align-items: center; }
+.hs-icon { font-size: 28rpx; margin-right: 12rpx; flex-shrink: 0; }
+.hs-text { flex: 1; font-size: 26rpx; color: #bbb; }
+.hs-badge { font-size: 20rpx; color: #fff; background: #07C160; padding: 4rpx 14rpx; border-radius: 20rpx; flex-shrink: 0; font-weight: 600; }
+
 /* ═══ 环形图 ═══ */
 .ring-card { background: #fff; margin: 12rpx 32rpx; border-radius: 8rpx; padding: 28rpx 0 24rpx; text-align: center; }
-.ring-subtitle { font-size: 24rpx; color: #888; margin-bottom: 16rpx; }
-.ring-wrap { width: 200px; height: 200px; margin: 0 auto; }
-.donut-canvas { width: 200px; height: 200px; }
+.ring-title { font-size: 28rpx; font-weight: 600; color: #333; margin-bottom: 4rpx; }
+.ring-date { font-size: 22rpx; color: #888; margin-bottom: 16rpx; }
+.ring-wrap { width: 400rpx; height: 400rpx; margin: 0 auto; }
+.donut-canvas { width: 400rpx; height: 400rpx; }
 .ring-legend { display: flex; justify-content: center; gap: 40rpx; margin-top: 20rpx; }
 .legend-item { display: flex; align-items: center; gap: 8rpx; font-size: 26rpx; color: #333; }
 .ldot { width: 16rpx; height: 16rpx; border-radius: 50%; }
@@ -13,6 +20,45 @@
 .ldot.used { background: #FF8C00; }
 .lnum { font-weight: 700; }
 .lpct { color: #888; font-size: 24rpx; }
+
+/* ═══ 日均成交与全月预估 ═══ */
+.average-card {
+  margin-top: 16rpx;
+  padding: 32rpx 32rpx 24rpx;
+  border: 1rpx solid #EEE;
+  border-radius: 24rpx;
+  background: #FFF;
+}
+.average-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.average-heading { min-width: 0; }
+.average-title { display: block; font-size: 32rpx; font-weight: 800; color: #1A1A1A; }
+.average-note { display: block; margin-top: 8rpx; color: #999; font-size: 22rpx; line-height: 1.35; }
+.average-status { flex: 0 0 auto; padding: 6rpx 12rpx; border-radius: 999rpx; background: #FFF7E6; color: #D97706; font-size: 20rpx; font-weight: 700; white-space: nowrap; }
+.average-hero { margin-top: 24rpx; }
+.average-hero-label { display: block; color: #666; font-size: 22rpx; line-height: 1.3; }
+.average-hero-number { display: inline-block; margin-top: 6rpx; font-size: 60rpx; line-height: 1; font-weight: 800; letter-spacing: -2rpx; color: #1A1A1A; }
+.average-hero-unit { color: #666; font-size: 24rpx; }
+.average-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 16rpx; margin-top: 24rpx; }
+.average-metric { padding: 20rpx 24rpx 18rpx; border: 1rpx solid #EEE; border-radius: 16rpx; background: #FBFBFB; }
+.average-metric-label { display: flex; align-items: center; gap: 10rpx; color: #666; font-size: 22rpx; }
+.average-dot { width: 14rpx; height: 14rpx; border-radius: 50%; }
+.average-dot--new { background: #3B82F6; }
+.average-dot--used { background: #FF8C00; }
+.average-metric-number { display: inline-block; margin-top: 8rpx; font-size: 40rpx; line-height: 1.15; font-weight: 800; letter-spacing: -1rpx; }
+.average-metric--new .average-metric-number { color: #3B82F6; }
+.average-metric--used .average-metric-number { color: #FF8C00; }
+.average-metric-unit { margin-left: 6rpx; color: #666; font-size: 20rpx; }
+.forecast-card { margin-top: 20rpx; padding: 20rpx 24rpx 18rpx; border: 1rpx solid #DBEAFE; border-radius: 16rpx; background: #F5F9FF; }
+.forecast-head { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
+.forecast-label { color: #53657D; font-size: 22rpx; font-weight: 700; }
+.forecast-tag { color: #3B82F6; font-size: 20rpx; font-weight: 700; }
+.forecast-value { display: flex; align-items: baseline; gap: 6rpx; margin-top: 6rpx; }
+.forecast-value > text:first-child { color: #1A1A1A; font-size: 48rpx; line-height: 1.1; font-weight: 800; letter-spacing: -1rpx; }
+.forecast-unit { color: #666; font-size: 22rpx; }
+.forecast-formula { display: block; margin-top: 8rpx; color: #718096; font-size: 20rpx; line-height: 1.45; }
+.forecast-track { height: 10rpx; overflow: hidden; margin-top: 16rpx; border-radius: 999rpx; background: #DBEAFE; }
+.forecast-progress { height: 100%; border-radius: inherit; background: #3B82F6; }
+.forecast-foot { display: flex; justify-content: space-between; margin-top: 6rpx; color: #8090A5; font-size: 20rpx; }
 
 /* ═══ Section ═══ */
 .section { margin: 32rpx 32rpx 0; }
@@ -36,7 +82,8 @@
 
 /* ═══ 各区占比 ═══ */
 .two-col { display: flex; gap: 16rpx; }
-.dcol { flex: 1; background: #fff; border-radius: 8rpx; padding: 20rpx; }
+.district-card { padding: 12rpx; border: 1rpx solid #EEE; border-radius: 24rpx; background: #FFF; }
+.dcol { flex: 1; min-width: 0; border: 1rpx solid #EEE; border-radius: 16rpx; padding: 16rpx; background: #FFF; }
 .dcol-title { font-size: 26rpx; font-weight: 600; color: #333; margin-bottom: 16rpx; display: flex; align-items: center; gap: 8rpx; }
 .dcdot { width: 14rpx; height: 14rpx; border-radius: 50%; }
 .dcdot.new { background: #07C160; }
@@ -51,6 +98,22 @@
 .dcnt { font-size: 22rpx; color: #888; width: 56rpx; text-align: right; }
 .dpct { font-size: 22rpx; color: #333; font-weight: 600; width: 64rpx; text-align: right; }
 
+/* ═══ 销量排行 ═══ */
+.sales-tabs { white-space: nowrap; margin-bottom: 16rpx; }
+.sales-tab { display: inline-block; font-size: 24rpx; color: #888; background: #fff; padding: 12rpx 24rpx; border-radius: 8rpx; margin-right: 12rpx; }
+.sales-tab.on { background: #07C160; color: #fff; font-weight: 600; }
+.sales-list { background: #fff; border-radius: 8rpx; overflow: hidden; }
+.sales-row { display: flex; align-items: center; padding: 18rpx 24rpx; gap: 16rpx; border-bottom: 1rpx solid #F0F0F0; }
+.sales-row:last-child { border-bottom: none; }
+.sales-row-hover { background: #F7F7F7; }
+.sr-idx { font-size: 28rpx; font-weight: 700; color: #07C160; width: 40rpx; text-align: center; }
+.sr-info { flex: 1; min-width: 0; }
+.sr-name { font-size: 28rpx; font-weight: 500; color: #333; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-zone { font-size: 22rpx; color: #07C160; background: rgba(7,193,96,0.08); padding: 2rpx 10rpx; border-radius: 4rpx; display: inline-block; margin-top: 4rpx; }
+.sr-count { font-size: 30rpx; font-weight: 700; color: #333; flex-shrink: 0; }
+.sales-empty { text-align: center; padding: 48rpx 32rpx; font-size: 26rpx; color: #888; }
+.sales-note { text-align: center; font-size: 20rpx; color: #A8A8A8; padding: 12rpx 0; }
+
 /* ═══ 时间范围 ═══ */
 .range-bar { display: flex; gap: 16rpx; margin-bottom: 20rpx; }
 .range-tab { flex: 1; text-align: center; padding: 16rpx 0; font-size: 26rpx; color: #888;
@@ -58,19 +121,14 @@
   align-items: center; justify-content: center; }
 .range-tab.on { background: #07C160; color: #fff; font-weight: 600; }
 
-/* ═══ 月度走势 ═══ */
-.trend-chart { background: #fff; border-radius: 8rpx; padding: 16rpx 16rpx 4rpx; }
-.trend-row { display: flex; align-items: center; gap: 12rpx; padding: 12rpx 0; min-height: 60rpx; }
-.trend-row + .trend-row { border-top: 1rpx solid #F0F0F0; }
-.tr-month { font-size: 22rpx; color: #888; width: 80rpx; text-align: center; }
-.tr-bar-wrap { flex: 1; height: 20rpx; border-radius: 8rpx; background: #F0F0F0; overflow: hidden; display: flex; }
-.tr-bar-new { height: 100%; background: #07C160; }
-.tr-bar-used { height: 100%; background: #FF8C00; }
-.tr-count { font-size: 24rpx; color: #333; font-weight: 600; width: 100rpx; text-align: right; white-space: nowrap; }
-.trend-legend { display: flex; gap: 20rpx; padding: 12rpx 16rpx 8rpx; font-size: 22rpx; color: #888; align-items: center; }
-.trend-legend .dot { width: 12rpx; height: 12rpx; border-radius: 50%; display: inline-block; margin-right: 4rpx; }
-.trend-legend .dot.new { background: #07C160; }
-.trend-legend .dot.used { background: #FF8C00; }
+/* ═══ 月度走势图 ═══ */
+.chart-card { background: #fff; border-radius: 8rpx; padding: 16rpx 12rpx 8rpx; }
+.trend-chart-wrap { width: 100%; height: 400rpx; }
+.trend-canvas { width: 100%; height: 400rpx; }
+.chart-legend { display: flex; justify-content: center; gap: 24rpx; padding: 8rpx 0 4rpx; font-size: 22rpx; color: #888; align-items: center; }
+.chart-legend .dot { width: 14rpx; height: 14rpx; border-radius: 50%; display: inline-block; margin-right: 6rpx; }
+.chart-legend .dot.new { background: #07C160; }
+.chart-legend .dot.used { background: #FF8C00; }
 
 /* ═══ 日成交 ═══ */
 .tx-list { background: #fff; border-radius: 8rpx; }

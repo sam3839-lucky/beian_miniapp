@@ -1,0 +1,57 @@
+<view class="page">
+  <view class="zone-bar" wx:if="{{zone}}">
+    <text>{{zone}}片区 · {{items.length}}个项目</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="state-msg">加载中...</view>
+
+  <block wx:else>
+    <scroll-view class="cmp-scroll" scroll-x wx:if="{{items.length}}">
+      <view class="cmp-table">
+        <!-- 表头 -->
+        <view class="cmp-row cmp-head">
+          <text class="cmp-label">指标</text>
+          <view class="cmp-col" wx:for="{{items}}" wx:key="project_name">
+            <text class="cmp-pname {{item.project_name === highlight ? 'hl' : ''}}">{{item.project_name}}</text>
+          </view>
+        </view>
+        <!-- 行 -->
+        <view class="cmp-row">
+          <text class="cmp-label">区域</text>
+          <text class="cmp-val" wx:for="{{items}}" wx:key="project_name">{{item.zone}}</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">备案均价</text>
+          <text class="cmp-val price" wx:for="{{items}}" wx:key="project_name">{{item.avgUnitWan}}万/㎡</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">面积范围</text>
+          <text class="cmp-val" wx:for="{{items}}" wx:key="project_name">{{item.areaRange}}</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">总价区间</text>
+          <text class="cmp-val price" wx:for="{{items}}" wx:key="project_name">{{item.priceRange}}</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">去化率</text>
+          <text class="cmp-val" wx:for="{{items}}" wx:key="project_name" style="color:{{item.pct > 90 ? '#FF4D4F' : item.pct > 50 ? '#FF8C00' : '#999'}}">{{item.pct}}%</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">总套数</text>
+          <text class="cmp-val" wx:for="{{items}}" wx:key="project_name">{{item.total}}套</text>
+        </view>
+        <view class="cmp-row">
+          <text class="cmp-label">取证日期</text>
+          <text class="cmp-val" wx:for="{{items}}" wx:key="project_name">{{item.passDateShort}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="state-msg" wx:if="{{!items.length}}">该区域暂无对比数据</view>
+  </block>
+
+  <view class="cmp-ai" wx:if="{{aiText}}">
+    <view class="cmp-ai-head">🤖 AI 对比解读</view>
+    <text class="cmp-ai-body">{{aiText}}</text>
+  </view>
+</view>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>房价指数图表改良</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;background:#E8ECF1;display:flex;justify-content:center;padding:40px 20px;gap:24px;flex-wrap:wrap}
+.card{width:375px;background:#fff;border-radius:16px;padding:20px 16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+h3{font-size:14px;margin-bottom:16px}
+.bar-chart{position:relative;padding:0 4px}
+.bars{display:flex;align-items:flex-end;gap:4px;height:80px;margin-bottom:4px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.bar{flex:1;width:100%;border-radius:2px 2px 0 0;min-height:3px;position:relative;z-index:1}
+.bar.up{background:#07C160}.bar.down{background:#FF4D4F}
+.bar-label{position:absolute;top:-18px;font-size:9px;font-weight:700;white-space:nowrap;z-index:2}
+.bar-label.up{color:#059669}.bar-label.down{color:#DC2626}
+.baseline{position:absolute;bottom:12px;left:0;right:0;height:1px;background:#E5E5E5;z-index:0}
+.base-label{position:absolute;right:4px;bottom:10px;font-size:8px;color:#CCC}
+.months{display:flex;gap:4px}
+.months span{flex:1;text-align:center;font-size:10px;color:#BBB}
+.legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px;color:#888}
+.note{font-size:10px;color:#CCC;text-align:center;margin-top:8px}
+
+.old-card{margin-top:8px;border-top:1px dashed #EEE;padding-top:12px}
+.old-card h3{font-size:12px;color:#888}
+</style>
+</head>
+<body>
+
+<!-- ═══ 新设计 ═══ -->
+<div class="card" style="border:2px solid #07C160">
+  <h3>📊 深圳房价指数 · 新房环比 <span style="font-size:12px;color:#07C160;font-weight:400">（新设计）</span></h3>
+
+  <!-- 柱状图 -->
+  <div class="bar-chart">
+    <div class="bars">
+      <div class="baseline"></div>
+      <div class="base-label">基准 100</div>
+      <div class="bar-wrap"><div class="bar down" style="height:18px"></div><div class="bar-label down">-0.6%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:18px"></div><div class="bar-label down">-0.6%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:12px"></div><div class="bar-label down">-0.4%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:30px"></div><div class="bar-label down">-1.0%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:21px"></div><div class="bar-label down">-0.7%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:27px"></div><div class="bar-label down">-0.9%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:15px"></div><div class="bar-label down">-0.5%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:12px"></div><div class="bar-label down">-0.4%</div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:9px"></div><div class="bar-label down">-0.3%</div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:6px"></div><div class="bar-label up">+0.2%</div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:3px"></div><div class="bar-label up">+0.1%</div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:12px"></div><div class="bar-label up">+0.4%</div></div>
+    </div>
+    <div class="months">
+      <span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span>
+    </div>
+  </div>
+  <div class="legend">
+    <span style="color:#07C160">■ 环比上涨</span><span style="color:#FF4D4F">■ 环比下跌</span><span>— 基准线 100</span>
+  </div>
+  <div class="note">数据：2025.06 ~ 2026.05 · 国家统计局</div>
+</div>
+
+<!-- ═══ 旧设计对比 ═══ -->
+<div class="card old-card">
+  <h3>📊 旧设计（对比）<span style="font-size:10px;color:#888;font-weight:400">高度差太小，看不清涨跌</span></h3>
+  <div class="bar-chart">
+    <div class="bars">
+      <div class="bar-wrap"><div class="bar down" style="height:43px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:43px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:37px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:40px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:34px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:31px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:43px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:37px"></div></div>
+      <div class="bar-wrap"><div class="bar down" style="height:34px"></div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:9px"></div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:6px"></div></div>
+      <div class="bar-wrap"><div class="bar up" style="height:9px"></div></div>
+    </div>
+    <div class="months">
+      <span>06</span><span>07</span><span>08</span><span>09</span><span>10</span><span>11</span><span>12</span><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2931 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>备案价小程序 v2.0 UI 设计稿</title>
+<style>
+/* ===== CSS Variables (Design Tokens) ===== */
+:root {
+  --green: #07C160;
+  --orange: #FF8C00;
+  --red: #FF4D4F;
+  --blue: #3B82F6;
+  --text: #1A1A1A;
+  --text-secondary: #666;
+  --text-hint: #999;
+  --bg: #F5F5F5;
+  --card: #fff;
+  --border: #EEE;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: #E8ECF1;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* ===== Page Container ===== */
+.page-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  max-width: 1200px;
+}
+
+/* ===== Phone Frame ===== */
+.phone-frame {
+  width: 375px;
+  background: var(--card);
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 2px #1a1a1a;
+  position: relative;
+}
+
+/* Status Bar */
+.phone-status {
+  background: #fff;
+  padding: 12px 24px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.phone-status .time { font-size: 14px; }
+.phone-status .icons { display: flex; gap: 6px; align-items: center; }
+
+/* Nav Bar */
+.nav-bar {
+  padding: 8px 16px 12px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: #fff;
+  position: relative;
+}
+.nav-bar .back {
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 400;
+}
+
+/* ===== Page Content ===== */
+.page-content {
+  background: var(--bg);
+  min-height: 600px;
+  padding-bottom: 60px;
+}
+
+/* ===== Tab Bar ===== */
+.tab-bar {
+  display: flex;
+  background: #fff;
+  border-top: 0.5px solid #E5E5E5;
+  padding: 4px 0 env(safe-area-inset-bottom, 8px);
+  position: sticky;
+  bottom: 0;
+}
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 10px;
+  color: #999;
+  gap: 2px;
+}
+.tab-item.active { color: var(--green); }
+.tab-item .tab-icon { font-size: 22px; line-height: 1; }
+.tab-item .tab-label { font-size: 10px; }
+
+/* ===== Components ===== */
+
+/* Hero Banner */
+.hero-banner {
+  background: linear-gradient(135deg, #0B5C3B 0%, #0A7E44 40%, #07C160 100%);
+  color: #fff;
+  padding: 20px 16px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  right: -20px; top: -20px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.hero-date {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+.hero-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
+}
+.hero-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+.hero-stat {
+  flex: 1;
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 12px;
+  backdrop-filter: blur(4px);
+}
+.hero-stat .val {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.hero-stat .lbl {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+.hero-stat .change {
+  font-size: 11px;
+  margin-top: 2px;
+  display: flex; align-items: center; gap: 2px;
+}
+.change.up { color: #4ADE80; }
+.change.down { color: #F87171; }
+
+/* Section */
+.section { padding: 16px 12px; }
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex; align-items: center; gap: 6px;
+}
+.section-more {
+  font-size: 12px;
+  color: var(--text-hint);
+}
+
+/* Quick Entry Grid */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px 4px;
+  text-align: center;
+  padding: 0 12px 16px;
+  background: #fff;
+}
+.entry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.entry-icon {
+  width: 44px; height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.entry-icon.green { background: #E8F8EE; color: var(--green); }
+.entry-icon.orange { background: #FFF3E6; color: var(--orange); }
+.entry-icon.blue { background: #EFF6FF; color: var(--blue); }
+.entry-icon.red { background: #FFF0F0; color: var(--red); }
+.entry-label { font-size: 11px; color: #555; }
+
+/* Alert Banner */
+.alert-banner {
+  margin: 0 12px;
+  background: #FFF7ED;
+  border: 1px solid #FED7AA;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #9A3412;
+}
+.alert-banner .icon { font-size: 18px; flex-shrink: 0; }
+
+/* Search Bar */
+.search-bar {
+  margin: 0 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 0;
+}
+.search-select {
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 4px;
+}
+.search-input-wrap {
+  flex: 1;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+}
+.search-input-wrap input {
+  border: none;
+  outline: none;
+  font-size: 13px;
+  width: 100%;
+  font-family: var(--font);
+  color: var(--text);
+}
+.search-input-wrap input::placeholder { color: #C0C0C0; }
+.btn-search {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Project Card */
+.project-card {
+  margin: 0 12px 10px;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.project-card .name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.project-card .location {
+  font-size: 12px;
+  color: var(--text-hint);
+  display: flex; align-items: center; gap: 6px;
+}
+.project-card .tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.tag-jz { background: #E8F8EE; color: #059669; }
+.tag-mp { background: #FFF3E6; color: #D97706; }
+.tag-jj { background: #F0F4FF; color: #4F6EF7; }
+.tag-new { background: #FFF0F0; color: #E53E3E; font-size: 10px; }
+
+.project-card .price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+}
+.project-card .unit-price {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--red);
+}
+.project-card .unit-price small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-hint);
+}
+.project-card .meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.project-card .total-range {
+  font-weight: 600;
+  color: var(--text);
+}
+.project-card .area-range {
+  color: var(--text-hint);
+}
+
+/* Absorption Bar */
+.absorption-bar {
+  margin-top: 10px;
+}
+.absorption-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-hint);
+  margin-bottom: 4px;
+}
+.absorption-info .rate {
+  font-weight: 700;
+  font-size: 13px;
+}
+.rate-high { color: var(--red); }
+.rate-mid { color: var(--orange); }
+.rate-low { color: var(--text-hint); }
+.absorption-track {
+  height: 6px;
+  background: #F0F0F0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.absorption-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+.fill-high { background: var(--red); }
+.fill-mid { background: var(--orange); }
+.fill-low { background: #CCC; }
+
+/* Building-level absorption bars */
+.building-bars {
+  margin-top: 8px;
+  border-top: 0.5px solid #f0f0f0;
+  padding-top: 8px;
+}
+.building-bars .bld-label {
+  font-size: 10px;
+  color: var(--text-hint);
+  margin-bottom: 4px;
+}
+.bld-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+  padding: 1px 0;
+}
+.bld-row:active { opacity: 0.7; }
+.bld-row .bld-name {
+  width: 28px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+}
+.bld-row .bld-track {
+  flex: 1;
+  height: 4px;
+  background: #F0F0F0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bld-row .bld-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+.bld-row .bld-count {
+  width: 52px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 10px;
+  color: var(--text-hint);
+}
+.bld-row .bld-pct {
+  width: 34px;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.project-card .permit-date {
+  font-size: 11px;
+  color: var(--text-hint);
+  margin-top: 8px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* AI Insight Card */
+.ai-card {
+  margin: 0 12px 10px;
+  background: linear-gradient(135deg, #F0FDF4 0%, #ECFEFF 100%);
+  border: 1px solid #A7F3D0;
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.ai-card .ai-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.ai-card .ai-text {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Top 3 List */
+.top-list {
+  margin: 0 12px 10px;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+.top-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.top-item:last-child { border-bottom: none; }
+.top-rank {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+}
+.rank-1 { background: #FFE5E5; color: #E53E3E; }
+.rank-2 { background: #FFF3E6; color: #D97706; }
+.rank-3 { background: #FFF7ED; color: #C2410C; }
+.top-item .t-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.top-item .t-rate { font-size: 14px; font-weight: 700; }
+.top-item .t-price { font-size: 11px; color: var(--text-hint); }
+
+/* ===== Detail Building Absorption Card ===== */
+.detail-bld-card {
+  margin: 12px;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+.detail-bld-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 0.5px solid var(--border);
+}
+.detail-bld-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid #f8f8f8;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.detail-bld-row:last-child { border-bottom: none; }
+.detail-bld-row:active { background: #F9FAFB; }
+.detail-bld-row .bld-info {
+  width: 100px;
+  flex-shrink: 0;
+}
+.detail-bld-row .bld-tag {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+}
+.detail-bld-row .bld-sub {
+  font-size: 10px;
+  color: var(--text-hint);
+}
+.detail-bld-row .bld-bar-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.detail-bld-row .bld-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #F0F0F0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.detail-bld-row .bld-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+.detail-bld-row .bld-bar-pct {
+  width: 40px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+}
+.detail-bld-row .bld-sold {
+  width: 52px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-hint);
+  flex-shrink: 0;
+}
+
+/* ===== Detail Page Styles ===== */
+.detail-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+  padding: 20px 16px;
+}
+.detail-hero .d-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+.detail-hero .d-loc {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-top: 4px;
+}
+.detail-hero .d-price-main {
+  font-size: 32px;
+  font-weight: 800;
+  margin-top: 12px;
+  letter-spacing: -1px;
+}
+.detail-hero .d-price-sub {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+.detail-hero .d-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.detail-hero .d-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.d-tag-green { background: rgba(7,193,96,0.2); color: #4ADE80; }
+.d-tag-gold { background: rgba(255,140,0,0.2); color: #FBBF24; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  margin: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.info-cell {
+  background: #fff;
+  padding: 12px 10px;
+  text-align: center;
+}
+.info-cell .val { font-size: 18px; font-weight: 700; color: var(--text); }
+.info-cell .lbl { font-size: 11px; color: var(--text-hint); margin-top: 2px; }
+
+.detail-tabs {
+  display: flex;
+  margin: 0 12px;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.detail-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--text-hint);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+.detail-tab.active {
+  color: var(--green);
+  border-bottom-color: var(--green);
+  font-weight: 600;
+}
+
+/* Unit Table */
+.unit-table {
+  margin: 10px 12px;
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.unit-filters {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 0.5px solid var(--border);
+}
+.uf-trigger {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  color: #666;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.uf-trigger.active { background: var(--green); color: #fff; }
+.uf-arrow { font-size: 9px; opacity: 0.5; }
+.uf-search {
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 11px;
+  width: 90px;
+  font-family: var(--font);
+  outline: none;
+}
+.uf-backdrop {
+  display: none;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 200px;
+  background: rgba(0,0,0,0.08);
+  z-index: 5;
+}
+.uf-backdrop.open { display: block; }
+.uf-dropdown {
+  display: none;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: #fff;
+  padding: 8px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-radius: 8px;
+}
+.uf-dropdown.open { display: flex; }
+.uf-dd-chip {
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  color: #666;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+}
+.uf-dd-chip.selected {
+  background: #E8F8EE;
+  color: #059669;
+  font-weight: 600;
+}
+.filter-chip {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  color: #666;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+}
+.filter-chip.active {
+  background: var(--green);
+  color: #fff;
+}
+.filter-chip-active-fill {
+  background: var(--green) !important;
+  color: #fff !important;
+}
+
+/* ===== Multi-Select Filter Chips ===== */
+.filter-chip.multi-selected {
+  background: #E8F8EE;
+  color: #059669;
+  border: 1.5px solid var(--green);
+  padding: 4.5px 10.5px;  /* compensate border */
+}
+.filter-chip.multi-selected::before {
+  content: '✓ ';
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ===== Quick Combo Bar (compact, scrollable) ===== */
+.quick-combo-bar {
+  background: #fff;
+  padding: 8px 0 8px 12px;
+  border-bottom: 0.5px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quick-combo-bar .quick-label {
+  font-size: 11px;
+  color: var(--text-hint);
+  flex-shrink: 0;
+}
+.quick-combo-scroll {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-right: 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.quick-combo-scroll::-webkit-scrollbar { display: none; }
+.quick-combo-chip {
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #FFF3E6;
+  color: #D97706;
+  cursor: pointer;
+  border: 1px solid #FDE68A;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.quick-combo-chip:active {
+  background: #FDE68A;
+  transform: scale(0.96);
+}
+
+/* ===== Compact Filter Row (single line) ===== */
+.filter-row {
+  background: #fff;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 0.5px solid #f0f0f0;
+  position: relative;
+  z-index: 10;
+}
+.filter-trigger {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: var(--font);
+  position: relative;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.filter-trigger::after {
+  content: '▾';
+  font-size: 9px;
+  color: #C0C0C0;
+  margin-left: 1px;
+}
+.filter-trigger.has-value {
+  color: var(--green);
+  font-weight: 600;
+}
+.filter-trigger.has-value::after { color: var(--green); }
+.filter-trigger + .filter-trigger {
+  border-left: 0.5px solid #f0f0f0;
+}
+
+/* ===== Filter Dropdown Panel ===== */
+.filter-backdrop {
+  display: none;
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  height: 260px;
+  background: rgba(0,0,0,0.15);
+  z-index: 5;
+}
+.filter-backdrop.open { display: block; }
+.filter-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: #fff;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.filter-dropdown.open { display: flex; }
+.filter-dropdown .dd-chip {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  color: #666;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+}
+.filter-dropdown .dd-chip.selected {
+  background: #E8F8EE;
+  color: #059669;
+  border: 1.5px solid var(--green);
+  padding: 4.5px 12.5px;
+}
+.filter-dropdown .dd-chip.selected::before {
+  content: '✓ ';
+  font-size: 10px;
+  font-weight: 700;
+}
+.filter-dropdown .dd-actions {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 0.5px solid #f0f0f0;
+}
+.filter-dropdown .dd-btn {
+  font-size: 12px;
+  padding: 6px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font);
+  border: none;
+}
+.filter-dropdown .dd-btn-reset { background: #F5F5F5; color: #666; }
+.filter-dropdown .dd-btn-confirm { background: var(--green); color: #fff; }
+
+/* ===== Filter Summary Bar (compact) ===== */
+.filter-summary-bar {
+  margin: 0;
+  padding: 6px 12px;
+  background: #FAFBFC;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  min-height: 32px;
+}
+.filter-summary-bar .summary-label {
+  color: #999;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.filter-summary-tag {
+  font-size: 10px;
+  background: #E8F8EE;
+  color: #059669;
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 500;
+}
+.filter-summary-tag .tag-remove {
+  cursor: pointer;
+  color: #6EE7B7;
+  font-size: 10px;
+  line-height: 1;
+}
+.filter-summary-tag .tag-remove:hover { color: #DC2626; }
+.filter-summary-clear {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ===== Mortgage Calculator ===== */
+.calc-card {
+  margin: 12px;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.calc-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 0.5px solid var(--border);
+}
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 0.5px solid #f8f8f8;
+}
+.calc-label { font-size: 13px; color: var(--text); flex-shrink: 0; }
+.calc-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.calc-input {
+  width: 72px;
+  text-align: center;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 8px;
+  padding: 6px 4px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.calc-input:focus { border-color: var(--green); }
+.calc-unit { font-size: 12px; color: var(--text-hint); }
+.calc-chips {
+  display: flex;
+  gap: 6px;
+}
+.calc-chip {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: #F5F5F5;
+  color: #666;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.calc-chip.active {
+  background: var(--green);
+  color: #fff;
+}
+.calc-type-toggle {
+  display: flex;
+  background: #F5F5F5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.calc-type-btn {
+  font-size: 12px;
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.calc-type-btn.active {
+  background: var(--green);
+  color: #fff;
+}
+.calc-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.calc-summary-item {
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.cs-label { font-size: 11px; color: var(--text-hint); display: block; }
+.cs-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  display: block;
+  margin-top: 4px;
+}
+.cs-val small { font-size: 12px; font-weight: 500; color: var(--text-hint); }
+.calc-bd-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 0.5px solid #f8f8f8;
+  font-size: 13px;
+  color: var(--text);
+}
+.calc-bd-val { font-weight: 700; font-size: 15px; }
+
+/* ===== Global Interactive Feedback ===== */
+.clickable {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.clickable:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+/* tab bar items */
+.tab-item {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.tab-item:active { opacity: 0.6; }
+
+/* entry grid items */
+.entry-item {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.entry-item:active {
+  background: #F0F0F0;
+  transform: scale(0.96);
+}
+
+/* ranking rows */
+.top-item {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.top-item:active { background: #F5F5F5; }
+
+/* section "more" links */
+.section-more { cursor: pointer; }
+.section-more:active { opacity: 0.6; }
+
+/* project cards */
+.project-card {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.project-card:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* unit rows */
+.unit-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.unit-row:active { background: #F5F5F5; }
+
+/* detail tabs */
+.detail-tab {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.detail-tab:active { opacity: 0.7; }
+
+/* upcoming cards */
+.upcoming-card {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.upcoming-card:active {
+  transform: scale(0.985);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* back button */
+.back {
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.back:active { opacity: 0.5; }
+
+/* discount calculator */
+.calc-btn {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.calc-btn:active {
+  transform: scale(0.96);
+  opacity: 0.8;
+}
+
+/* nav buttons (prev/next unit) */
+.nav-btn {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.nav-btn:active {
+  background: #F0F0F0;
+  transform: scale(0.96);
+}
+
+/* search button hover */
+.btn-search {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-search:active {
+  opacity: 0.8;
+  transform: scale(0.96);
+}
+
+/* toast popup */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font);
+  z-index: 999;
+  pointer-events: none;
+  animation: toastIn 0.25s ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%,-50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ===== Unit Table ===== */
+.unit-table-header {
+  display: grid;
+  grid-template-columns: 60px 70px 1fr 1fr 70px;
+  padding: 10px;
+  background: #FAFAFA;
+  font-size: 11px;
+  color: var(--text-hint);
+  font-weight: 500;
+}
+.unit-row {
+  display: grid;
+  grid-template-columns: 60px 70px 1fr 1fr 70px;
+  padding: 10px;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 13px;
+  align-items: center;
+}
+.unit-row:last-child { border-bottom: none; }
+.unit-status {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.status-available { background: #E8F8EE; color: #059669; }
+.status-sold { background: #FFF0F0; color: #DC2626; }
+.status-locked { background: #FFF7ED; color: #D97706; }
+
+/* Compare Table */
+.compare-table {
+  margin: 10px 12px;
+  background: #fff;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.compare-header {
+  display: grid;
+  grid-template-columns: 90px repeat(3, 1fr);
+  padding: 12px 10px;
+  background: #FAFAFA;
+  font-size: 11px;
+  color: var(--text-hint);
+  border-bottom: 0.5px solid var(--border);
+}
+.compare-row {
+  display: grid;
+  grid-template-columns: 90px repeat(3, 1fr);
+  padding: 10px;
+  border-bottom: 0.5px solid var(--border);
+  font-size: 12px;
+  align-items: center;
+}
+.compare-row:last-child { border-bottom: none; }
+.compare-label { font-weight: 600; color: var(--text); }
+.compare-highlight { color: var(--red); font-weight: 700; }
+
+/* Upcoming Card */
+.upcoming-card {
+  margin: 0 12px 10px;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.upcoming-card .u-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.upcoming-card .u-loc {
+  font-size: 12px;
+  color: var(--text-hint);
+  margin-top: 2px;
+}
+.upcoming-card .u-estimate {
+  font-size: 13px;
+  color: var(--orange);
+  font-weight: 600;
+  margin-top: 6px;
+}
+.upcoming-card .u-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.u-status-badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+.badge-building { background: #FFF7ED; color: #D97706; }
+.badge-showroom { background: #EFF6FF; color: #3B82F6; }
+.badge-capped { background: #F0FDF4; color: #059669; }
+
+.u-timeline {
+  font-size: 11px;
+  color: var(--text-hint);
+  flex: 1;
+  text-align: right;
+}
+
+/* Page Label */
+.page-label {
+  position: absolute;
+  top: -32px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== Utility ===== */
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-8 { gap: 8px; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mb-8 { margin-bottom: 8px; }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-orange { color: var(--orange); }
+.text-xs { font-size: 11px; }
+.text-sm { font-size: 13px; }
+
+/* Scroll hint */
+.scroll-hint {
+  text-align: center;
+  font-size: 11px;
+  color: #CCC;
+  padding: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="page-container">
+
+<!-- ===== SCREEN 1: Market Daily (行情) ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">📊 行情 Tab — 日报式首页</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+  <div style="background:#fff; padding:12px 16px 8px; text-align:center; font-size:17px; font-weight:700;">深圳楼市行情</div>
+
+  <div class="page-content">
+    <!-- Hero -->
+    <div class="hero-banner">
+      <div class="hero-date">📅 2026年6月13日 周六</div>
+      <div class="hero-title">深圳楼市日报</div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="val">87</div>
+          <div class="lbl">昨日新房网签</div>
+          <div class="change up">▲ 12%</div>
+        </div>
+        <div class="hero-stat">
+          <div class="val">63</div>
+          <div class="lbl">昨日二手过户</div>
+          <div class="change down">▼ 5%</div>
+        </div>
+        <div class="hero-stat">
+          <div class="val">2,341</div>
+          <div class="lbl">本月累计</div>
+          <div class="change up">▲ 8%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Entry -->
+    <div class="entry-grid">
+      <div class="entry-item"><div class="entry-icon green">🗺️</div><div class="entry-label">地图找房</div></div>
+      <div class="entry-item"><div class="entry-icon blue">🏠</div><div class="entry-label">新房查询</div></div>
+      <div class="entry-item"><div class="entry-icon orange">🔥</div><div class="entry-label">即将入市</div></div>
+      <div class="entry-item"><div class="entry-icon red">📈</div><div class="entry-label">成交趋势</div></div>
+      <div class="entry-item"><div class="entry-icon green">💰</div><div class="entry-label">房贷计算</div></div>
+    </div>
+
+    <!-- New Permits Today -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">📋 今日新取证</div>
+        <div class="section-more">查看全部 ›</div>
+      </div>
+      <div class="top-list">
+        <div class="top-item">
+          <span class="top-rank rank-1">新</span>
+          <span class="t-name">特发臻华府</span>
+          <span class="t-price">龙岗·布吉 · 5.03万/㎡ · 314套</span>
+        </div>
+        <div class="top-item">
+          <span class="top-rank rank-1">新</span>
+          <span class="t-name">卓越朗奕府</span>
+          <span class="t-price">龙华·大浪 · 4.27万/㎡ · 303套</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hot Projects -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">🔥 本周去化最快 Top 3</div>
+      </div>
+      <div class="top-list">
+        <div class="top-item">
+          <span class="top-rank rank-1">1</span>
+          <span class="t-name">中海云颂玖章</span>
+          <span class="t-rate rate-high">95.6%</span>
+        </div>
+        <div class="top-item">
+          <span class="top-rank rank-2">2</span>
+          <span class="t-name">半山悦海花园</span>
+          <span class="t-rate rate-high">97.5%</span>
+        </div>
+        <div class="top-item">
+          <span class="top-rank rank-3">3</span>
+          <span class="t-name">锦和玉鸣府</span>
+          <span class="t-rate rate-low">3.0%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insight -->
+    <div class="ai-card">
+      <div class="ai-header">🤖 AI 每日解读</div>
+      <div class="ai-text">
+        今日龙华2盘集中取证，备案均价较上季度微降3.2%。中海云颂玖章去化率已达95.6%，成为龙华片区今年首个接近清盘的项目。光明网签量本周回升明显，金地峰境誉府降价至3.8万/㎡后网签加速。整体市场仍以"以价换量"为主基调。
+      </div>
+    </div>
+
+    <div class="scroll-hint">—— 下拉加载历史行情 ——</div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <div class="tab-item active">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">行情</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">🔍</span>
+      <span class="tab-label">找房</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">📈</span>
+      <span class="tab-label">成交</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">我的</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: Project Listing (找房) ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">🔍 找房 Tab — 多维筛选 + 升级卡片</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+
+  <div class="page-content">
+    <!-- Search Header -->
+    <div style="background:#fff; padding:12px 12px;">
+      <div class="search-bar" style="margin:0; padding:0;">
+        <div class="search-select">所有区 ▾</div>
+        <div class="search-input-wrap">
+          <span style="font-size:14px;">🔍</span>
+          <input type="text" placeholder="输入项目名或街道">
+        </div>
+        <button class="btn-search">搜索</button>
+      </div>
+    </div>
+
+    <!-- ====== Quick Combo Bar (compact) ====== -->
+    <div class="quick-combo-bar">
+      <span class="quick-label">⚡快速</span>
+      <div class="quick-combo-scroll">
+        <button class="quick-combo-chip" data-combo="gangxu-2">刚需两房</button>
+        <button class="quick-combo-chip" data-combo="gaishan-3">改善三房</button>
+        <button class="quick-combo-chip" data-combo="haozhai-4">豪宅四房+</button>
+        <button class="quick-combo-chip" data-combo="xiaohu-1">小户一房</button>
+        <button class="quick-combo-chip" data-combo="dapingceng-5">大平层五房+</button>
+      </div>
+    </div>
+
+    <!-- ====== Filter Row (single line) ====== -->
+    <div class="filter-row" id="filterRow">
+      <div class="filter-trigger has-value" data-filter="room">户型<span style="font-size:10px;color:#07C160;margin-left:2px;">三房</span></div>
+      <div class="filter-trigger" data-filter="price">总价</div>
+      <div class="filter-trigger" data-filter="area">面积</div>
+      <div class="filter-trigger" data-filter="deco">装修</div>
+      <div class="filter-trigger" data-filter="sort" style="max-width:60px;flex:none;">排序</div>
+    </div>
+
+    <!-- ====== Dropdown Panels ====== -->
+    <div style="position:relative;">
+      <div class="filter-backdrop" id="filterBackdrop"></div>
+      <!-- 户型 dropdown -->
+      <div class="filter-dropdown" data-filter="room">
+        <button class="dd-chip selected" data-value="一房">一房</button>
+        <button class="dd-chip selected" data-value="两房">两房</button>
+        <button class="dd-chip selected" data-value="三房">三房</button>
+        <button class="dd-chip" data-value="四房">四房</button>
+        <button class="dd-chip" data-value="五房及以上">五房及以上</button>
+        <div class="dd-actions">
+          <button class="dd-btn dd-btn-reset" data-action="reset">重置</button>
+          <button class="dd-btn dd-btn-confirm" data-action="confirm">确定</button>
+        </div>
+      </div>
+      <!-- 总价 dropdown -->
+      <div class="filter-dropdown" data-filter="price">
+        <button class="dd-chip" data-value="300万以下">300万以下</button>
+        <button class="dd-chip" data-value="300~500万">300~500万</button>
+        <button class="dd-chip" data-value="500~800万">500~800万</button>
+        <button class="dd-chip" data-value="800~1200万">800~1200万</button>
+        <button class="dd-chip" data-value="1200万以上">1200万以上</button>
+        <div style="display:flex;align-items:center;gap:4px;margin-top:4px;width:100%;">
+          <input type="number" placeholder="最低" style="width:52px;padding:4px 6px;border:1px solid #eee;border-radius:12px;font-size:11px;font-family:var(--font);outline:none;">
+          <span style="color:#ccc;font-size:11px;">-</span>
+          <input type="number" placeholder="最高" style="width:52px;padding:4px 6px;border:1px solid #eee;border-radius:12px;font-size:11px;font-family:var(--font);outline:none;">
+          <span style="font-size:10px;color:var(--text-hint);">万</span>
+        </div>
+        <div class="dd-actions">
+          <button class="dd-btn dd-btn-reset" data-action="reset">重置</button>
+          <button class="dd-btn dd-btn-confirm" data-action="confirm">确定</button>
+        </div>
+      </div>
+      <!-- 面积 dropdown -->
+      <div class="filter-dropdown" data-filter="area">
+        <button class="dd-chip" data-value="70㎡以下">70㎡以下</button>
+        <button class="dd-chip" data-value="70~90㎡">70~90㎡</button>
+        <button class="dd-chip" data-value="90~120㎡">90~120㎡</button>
+        <button class="dd-chip" data-value="120~144㎡">120~144㎡</button>
+        <button class="dd-chip" data-value="144㎡以上">144㎡以上</button>
+        <div class="dd-actions">
+          <button class="dd-btn dd-btn-reset" data-action="reset">重置</button>
+          <button class="dd-btn dd-btn-confirm" data-action="confirm">确定</button>
+        </div>
+      </div>
+      <!-- 装修 dropdown -->
+      <div class="filter-dropdown" data-filter="deco">
+        <button class="dd-chip selected" data-value="">不限</button>
+        <button class="dd-chip" data-value="精装">精装</button>
+        <button class="dd-chip" data-value="毛坯">毛坯</button>
+        <div class="dd-actions">
+          <button class="dd-btn dd-btn-reset" data-action="reset">重置</button>
+          <button class="dd-btn dd-btn-confirm" data-action="confirm">确定</button>
+        </div>
+      </div>
+      <!-- 排序 dropdown -->
+      <div class="filter-dropdown" data-filter="sort" style="flex-direction:column;gap:0;">
+        <button class="dd-chip selected" data-value="取证日期最新" style="width:100%;text-align:left;border-radius:0;background:transparent;border-bottom:0.5px solid #f0f0f0;">取证日期最新</button>
+        <button class="dd-chip" data-value="总价从低到高" style="width:100%;text-align:left;border-radius:0;background:transparent;border-bottom:0.5px solid #f0f0f0;">总价从低到高</button>
+        <button class="dd-chip" data-value="单价从低到高" style="width:100%;text-align:left;border-radius:0;background:transparent;border-bottom:0.5px solid #f0f0f0;">单价从低到高</button>
+        <button class="dd-chip" data-value="去化率从高到低" style="width:100%;text-align:left;border-radius:0;background:transparent;">去化率从高到低</button>
+      </div>
+    </div>
+
+    <!-- ====== Filter Summary Bar (compact) ====== -->
+    <div class="filter-summary-bar" id="filterSummary">
+      <span class="summary-label">已选</span>
+      <span class="filter-summary-tag" data-filter="room" data-value="三房">三房<span class="tag-remove">✕</span></span>
+      <a class="filter-summary-clear" id="clearAllSummary">清空</a>
+    </div>
+
+    <!-- Result count -->
+    <div style="padding:8px 16px; font-size:11px; color:var(--text-hint);">
+      筛选到 <b style="color:var(--text);" id="resultCount">12</b> 个项目 · 按取证日期排序
+    </div>
+
+    <!-- Card 1: Low absorption -->
+    <div class="project-card">
+      <div class="flex-between">
+        <div class="name">特发臻华府</div>
+        <span class="tag tag-jz">精装</span>
+      </div>
+      <div class="location">龙岗 · 布吉</div>
+      <div class="price-row">
+        <span class="unit-price">50,300<small>元/㎡</small></span>
+      </div>
+      <div class="meta-row">
+        <span>314套 | 剩314套</span>
+        <span class="total-range">401~965万</span>
+        <span class="area-range">87~183㎡</span>
+      </div>
+      <div class="absorption-bar">
+        <div class="absorption-info">
+          <span>去化率</span>
+          <span class="rate rate-low">0.00%</span>
+        </div>
+        <div class="absorption-track">
+          <div class="absorption-fill fill-low" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="permit-date">📋 取证日期 2026-06-12 · <span class="tag tag-new">今日新取证</span></div>
+    </div>
+
+    <!-- Card 2: Medium absorption -->
+    <div class="project-card">
+      <div class="flex-between">
+        <div class="name">锦和玉鸣府（2栋）</div>
+        <span class="tag tag-jz">精装</span>
+      </div>
+      <div class="location">宝安 · 沙井</div>
+      <div class="price-row">
+        <span class="unit-price">55,800<small>元/㎡</small></span>
+      </div>
+      <div class="meta-row">
+        <span>66套 | 剩64套</span>
+        <span class="total-range">650~1077万</span>
+        <span class="area-range">130~179㎡</span>
+      </div>
+      <div class="absorption-bar">
+        <div class="absorption-info">
+          <span>去化率</span>
+          <span class="rate rate-mid">3.03%</span>
+        </div>
+        <div class="absorption-track">
+          <div class="absorption-fill fill-mid" style="width:3.03%"></div>
+        </div>
+      </div>
+      <div class="permit-date">📋 取证日期 2026-05-29 · 已过16天</div>
+    </div>
+
+    <!-- Card 3: High absorption -->
+    <div class="project-card">
+      <div class="flex-between">
+        <div class="name">中海云颂玖章</div>
+        <span class="tag tag-jz">精装</span>
+      </div>
+      <div class="location">龙华 · 梅林关</div>
+      <div class="price-row">
+        <span class="unit-price">80,000<small>元/㎡</small></span>
+      </div>
+      <div class="meta-row">
+        <span>206套 | 剩9套</span>
+        <span class="total-range">736~1266万</span>
+        <span class="area-range">107~144㎡</span>
+      </div>
+      <div class="absorption-bar">
+        <div class="absorption-info">
+          <span>去化率</span>
+          <span class="rate rate-high">95.63%</span>
+        </div>
+        <div class="absorption-track">
+          <div class="absorption-fill fill-high" style="width:95.63%"></div>
+        </div>
+      </div>
+      <div class="permit-date">📋 取证日期 2026-05-28 · 已过17天</div>
+    </div>
+
+    <!-- Card 4: High absorption -->
+    <div class="project-card">
+      <div class="flex-between">
+        <div class="name">半山悦海花园</div>
+        <span class="tag tag-mp">毛坯</span>
+      </div>
+      <div class="location">盐田 · 沙头角</div>
+      <div class="price-row">
+        <span class="unit-price">52,200<small>元/㎡</small></span>
+      </div>
+      <div class="meta-row">
+        <span>836套 | 剩21套</span>
+        <span class="total-range">382~664万</span>
+        <span class="area-range">88~185㎡</span>
+      </div>
+      <div class="absorption-bar">
+        <div class="absorption-info">
+          <span>去化率</span>
+          <span class="rate rate-high">97.49%</span>
+        </div>
+        <div class="absorption-track">
+          <div class="absorption-fill fill-high" style="width:97.49%"></div>
+        </div>
+      </div>
+      <div class="permit-date">📋 取证日期 2026-06-11 · 已过2天</div>
+    </div>
+
+    <div style="text-align:center; padding:12px; font-size:13px; color:var(--green);">下一页 ›</div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab-item">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">行情</span>
+    </div>
+    <div class="tab-item active">
+      <span class="tab-icon">🔍</span>
+      <span class="tab-label">找房</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">📈</span>
+      <span class="tab-label">成交</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">我的</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: Project Detail ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">🏠 楼盘详情 — 项目总览</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+  <div class="nav-bar">
+    <span class="back">‹ 返回</span>
+    项目详情
+  </div>
+
+  <div class="page-content">
+    <!-- Detail Hero -->
+    <div class="detail-hero">
+      <div class="d-name">半山悦海花园</div>
+      <div class="d-loc">📍 盐田区 · 沙头角 · 海涛路58号</div>
+      <div class="d-price-main">52,200 <span style="font-size:14px;">元/㎡</span></div>
+      <div class="d-price-sub">总价 382万 ~ 664万</div>
+      <div class="d-tags">
+        <span class="d-tag d-tag-green">毛坯交付</span>
+        <span class="d-tag d-tag-gold">70年产权</span>
+        <span class="d-tag d-tag-green">2026-06-11 取证</span>
+      </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="val">97.5<span style="font-size:12px;color:var(--red);">%</span></div>
+        <div class="lbl">去化率</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">836<span style="font-size:12px;">套</span></div>
+        <div class="lbl">总房源</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">21<span style="font-size:12px;">套</span></div>
+        <div class="lbl">可售余量</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">1,494<span style="font-size:12px;">户</span></div>
+        <div class="lbl">总户数</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">1:1</div>
+        <div class="lbl">车位比</div>
+      </div>
+      <div class="info-cell">
+        <div class="val">5.27</div>
+        <div class="lbl">容积率</div>
+      </div>
+    </div>
+
+    <!-- Detail Tabs -->
+    <div class="detail-tabs">
+      <div class="detail-tab active" data-panel="units">房源信息</div>
+      <div class="detail-tab" data-panel="project">项目详情</div>
+      <div class="detail-tab" data-panel="buildings">楼栋去化</div>
+      <div class="detail-tab" data-panel="compare">同板块对比</div>
+    </div>
+
+    <!-- Panel: 房源信息 (default) -->
+    <div class="detail-panel" data-panel="units">
+      <div class="unit-table">
+        <div class="unit-filters">
+          <div class="uf-trigger" data-uf="bld">1栋 <span class="uf-arrow">▾</span></div>
+          <div class="uf-trigger" data-uf="unit">二单元 <span class="uf-arrow">▾</span></div>
+          <div class="uf-trigger" data-uf="status">状态 <span class="uf-arrow">▾</span></div>
+          <div class="uf-trigger" data-uf="type">户型 <span class="uf-arrow">▾</span></div>
+          <input type="text" placeholder="搜索房间号" class="uf-search">
+        </div>
+        <!-- Unit filter dropdowns -->
+        <div style="position:relative;">
+          <div class="uf-backdrop" id="ufBackdrop"></div>
+          <div class="uf-dropdown" data-uf="bld">
+            <div class="uf-dd-chip selected" data-value="1栋">1栋</div>
+            <div class="uf-dd-chip" data-value="2栋">2栋</div>
+            <div class="uf-dd-chip" data-value="3栋">3栋</div>
+            <div class="uf-dd-chip" data-value="4栋">4栋</div>
+            <div class="uf-dd-chip" data-value="5栋">5栋</div>
+          </div>
+          <div class="uf-dropdown" data-uf="unit">
+            <div class="uf-dd-chip selected" data-value="二单元">二单元</div>
+            <div class="uf-dd-chip" data-value="一单元">一单元</div>
+          </div>
+          <div class="uf-dropdown" data-uf="status">
+            <div class="uf-dd-chip selected" data-value="">全部</div>
+            <div class="uf-dd-chip" data-value="可售">可售</div>
+            <div class="uf-dd-chip" data-value="已签认购">已签认购</div>
+            <div class="uf-dd-chip" data-value="已备案">已备案</div>
+          </div>
+          <div class="uf-dropdown" data-uf="type">
+            <div class="uf-dd-chip selected" data-value="">全部</div>
+            <div class="uf-dd-chip" data-value="一房">一房</div>
+            <div class="uf-dd-chip" data-value="两房">两房</div>
+            <div class="uf-dd-chip" data-value="三房">三房</div>
+            <div class="uf-dd-chip" data-value="四房">四房</div>
+          </div>
+        </div>
+        <div class="unit-table-header">
+          <span>楼层</span><span>房间号</span><span>备案总价</span><span>建筑面积</span><span>状态</span>
+        </div>
+        <div style="background:#F9FAFB; padding:6px 10px; font-size:12px; color:var(--text-hint);">
+          📍 25层 <span style="float:right;">共5套</span>
+        </div>
+        <div class="unit-row">
+          <span style="color:var(--text-hint);">25F</span>
+          <span>2501</span>
+          <span>558万 <small style="color:var(--text-hint);">52,465元/㎡</small></span>
+          <span>106.5㎡ <small style="color:var(--text-hint);">分摊21.09㎡</small></span>
+          <span class="unit-status status-available">可售</span>
+        </div>
+        <div class="unit-row">
+          <span style="color:var(--text-hint);">25F</span>
+          <span>2502</span>
+          <span>423万 <small style="color:var(--text-hint);">47,229元/㎡</small></span>
+          <span>89.6㎡ <small style="color:var(--text-hint);">分摊17.74㎡</small></span>
+          <span class="unit-status status-available">可售</span>
+        </div>
+        <div class="unit-row">
+          <span style="color:var(--text-hint);">25F</span>
+          <span>2503</span>
+          <span>442万 <small style="color:var(--text-hint);">48,994元/㎡</small></span>
+          <span>90.3㎡ <small style="color:var(--text-hint);">分摊17.88㎡</small></span>
+          <span class="unit-status status-locked">已签认购</span>
+        </div>
+        <div class="unit-row" style="background:#FFFBEB;">
+          <span style="color:var(--text-hint);">25F</span>
+          <span>2506</span>
+          <span>446万 <small style="color:var(--text-hint);">48,994元/㎡</small></span>
+          <span>90.3㎡ <small style="color:var(--text-hint);">分摊17.88㎡</small></span>
+          <span class="unit-status status-available">可售</span>
+        </div>
+        <div style="text-align:center; padding:8px; font-size:12px; color:var(--green);">
+          查询共142条数据 · 展开全部楼层 ▼
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel: 楼栋去化 (hidden by default) -->
+    <div class="detail-panel" data-panel="buildings" style="display:none;">
+      <div class="detail-bld-card" style="margin:10px 12px;">
+        <div class="detail-bld-header">
+          <span>🏗️ 楼栋去化情况</span>
+          <span style="font-size:11px; color:var(--text-hint);">5栋 · 已售815套</span>
+        </div>
+        <div class="detail-bld-row" data-bld="1">
+          <div class="bld-info">
+            <span class="bld-tag">1栋</span>
+            <span class="bld-sub">2单元 · 200套</span>
+          </div>
+          <div class="bld-bar-wrap">
+            <div class="bld-bar-track"><div class="bld-bar-fill fill-high" style="width:99%"></div></div>
+            <span class="bld-bar-pct">99%</span>
+          </div>
+          <span class="bld-sold">198/200</span>
+        </div>
+        <div class="detail-bld-row" data-bld="2">
+          <div class="bld-info">
+            <span class="bld-tag">2栋</span>
+            <span class="bld-sub">2单元 · 156套</span>
+          </div>
+          <div class="bld-bar-wrap">
+            <div class="bld-bar-track"><div class="bld-bar-fill fill-high" style="width:96.2%"></div></div>
+            <span class="bld-bar-pct">96.2%</span>
+          </div>
+          <span class="bld-sold">150/156</span>
+        </div>
+        <div class="detail-bld-row" data-bld="3">
+          <div class="bld-info">
+            <span class="bld-tag">3栋</span>
+            <span class="bld-sub">2单元 · 192套</span>
+          </div>
+          <div class="bld-bar-wrap">
+            <div class="bld-bar-track"><div class="bld-bar-fill fill-high" style="width:97.4%"></div></div>
+            <span class="bld-bar-pct">97.4%</span>
+          </div>
+          <span class="bld-sold">187/192</span>
+        </div>
+        <div class="detail-bld-row" data-bld="4">
+          <div class="bld-info">
+            <span class="bld-tag">4栋</span>
+            <span class="bld-sub">2单元 · 164套</span>
+          </div>
+          <div class="bld-bar-wrap">
+            <div class="bld-bar-track"><div class="bld-bar-fill fill-high" style="width:96.3%"></div></div>
+            <span class="bld-bar-pct">96.3%</span>
+          </div>
+          <span class="bld-sold">158/164</span>
+        </div>
+        <div class="detail-bld-row" data-bld="5">
+          <div class="bld-info">
+            <span class="bld-tag">5栋</span>
+            <span class="bld-sub">1单元 · 124套</span>
+          </div>
+          <div class="bld-bar-wrap">
+            <div class="bld-bar-track"><div class="bld-bar-fill fill-high" style="width:100%"></div></div>
+            <span class="bld-bar-pct" style="color:var(--red);">100%</span>
+          </div>
+          <span class="bld-sold">124/124</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: Compare ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">⚖️ 同板块对比 — 竞品矩阵</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+  <div class="nav-bar">
+    <span class="back">‹ 返回</span>
+    同板块项目对比
+  </div>
+
+  <div class="page-content">
+    <div style="padding:12px 16px; font-size:13px; color:var(--text-hint);">
+      盐田 · 沙头角片区 | 最近4个取证项目
+    </div>
+
+    <div class="compare-table">
+      <div class="compare-header">
+        <span></span>
+        <span style="font-weight:700; color:var(--green);">🏠 本项目</span>
+        <span>竞品A</span>
+        <span>竞品B</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">项目名</span>
+        <span style="font-weight:700;">半山悦海花园</span>
+        <span>路劲驭海隽府</span>
+        <span>合泰嘉悦公馆</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">备案均价</span>
+        <span>52,200元/㎡</span>
+        <span>58,400元/㎡</span>
+        <span>57,500元/㎡</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">装修</span>
+        <span>毛坯</span>
+        <span>精装</span>
+        <span>精装</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">面积范围</span>
+        <span>88~185㎡</span>
+        <span>90~160㎡</span>
+        <span>75~130㎡</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">总价区间</span>
+        <span>382~664万</span>
+        <span class="compare-highlight">758~1,759万</span>
+        <span>362~670万</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">去化率</span>
+        <span class="compare-highlight" style="background:#FFF0F0; padding:2px 6px; border-radius:4px;">97.49%</span>
+        <span>0.00%</span>
+        <span>26.44%</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">得房率</span>
+        <span>≈81%</span>
+        <span>≈78%</span>
+        <span>≈80%</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">取证日期</span>
+        <span>2026-06-11</span>
+        <span>2026-06-03</span>
+        <span>2026-05-28</span>
+      </div>
+
+      <div class="compare-row">
+        <span class="compare-label">物业费</span>
+        <span>5.28元/㎡</span>
+        <span>5.50元/㎡</span>
+        <span>4.80元/㎡</span>
+      </div>
+    </div>
+
+    <div style="padding:12px 16px;">
+      <div class="ai-card" style="margin:0;">
+        <div class="ai-header">💡 对比解读</div>
+        <div class="ai-text">
+          半山悦海花园在本片区去化率遥遥领先（97.49%），总价门槛最低（382万起），毛坯交付降低了单价。路劲驭海隽府因大面积户型占比高，总价区间偏高（最高1759万），去化缓慢。合泰嘉悦公馆定位中端，去化率26.44%处于正常水平。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: Upcoming Projects ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">🔥 即将入市 — 在建项目追踪</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+
+  <div class="page-content">
+    <div style="background:#fff; padding:12px;">
+      <div class="search-bar" style="margin:0; padding:0;">
+        <div class="search-select">所有区 ▾</div>
+        <div style="font-size:11px; color:var(--green); white-space:nowrap;">清空条件</div>
+        <div class="search-input-wrap">
+          <span>🔍</span>
+          <input type="text" placeholder="请输入项目名称">
+        </div>
+        <button class="btn-search">查询</button>
+      </div>
+    </div>
+
+    <!-- Upcoming Card 1 -->
+    <div class="upcoming-card" style="margin-top:10px;">
+      <div class="flex-between">
+        <div class="u-name">中海安缇雅苑</div>
+        <span class="u-status-badge badge-showroom">样板房已开</span>
+      </div>
+      <div class="u-loc">南山 · 红树湾</div>
+      <div class="u-estimate">💰 预估均价 15万/㎡ · 总价 3525~4350万</div>
+      <div style="font-size:12px; color:var(--text-hint); margin-top:4px;">
+        180套 · 235~290㎡ · 精装
+      </div>
+      <div class="u-progress">
+        <span style="font-size:12px;">上市倒计时</span>
+        <span class="u-timeline">⏳ 预计16个月</span>
+      </div>
+    </div>
+
+    <!-- Upcoming Card 2 -->
+    <div class="upcoming-card">
+      <div class="flex-between">
+        <div class="u-name">招商望海玥</div>
+        <span class="u-status-badge badge-showroom">样板房已开</span>
+      </div>
+      <div class="u-loc">南山 · 蛇口</div>
+      <div class="u-estimate">💰 预估均价 11万/㎡ · 总价 737~1375万</div>
+      <div style="font-size:12px; color:var(--text-hint); margin-top:4px;">
+        52套 · 67~125㎡ · 精装
+      </div>
+      <div class="u-progress">
+        <span style="font-size:12px;">上市倒计时</span>
+        <span class="u-timeline">📅 预计2026年内</span>
+      </div>
+    </div>
+
+    <!-- Upcoming Card 3 -->
+    <div class="upcoming-card">
+      <div class="flex-between">
+        <div class="u-name">盛合天瑞家园</div>
+        <span class="u-status-badge badge-showroom">样板房已开</span>
+      </div>
+      <div class="u-loc">宝安 · 航城</div>
+      <div class="u-estimate">💰 预估均价 5.5万/㎡ · 总价 440~572万</div>
+      <div style="font-size:12px; color:var(--text-hint); margin-top:4px;">
+        540套 · 80~104㎡ · 简装
+      </div>
+      <div class="u-progress">
+        <span style="font-size:12px;">上市倒计时</span>
+        <span class="u-timeline">📅 预计2026年内</span>
+      </div>
+    </div>
+
+    <!-- Upcoming Card 4 -->
+    <div class="upcoming-card">
+      <div class="flex-between">
+        <div class="u-name">滨江叠映春语</div>
+        <span class="u-status-badge badge-building">建设中</span>
+      </div>
+      <div class="u-loc">龙华 · 大浪</div>
+      <div class="u-estimate">💰 预估均价 4万/㎡ · 总价 280~468万</div>
+      <div style="font-size:12px; color:var(--text-hint); margin-top:4px;">
+        693套 · 70~117㎡ · 精装
+      </div>
+      <div class="u-progress">
+        <span style="font-size:12px;">上市倒计时</span>
+        <span class="u-timeline">⏳ 预计18个月</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab-item">
+      <span class="tab-icon">📊</span>
+      <span class="tab-label">行情</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">🔍</span>
+      <span class="tab-label">找房</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">📈</span>
+      <span class="tab-label">成交</span>
+    </div>
+    <div class="tab-item">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">我的</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 6: Unit Detail + Discount ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">🔢 单套详情 + 折扣计算</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+  <div class="nav-bar">
+    <span class="back">‹ 返回</span>
+    房间详情
+  </div>
+
+  <div class="page-content">
+    <!-- Room Header -->
+    <div style="background:linear-gradient(135deg, #1a1a2e, #16213e); color:#fff; padding:20px 16px; text-align:center;">
+      <div style="font-size:11px; opacity:0.6;">路劲驭海隽府 · 1栋二单元</div>
+      <div style="font-size:40px; font-weight:800; margin:8px 0; letter-spacing:-1px;">1907</div>
+      <div style="font-size:13px; opacity:0.8;">19层 · 住宅</div>
+      <div style="display:flex; gap:6px; justify-content:center; margin-top:10px;">
+        <span class="unit-status status-available" style="color:#4ADE80; background:rgba(74,222,128,0.2);">期房待售</span>
+        <span style="font-size:11px; background:rgba(255,255,255,0.1); padding:3px 8px; border-radius:4px;">得房率 81%</span>
+      </div>
+    </div>
+
+    <!-- Price Info -->
+    <div style="background:#fff; margin:12px; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);">
+      <div class="flex-between" style="margin-bottom:12px;">
+        <span style="color:var(--text-hint);">备案总价</span>
+        <span style="font-size:24px; font-weight:800; color:var(--red);">4,227,692 <small style="font-size:13px;">元</small></span>
+      </div>
+      <div class="flex-between" style="margin-bottom:12px;">
+        <span style="color:var(--text-hint);">备案单价</span>
+        <span style="font-size:18px; font-weight:700;">47,582 <small style="font-size:12px; color:var(--text-hint);">元/㎡</small></span>
+      </div>
+      <div class="flex-between" style="margin-bottom:12px;">
+        <span style="color:var(--text-hint);">户内面积单价</span>
+        <span style="font-size:16px; font-weight:600;">58,857 <small style="font-size:12px; color:var(--text-hint);">元/㎡</small></span>
+      </div>
+    </div>
+
+    <!-- Room Details -->
+    <div style="background:#fff; margin:12px; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow);">
+      <div class="flex-between" style="padding:8px 0; border-bottom:0.5px solid var(--border);">
+        <span style="color:var(--text-hint);">建筑面积</span>
+        <span style="font-weight:600;">88.85 ㎡</span>
+      </div>
+      <div class="flex-between" style="padding:8px 0; border-bottom:0.5px solid var(--border);">
+        <span style="color:var(--text-hint);">户内面积</span>
+        <span style="font-weight:600;">71.83 ㎡</span>
+      </div>
+      <div class="flex-between" style="padding:8px 0; border-bottom:0.5px solid var(--border);">
+        <span style="color:var(--text-hint);">分摊面积</span>
+        <span style="font-weight:600;">17.02 ㎡</span>
+      </div>
+      <div class="flex-between" style="padding:8px 0; border-bottom:0.5px solid var(--border);">
+        <span style="color:var(--text-hint);">物业费</span>
+        <span style="font-weight:600;">5.28 元/月/㎡ · 469 元/月</span>
+      </div>
+    </div>
+
+    <!-- Discount Calculator -->
+    <div style="background:#fff; margin:12px; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); border-left:4px solid var(--green);">
+      <div style="font-weight:700; font-size:15px; margin-bottom:12px;">💰 折扣计算器</div>
+      <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+        <span style="color:var(--text-hint); font-size:13px;">折扣</span>
+        <input type="number" value="85" style="width:60px; text-align:center; border:2px solid var(--green); border-radius:8px; padding:8px; font-size:18px; font-weight:700; font-family:var(--font); color:var(--green);">
+        <span style="font-size:13px; color:var(--text-hint);">%</span>
+        <span style="flex:1;"></span>
+        <button style="background:var(--green); color:#fff; border:none; border-radius:8px; padding:10px 20px; font-size:14px; font-weight:600; cursor:pointer;">计算折后价</button>
+      </div>
+
+      <div style="background:#F9FAFB; border-radius:8px; padding:12px;">
+        <div class="flex-between" style="margin-bottom:8px;">
+          <span style="font-size:12px; color:var(--text-hint);">折后总价（85折）</span>
+          <span style="font-size:20px; font-weight:800; color:var(--red);">3,593,538 <small style="font-size:12px;">元</small></span>
+        </div>
+        <div class="flex-between" style="margin-bottom:8px;">
+          <span style="font-size:12px; color:var(--text-hint);">折后单价</span>
+          <span style="font-size:16px; font-weight:700;">40,445 <small style="font-size:11px; color:var(--text-hint);">元/㎡</small></span>
+        </div>
+        <div class="flex-between">
+          <span style="font-size:12px; color:var(--text-hint);">首付15%</span>
+          <span style="font-size:16px; font-weight:700; color:var(--orange);">539,031 <small style="font-size:11px;">元</small></span>
+        </div>
+      </div>
+
+      <div style="margin-top:8px; font-size:11px; color:var(--text-hint);">
+        💡 政策规定售价不低于备案价85%，最低可打85折
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="display:flex; justify-content:space-between; padding:0 12px 20px;">
+      <button style="padding:10px 20px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:13px; font-family:var(--font); cursor:pointer;">‹ 上一套（1904）</button>
+      <button style="padding:10px 20px; border-radius:8px; border:1px solid var(--border); background:#fff; font-size:13px; font-family:var(--font); cursor:pointer;">下一套（7101） ›</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== SCREEN 7: Mortgage Calculator ===== -->
+<div class="phone-frame" style="position:relative;">
+  <div class="page-label">💰 房贷计算器 — 等额本息/本金对比</div>
+  <div class="phone-status">
+    <span class="time">9:41</span>
+    <span class="icons">5G ▮▮▮▮ 🔋</span>
+  </div>
+  <div class="nav-bar"><span class="back">‹ 返回</span>房贷计算</div>
+
+  <div class="page-content">
+    <!-- Input Card -->
+    <div class="calc-card">
+      <div class="calc-card-title">📋 贷款参数</div>
+      <!-- 房屋总价 -->
+      <div class="calc-row">
+        <span class="calc-label">房屋总价</span>
+        <div class="calc-input-wrap">
+          <input type="number" id="housePrice" value="500" class="calc-input">
+          <span class="calc-unit">万元</span>
+        </div>
+      </div>
+      <!-- 首付比例 -->
+      <div class="calc-row">
+        <span class="calc-label">首付比例</span>
+        <div class="calc-chips" id="downPaymentGroup">
+          <button class="calc-chip" data-pct="15">15%</button>
+          <button class="calc-chip active" data-pct="20">20%</button>
+          <button class="calc-chip" data-pct="30">30%</button>
+          <button class="calc-chip" data-pct="50">50%</button>
+        </div>
+      </div>
+      <!-- 贷款年限 -->
+      <div class="calc-row">
+        <span class="calc-label">贷款年限</span>
+        <div class="calc-chips" id="loanYearGroup">
+          <button class="calc-chip" data-yr="10">10年</button>
+          <button class="calc-chip" data-yr="15">15年</button>
+          <button class="calc-chip" data-yr="20">20年</button>
+          <button class="calc-chip active" data-yr="30">30年</button>
+        </div>
+      </div>
+      <!-- 贷款利率 -->
+      <div class="calc-row">
+        <span class="calc-label">贷款利率</span>
+        <div class="calc-input-wrap">
+          <input type="number" id="interestRate" value="3.05" step="0.01" class="calc-input">
+          <span class="calc-unit">%</span>
+        </div>
+      </div>
+      <!-- 还款方式 -->
+      <div class="calc-row" style="border-bottom:none; padding-bottom:0;">
+        <span class="calc-label">还款方式</span>
+        <div class="calc-type-toggle" id="paymentType">
+          <button class="calc-type-btn active" data-type="equal">等额本息</button>
+          <button class="calc-type-btn" data-type="principal">等额本金</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loan Summary -->
+    <div class="calc-card" style="border-left:4px solid var(--green);">
+      <div class="calc-card-title">📊 贷款概要</div>
+      <div class="calc-summary-grid">
+        <div class="calc-summary-item">
+          <span class="cs-label">贷款总额</span>
+          <span class="cs-val" id="loanTotal">400.00<small>万</small></span>
+        </div>
+        <div class="calc-summary-item">
+          <span class="cs-label">首付金额</span>
+          <span class="cs-val" id="downPayment">100.00<small>万</small></span>
+        </div>
+        <div class="calc-summary-item">
+          <span class="cs-label">月供</span>
+          <span class="cs-val" id="monthlyPayment" style="color:var(--red);">17,900<small>元</small></span>
+        </div>
+        <div class="calc-summary-item">
+          <span class="cs-label">总利息</span>
+          <span class="cs-val" id="totalInterest" style="color:var(--orange);">244.39<small>万</small></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly Breakdown (for 等额本金) -->
+    <div class="calc-card" id="breakdownCard" style="display:none;">
+      <div class="calc-card-title">📅 月供变化（等额本金）</div>
+      <div class="calc-bd-row">
+        <span>首月月供</span>
+        <span class="calc-bd-val" id="firstMonth">-</span>
+      </div>
+      <div class="calc-bd-row">
+        <span>末月月供</span>
+        <span class="calc-bd-val" id="lastMonth">-</span>
+      </div>
+      <div class="calc-bd-row" style="border-bottom:none;">
+        <span>月供递减</span>
+        <span class="calc-bd-val" id="monthlyDecline" style="color:var(--green);">-</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-hint); margin-top:8px;">
+        💡 等额本金每月还本金相同，利息逐月递减，总利息比等额本息少
+      </div>
+    </div>
+
+    <!-- Quick reference -->
+    <div class="calc-card">
+      <div class="calc-card-title">💡 参考利率</div>
+      <div style="font-size:12px; color:var(--text-hint); line-height:1.8;">
+        LPR 5年期以上：<b style="color:var(--text);">3.6%</b>（2026年6月）<br>
+        首套房贷利率：LPR − 55bp = <b style="color:var(--green);">3.05%</b><br>
+        二套房贷利率：LPR + 30bp = <b style="color:var(--orange);">3.9%</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page-container -->
+
+<!-- ====== Interactive Scripts ====== -->
+<script>
+(function() {
+  // ═══════════════════════════════════════════
+  //  SCREEN 2: 找房 — filter logic (keep)
+  // ═══════════════════════════════════════════
+  var COMBOS = {
+    'gangxu-2':      { room: ['两房'],           price: ['300万以下','300~500万'] },
+    'gaishan-3':     { room: ['三房'],           price: ['500~800万','800~1200万'] },
+    'haozhai-4':     { room: ['四房','五房及以上'], price: ['1200万以上'] },
+    'xiaohu-1':      { room: ['一房'],           price: [] },
+    'dapingceng-5':  { room: ['五房及以上'],      price: ['800~1200万','1200万以上'] },
+  };
+  var selected = { room: ['三房'], price: [], area: [], deco: [''], sort: ['取证日期最新'] };
+  var activeDropdown = null;
+
+  function $$(sel) { return document.querySelectorAll(sel); }
+  function $(sel) { return document.querySelector(sel); }
+
+  // ── toast utility ──
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.remove(); }, 1200);
+  }
+
+  // ── dropdown open/close ──
+  function openDropdown(filter) {
+    if (activeDropdown === filter) { closeDropdown(); return; }
+    if (activeDropdown) closeDropdown(false);
+    activeDropdown = filter;
+    var bd = $('#filterBackdrop'); if (bd) bd.classList.add('open');
+    var dd = $('.filter-dropdown[data-filter="'+filter+'"]'); if (dd) dd.classList.add('open');
+    $$('.filter-trigger').forEach(function(t){ t.style.color = t.getAttribute('data-filter')===filter ? 'var(--green)' : ''; });
+  }
+  function closeDropdown(clearTrigger) {
+    if (clearTrigger !== false) { $$('.filter-trigger').forEach(function(t){ t.style.color = ''; }); }
+    var bd = $('#filterBackdrop'); if (bd) bd.classList.remove('open');
+    $$('.filter-dropdown').forEach(function(d){ d.classList.remove('open'); });
+    activeDropdown = null;
+    updateTriggers();
+  }
+  function updateTriggers() {
+    $$('.filter-trigger').forEach(function(t){
+      var f = t.getAttribute('data-filter');
+      var vals = selected[f] || [];
+      var old = t.querySelector('.trigger-val'); if (old) old.remove();
+      if (f === 'deco') {
+        if (vals.length===0||vals[0]==='') { t.classList.remove('has-value'); } else { t.classList.add('has-value'); t.innerHTML='装修<span class="trigger-val" style="font-size:10px;color:var(--green);margin-left:2px;">'+vals[0]+'</span>'; }
+      } else if (f === 'sort') {
+        t.innerHTML='排序<span class="trigger-val" style="font-size:10px;color:var(--green);margin-left:2px;">'+(vals[0]||'默认')+'</span>'; t.classList.add('has-value');
+      } else {
+        if (vals.length===0) { t.classList.remove('has-value'); t.textContent = f==='room'?'户型':(f==='price'?'总价':'面积'); }
+        else { t.classList.add('has-value'); t.innerHTML=(f==='room'?'户型':(f==='price'?'总价':'面积'))+'<span class="trigger-val" style="font-size:10px;color:var(--green);margin-left:2px;">'+vals[0]+(vals.length>1?' +'+(vals.length-1):'')+'</span>'; }
+      }
+    });
+  }
+  function syncDropdown(filter) {
+    var dd = $('.filter-dropdown[data-filter="'+filter+'"]'); if (!dd) return;
+    var vals = selected[filter] || [];
+    dd.querySelectorAll('.dd-chip').forEach(function(chip){
+      var v = chip.getAttribute('data-value');
+      if (filter==='deco'||filter==='sort') { chip.classList.toggle('selected', v===vals[0]); }
+      else { chip.classList.toggle('selected', vals.indexOf(v)!==-1); }
+    });
+  }
+  function updateSummary() {
+    var bar = $('#filterSummary'); if (!bar) return;
+    bar.querySelectorAll('.filter-summary-tag').forEach(function(t){ t.remove(); });
+    var ph = bar.querySelector('.summary-placeholder'); if (ph) ph.remove();
+    var allTags = [];
+    ['room','price','area'].forEach(function(g){ (selected[g]||[]).forEach(function(v){ allTags.push({group:g,value:v}); }); });
+    if (selected.deco&&selected.deco[0]&&selected.deco[0]!=='') allTags.push({group:'deco',value:selected.deco[0]});
+    var label = bar.querySelector('.summary-label');
+    if (allTags.length===0) {
+      var ph2 = document.createElement('span'); ph2.className='summary-placeholder'; ph2.style.cssText='font-size:10px;color:#bbb;'; ph2.textContent='全部条件';
+      label.after(ph2); bar.querySelector('.filter-summary-clear').style.display='none';
+    } else {
+      bar.querySelector('.filter-summary-clear').style.display='';
+      allTags.forEach(function(t){
+        var tag = document.createElement('span'); tag.className='filter-summary-tag';
+        tag.setAttribute('data-filter',t.group); tag.setAttribute('data-value',t.value);
+        tag.innerHTML=t.value+'<span class="tag-remove">✕</span>'; label.after(tag);
+      });
+    }
+    var cnt = $('#resultCount'); if (cnt) { var n = allTags.length===0?48:Math.max(1,18-allTags.length*4); cnt.textContent=n; }
+  }
+  function clearAll() { selected.room=[];selected.price=[];selected.area=[];selected.deco=['']; updateTriggers(); updateSummary(); }
+
+  // ── attach Screen 2 handlers ──
+  $$('.filter-dropdown .dd-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var dd=chip.closest('.filter-dropdown'), filter=dd.getAttribute('data-filter'), value=chip.getAttribute('data-value');
+      if (filter==='deco'||filter==='sort') { dd.querySelectorAll('.dd-chip').forEach(function(c){c.classList.remove('selected');}); chip.classList.add('selected'); }
+      else { chip.classList.toggle('selected'); }
+    });
+  });
+  $$('.filter-dropdown .dd-btn-confirm').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var dd=btn.closest('.filter-dropdown'), filter=dd.getAttribute('data-filter'), vals=[];
+      dd.querySelectorAll('.dd-chip.selected').forEach(function(c){vals.push(c.getAttribute('data-value'));});
+      selected[filter]=vals; closeDropdown(); updateSummary();
+    });
+  });
+  $$('.filter-dropdown .dd-btn-reset').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var dd=btn.closest('.filter-dropdown'), filter=dd.getAttribute('data-filter');
+      dd.querySelectorAll('.dd-chip').forEach(function(c){c.classList.remove('selected');});
+      if (filter==='deco') { var b=dd.querySelector('.dd-chip[data-value=""]'); if(b)b.classList.add('selected'); }
+      else if (filter==='sort') { var f=dd.querySelector('.dd-chip'); if(f)f.classList.add('selected'); }
+    });
+  });
+  $$('.filter-trigger').forEach(function(t){
+    t.addEventListener('click',function(){ var f=t.getAttribute('data-filter'); syncDropdown(f); openDropdown(f); });
+  });
+  var fb=$('#filterBackdrop'); if(fb) fb.addEventListener('click',function(){closeDropdown();});
+  $$('.quick-combo-chip').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var key=btn.getAttribute('data-combo'), combo=COMBOS[key]; if(!combo)return;
+      selected.room=[];selected.price=[];selected.area=[];
+      ['room','price','area'].forEach(function(g){(combo[g]||[]).forEach(function(v){if(selected[g].indexOf(v)===-1)selected[g].push(v);});});
+      updateTriggers(); updateSummary();
+    });
+  });
+  var fs=$('#filterSummary'); if(fs) fs.addEventListener('click',function(e){
+    var rb=e.target.closest('.tag-remove'); if(!rb)return;
+    var tag=rb.closest('.filter-summary-tag'); if(!tag)return;
+    var g=tag.getAttribute('data-filter'), v=tag.getAttribute('data-value');
+    var idx=(selected[g]||[]).indexOf(v); if(idx!==-1)selected[g].splice(idx,1);
+    updateTriggers(); updateSummary();
+  });
+  var cs=$('#clearAllSummary'); if(cs) cs.addEventListener('click',function(e){e.preventDefault();clearAll();});
+
+  // ═══════════════════════════════════════════
+  //  GLOBAL: Tab Bar interaction
+  // ═══════════════════════════════════════════
+  $$('.tab-bar').forEach(function(bar){
+    bar.querySelectorAll('.tab-item').forEach(function(tab, idx){
+      tab.addEventListener('click', function(){
+        bar.querySelectorAll('.tab-item').forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+        var labels = ['行情','找房','成交','我的'];
+        toast('切换到「'+labels[idx]+'」');
+      });
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 1: 行情 — entry items & rankings
+  // ═══════════════════════════════════════════
+  $$('.phone-frame').forEach(function(frame){
+    // Entry items (地图找房, 新房查询, etc.)
+    frame.querySelectorAll('.entry-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        var label = item.querySelector('.entry-label');
+        toast(label ? '即将上线：'+label.textContent : '即将上线');
+      });
+    });
+    // Ranking rows (top items)
+    frame.querySelectorAll('.top-item').forEach(function(row){
+      row.addEventListener('click', function(){
+        var name = row.querySelector('.t-name');
+        toast(name ? '查看：'+name.textContent : '查看详情');
+      });
+    });
+    // Section "more" links
+    frame.querySelectorAll('.section-more').forEach(function(link){
+      link.addEventListener('click', function(){ toast('查看更多'); });
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 2: 找房 — extra (project cards, search, pagination)
+  // ═══════════════════════════════════════════
+  // Building row click → toast
+  $$('.bld-row').forEach(function(row){
+    row.addEventListener('click', function(e){
+      e.stopPropagation();
+      var name = row.querySelector('.bld-name');
+      var pct = row.querySelector('.bld-pct');
+      var parentCard = row.closest('.project-card');
+      var projName = parentCard ? parentCard.querySelector('.name') : null;
+      toast((projName?projName.textContent+' ':'') + (name?name.textContent:'') + ' 去化 ' + (pct?pct.textContent:''));
+    });
+  });
+
+  // Project card click → toast
+  $$('.project-card').forEach(function(card){
+    card.addEventListener('click', function(e){
+      // don't fire if clicking inside filter area or building bars
+      if (e.target.closest('.filter-dropdown') || e.target.closest('.filter-row') || e.target.closest('.quick-combo-bar') || e.target.closest('.bld-row')) return;
+      var name = card.querySelector('.name');
+      toast(name ? '查看楼盘：'+name.textContent : '查看详情');
+    });
+  });
+  // Next page
+  var nextPage = document.querySelector('.phone-frame:nth-of-type(2) .page-content > div:last-child');
+  // Search button
+  $$('.btn-search').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      // only for screen 2's search
+      if (e.target.closest('.phone-frame') && e.target.closest('.phone-frame').querySelector('.page-label') && e.target.closest('.phone-frame').querySelector('.page-label').textContent.indexOf('找房')!==-1) {
+        toast('搜索中…');
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 3: 楼盘详情 — building absorption + detail tabs + unit filters
+  // ═══════════════════════════════════════════
+  // Building row click → switch to units tab + filter by building
+  $$('.detail-bld-row').forEach(function(row){
+    row.addEventListener('click', function(){
+      var bldName = row.querySelector('.bld-tag').textContent;
+      // deselect all building rows
+      row.parentElement.querySelectorAll('.detail-bld-row').forEach(function(r){ r.classList.remove('active-row'); r.style.background=''; });
+      row.classList.add('active-row');
+      row.style.background = '#F0FDF4';
+      // switch to 房源信息 tab
+      var frame = row.closest('.phone-frame');
+      if (frame) {
+        frame.querySelectorAll('.detail-tab').forEach(function(t){ t.classList.remove('active'); });
+        var unitsTab = frame.querySelector('.detail-tab[data-panel="units"]');
+        if (unitsTab) unitsTab.classList.add('active');
+        frame.querySelectorAll('.detail-panel').forEach(function(p){ p.style.display = 'none'; });
+        var unitsPanel = frame.querySelector('.detail-panel[data-panel="units"]');
+        if (unitsPanel) unitsPanel.style.display = 'block';
+      }
+      // update unit filter dropdown to match
+      var bldTrigger = document.querySelector('.uf-trigger[data-uf="bld"]');
+      if (bldTrigger) {
+        bldTrigger.innerHTML = bldName + ' <span class="uf-arrow">▾</span>';
+        bldTrigger.classList.add('active'); setTimeout(function(){ bldTrigger.classList.remove('active'); }, 300);
+      }
+      // update building dropdown selection
+      var bldDD = document.querySelector('.uf-dropdown[data-uf="bld"]');
+      if (bldDD) {
+        bldDD.querySelectorAll('.uf-dd-chip').forEach(function(c){ c.classList.toggle('selected', c.getAttribute('data-value')===bldName); });
+      }
+      updateUnitTableForBuilding(bldName);
+      toast('查看 '+bldName+' · 一房一价');
+    });
+  });
+
+  // Detail tab switching (with content panels)
+  $$('.detail-tabs').forEach(function(tabs){
+    tabs.querySelectorAll('.detail-tab').forEach(function(tab){
+      tab.addEventListener('click', function(){
+        var panel = tab.getAttribute('data-panel');
+        // update tab active state
+        tabs.querySelectorAll('.detail-tab').forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+        // show/hide panels within the same phone frame
+        var frame = tab.closest('.phone-frame');
+        if (frame) {
+          frame.querySelectorAll('.detail-panel').forEach(function(p){ p.style.display = 'none'; });
+          var target = frame.querySelector('.detail-panel[data-panel="'+panel+'"]');
+          if (target) target.style.display = 'block';
+        }
+        var labels = { units:'房源信息', project:'项目详情', buildings:'楼栋去化', compare:'同板块对比' };
+        if (panel !== 'units' && panel !== 'buildings') {
+          toast('切换到「'+labels[panel]+'」（该模块待开发）');
+        }
+      });
+    });
+  });
+  // Unit filter dropdowns
+  var ufActive = null;
+  $$('.uf-trigger').forEach(function(trigger){
+    trigger.addEventListener('click', function(){
+      var key = trigger.getAttribute('data-uf');
+      if (ufActive === key) { closeUf(); return; }
+      if (ufActive) closeUf(false);
+      ufActive = key;
+      $('#ufBackdrop').classList.add('open');
+      var dd = document.querySelector('.uf-dropdown[data-uf="'+key+'"]');
+      if (dd) dd.classList.add('open');
+      trigger.classList.add('active');
+    });
+  });
+  function closeUf(clearTrigger){
+    if (clearTrigger !== false) { $$('.uf-trigger').forEach(function(t){ t.classList.remove('active'); }); }
+    $('#ufBackdrop').classList.remove('open');
+    $$('.uf-dropdown').forEach(function(d){ d.classList.remove('open'); });
+    ufActive = null;
+  }
+  $('#ufBackdrop').addEventListener('click', function(){ closeUf(); });
+  $$('.uf-dd-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var dd = chip.closest('.uf-dropdown');
+      var key = dd.getAttribute('data-uf');
+      // single select
+      dd.querySelectorAll('.uf-dd-chip').forEach(function(c){ c.classList.remove('selected'); });
+      chip.classList.add('selected');
+      // update trigger label
+      var trigger = document.querySelector('.uf-trigger[data-uf="'+key+'"]');
+      if (trigger) {
+        var val = chip.getAttribute('data-value') || chip.textContent;
+        var labelMap = { bld:'', unit:'', status:'状态 ', type:'户型 ' };
+        trigger.innerHTML = (labelMap[key]||'') + val + ' <span class="uf-arrow">▾</span>';
+      }
+      closeUf();
+      // if building changed, update unit table
+      if (key === 'bld') {
+        toast('筛选 '+chip.textContent);
+        updateUnitTableForBuilding(chip.textContent);
+      }
+    });
+  });
+
+  // Update unit table to reflect selected building
+  function updateUnitTableForBuilding(bldName) {
+    var panel = document.querySelector('.detail-panel[data-panel="units"]');
+    if (!panel) return;
+    var layerLabel = panel.querySelector('.unit-table div[style]');
+    if (layerLabel && layerLabel.textContent.indexOf('层')!==-1) {
+      // update layer label to reflect building
+      var bldNum = bldName.replace('栋','');
+      layerLabel.innerHTML = '📍 '+bldName+' · 25层 <span style="float:right;">共5套</span>';
+    }
+  }
+  // Unit row click
+  $$('.unit-row').forEach(function(row){
+    row.addEventListener('click', function(){
+      var room = row.querySelectorAll('span')[1];
+      toast(room ? '查看房间 '+room.textContent+' 详情' : '查看房间详情');
+    });
+  });
+  // "展开全部楼层" toggle
+  var expandLink = document.querySelector('.unit-table div:last-child');
+  if (expandLink && expandLink.textContent.indexOf('展开全部楼层')!==-1) {
+    expandLink.addEventListener('click', function(){
+      if (expandLink.textContent.indexOf('展开')!==-1) {
+        expandLink.innerHTML = '查询共142条数据 · 收起全部楼层 ▲';
+        // simulate more rows
+        var table = expandLink.closest('.unit-table');
+        var newRows = [
+          ['26F','2601','432万 <small style="color:var(--text-hint);">49,150元/㎡</small>','88.0㎡ <small style="color:var(--text-hint);">分摊17.42㎡</small>','<span class="unit-status status-available">可售</span>'],
+          ['26F','2602','565万 <small style="color:var(--text-hint);">50,890元/㎡</small>','111.2㎡ <small style="color:var(--text-hint);">分摊22.02㎡</small>','<span class="unit-status status-available">可售</span>'],
+          ['26F','2603','442万 <small style="color:var(--text-hint);">48,994元/㎡</small>','90.3㎡ <small style="color:var(--text-hint);">分摊17.88㎡</small>','<span class="unit-status status-sold">已备案</span>'],
+        ];
+        var layerLabel = document.createElement('div');
+        layerLabel.style.cssText = 'background:#F9FAFB;padding:6px 10px;font-size:12px;color:var(--text-hint);';
+        layerLabel.innerHTML = '📍 26层 <span style="float:right;">共6套</span>';
+        expandLink.before(layerLabel);
+        newRows.forEach(function(r){
+          var row = document.createElement('div');
+          row.className = 'unit-row';
+          r.forEach(function(c){ var s=document.createElement('span'); s.innerHTML=c; row.appendChild(s); });
+          row.addEventListener('click', function(){
+            var rm = row.querySelectorAll('span')[1];
+            toast(rm ? '查看房间 '+rm.textContent+' 详情' : '查看房间详情');
+          });
+          expandLink.before(row);
+        });
+      } else {
+        expandLink.innerHTML = '查询共142条数据 · 展开全部楼层 ▼';
+        // remove the extra rows and layer label (simple: remove siblings between last original row and this link)
+        var prev = expandLink.previousElementSibling;
+        while (prev && !prev.classList.contains('unit-row') && prev.style.background !== '#FFFBEB') {
+          var toRemove = prev; prev = prev.previousElementSibling;
+          if (toRemove.tagName==='DIV' && toRemove.querySelector('.unit-status')) toRemove.remove();
+          else if (toRemove.style.background==='rgb(249, 250, 251)') toRemove.remove();
+          else break;
+        }
+      }
+    });
+  }
+  // Back button (Screen 3)
+  $$('.back').forEach(function(back){
+    back.addEventListener('click', function(){ toast('返回上一页'); });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 4: 同板块对比 — static display
+  // ═══════════════════════════════════════════
+  // (no unique interactive elements beyond back button, already handled)
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 5: 即将入市 — cards + search
+  // ═══════════════════════════════════════════
+  $$('.upcoming-card').forEach(function(card){
+    card.addEventListener('click', function(){
+      var name = card.querySelector('.u-name');
+      toast(name ? '查看：'+name.textContent : '查看项目详情');
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 6: 单套详情 — discount calculator + nav
+  // ═══════════════════════════════════════════
+  // Mock unit database for prev/next navigation
+  var mockUnits = [
+    { room: '1904', name:'路劲驭海隽府 · 1栋二单元', floor:'19层', price:4580000, unitPrice:49514, area:92.50, innerArea:74.80, shareArea:17.70, fee:5.28, rate:81 },
+    { room: '1907', name:'路劲驭海隽府 · 1栋二单元', floor:'19层', price:4227692, unitPrice:47582, area:88.85, innerArea:71.83, shareArea:17.02, fee:5.28, rate:81 },
+    { room: '7101', name:'路劲驭海隽府 · 1栋七单元', floor:'7层', price:5120000, unitPrice:48623, area:105.30, innerArea:85.00, shareArea:20.30, fee:5.28, rate:80 },
+  ];
+  var currentUnitIdx = 1; // 1907
+
+  function renderUnit(u) {
+    var frame = document.querySelectorAll('.phone-frame')[5]; // 6th frame
+    if (!frame) return;
+    // update header
+    var header = frame.querySelector('[style*="linear-gradient"]');
+    if (header) {
+      header.querySelectorAll('div').forEach(function(d){
+        if (d.style.fontSize==='11px') d.textContent = u.name;
+        if (d.style.fontSize==='40px') d.textContent = u.room;
+        if (d.style.fontSize==='13px') d.textContent = u.floor+' · 住宅';
+      });
+    }
+    // update price info
+    var priceCards = frame.querySelectorAll('.flex-between');
+    priceCards.forEach(function(row){
+      var spans = row.querySelectorAll('span');
+      var label = spans[0] ? spans[0].textContent : '';
+      var val = spans[1];
+      if (!val) return;
+      if (label==='备案总价') { val.innerHTML = u.price.toLocaleString()+' <small style="font-size:13px;">元</small>'; }
+      if (label==='备案单价') { val.innerHTML = u.unitPrice.toLocaleString()+' <small style="font-size:12px; color:var(--text-hint);">元/㎡</small>'; }
+      if (label==='户内面积单价') { val.innerHTML = Math.round(u.price/u.innerArea).toLocaleString()+' <small style="font-size:12px; color:var(--text-hint);">元/㎡</small>'; }
+      if (label==='建筑面积') { val.innerHTML = u.area.toFixed(2)+' ㎡'; }
+      if (label==='户内面积') { val.innerHTML = u.innerArea.toFixed(2)+' ㎡'; }
+      if (label==='分摊面积') { val.innerHTML = u.shareArea.toFixed(2)+' ㎡'; }
+      if (label==='物业费') { val.innerHTML = u.fee.toFixed(2)+' 元/月/㎡ · '+Math.round(u.fee*u.area)+' 元/月'; }
+    });
+    // update calculator results
+    var discountInput = frame.querySelector('input[type="number"]');
+    if (discountInput) { u._discount = parseInt(discountInput.value)||85; }
+    recalc(frame, u);
+  }
+
+  function recalc(frame, u) {
+    var discountInput = frame.querySelector('input[type="number"]');
+    var discount = parseInt(discountInput.value)||85;
+    var afterPrice = Math.round(u.price * discount / 100);
+    var afterUnitPrice = Math.round(afterPrice / u.area);
+    var downPayment = Math.round(afterPrice * 0.15);
+    var resultRows = frame.querySelectorAll('[style*="background:#F9FAFB"] .flex-between');
+    resultRows.forEach(function(row){
+      var spans = row.querySelectorAll('span');
+      var label = spans[0] ? spans[0].textContent : '';
+      var val = spans[1];
+      if (!val) return;
+      if (label.indexOf('折后总价')!==-1) { val.innerHTML = afterPrice.toLocaleString()+' <small style="font-size:12px;">元</small>'; }
+      if (label==='折后单价') { val.innerHTML = afterUnitPrice.toLocaleString()+' <small style="font-size:11px; color:var(--text-hint);">元/㎡</small>'; }
+      if (label==='首付15%') { val.innerHTML = downPayment.toLocaleString()+' <small style="font-size:11px;">元</small>'; }
+    });
+    // update prev/next button labels
+    var btns = frame.querySelectorAll('button');
+    btns.forEach(function(btn){
+      if (btn.textContent.indexOf('上一套')!==-1) {
+        var prev = mockUnits[(currentUnitIdx-1+mockUnits.length)%mockUnits.length];
+        btn.textContent = '‹ 上一套（'+prev.room+'）';
+      }
+      if (btn.textContent.indexOf('下一套')!==-1) {
+        var next = mockUnits[(currentUnitIdx+1)%mockUnits.length];
+        btn.textContent = '下一套（'+next.room+'） ›';
+      }
+    });
+  }
+
+  // Calculator: "计算折后价" button
+  $$('.phone-frame').forEach(function(frame){
+    // find the calc button
+    frame.querySelectorAll('button').forEach(function(btn){
+      if (btn.textContent==='计算折后价') {
+        btn.classList.add('calc-btn');
+        btn.addEventListener('click', function(){
+          var u = mockUnits[currentUnitIdx];
+          recalc(frame, u);
+          toast('已重新计算');
+        });
+      }
+    });
+  });
+
+  // Prev / Next unit navigation
+  $$('.phone-frame').forEach(function(frame){
+    frame.querySelectorAll('button').forEach(function(btn){
+      if (btn.textContent.indexOf('上一套')!==-1) {
+        btn.classList.add('nav-btn');
+        btn.addEventListener('click', function(){
+          currentUnitIdx = (currentUnitIdx - 1 + mockUnits.length) % mockUnits.length;
+          renderUnit(mockUnits[currentUnitIdx]);
+        });
+      }
+      if (btn.textContent.indexOf('下一套')!==-1) {
+        btn.classList.add('nav-btn');
+        btn.addEventListener('click', function(){
+          currentUnitIdx = (currentUnitIdx + 1) % mockUnits.length;
+          renderUnit(mockUnits[currentUnitIdx]);
+        });
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════════
+  //  SCREEN 7: 房贷计算器
+  // ═══════════════════════════════════════════
+  var dpPct = 20, loanYr = 30, payType = 'equal';
+
+  function calcMortgage() {
+    var hp = parseFloat($('#housePrice').value) || 0;   // 万元
+    var rate = parseFloat($('#interestRate').value) || 3.5; // %
+    var principal = hp * (1 - dpPct/100) * 10000; // 元
+    var months = loanYr * 12;
+    var mr = rate / 100 / 12; // monthly rate
+
+    // update summary
+    $('#loanTotal').innerHTML = (principal/10000).toFixed(2)+'<small>万</small>';
+    $('#downPayment').innerHTML = (hp*dpPct/100).toFixed(2)+'<small>万</small>';
+
+    if (payType === 'equal') {
+      // 等额本息
+      var mp = principal * mr * Math.pow(1+mr, months) / (Math.pow(1+mr, months)-1);
+      var totalPay = mp * months;
+      var totalInt = totalPay - principal;
+      $('#monthlyPayment').innerHTML = Math.round(mp).toLocaleString()+'<small>元</small>';
+      $('#totalInterest').innerHTML = (totalInt/10000).toFixed(2)+'<small>万</small>';
+      $('#breakdownCard').style.display = 'none';
+    } else {
+      // 等额本金
+      var mpPrincipal = principal / months;
+      var firstInt = principal * mr;
+      var firstMonth = mpPrincipal + firstInt;
+      var lastMonth = mpPrincipal + mpPrincipal * mr;
+      var totalInt = (firstInt + mpPrincipal*mr) * months / 2;
+      var monthlyDec = mpPrincipal * mr;
+      $('#monthlyPayment').innerHTML = Math.round(firstMonth).toLocaleString()+'<small>元起</small>';
+      $('#totalInterest').innerHTML = (totalInt/10000).toFixed(2)+'<small>万</small>';
+      $('#firstMonth').textContent = Math.round(firstMonth).toLocaleString()+' 元';
+      $('#lastMonth').textContent = Math.round(lastMonth).toLocaleString()+' 元';
+      $('#monthlyDecline').textContent = '约 '+Math.round(monthlyDec).toLocaleString()+' 元/月';
+      $('#breakdownCard').style.display = '';
+    }
+  }
+
+  // Attach handlers
+  $('#housePrice').addEventListener('input', calcMortgage);
+  $('#interestRate').addEventListener('input', calcMortgage);
+
+  // Down payment chip toggle
+  $$('#downPaymentGroup .calc-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      $$('#downPaymentGroup .calc-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      dpPct = parseInt(chip.getAttribute('data-pct'));
+      calcMortgage();
+    });
+  });
+
+  // Loan year chip toggle
+  $$('#loanYearGroup .calc-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      $$('#loanYearGroup .calc-chip').forEach(function(c){ c.classList.remove('active'); });
+      chip.classList.add('active');
+      loanYr = parseInt(chip.getAttribute('data-yr'));
+      calcMortgage();
+    });
+  });
+
+  // Payment type toggle
+  $$('#paymentType .calc-type-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      $$('#paymentType .calc-type-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      payType = btn.getAttribute('data-type');
+      calcMortgage();
+    });
+  });
+
+  // Initial calculation
+  calcMortgage();
+
+  // ── init ──
+  updateTriggers();
+  updateSummary();
+})();
+</script>
+
+</body>
+</html>

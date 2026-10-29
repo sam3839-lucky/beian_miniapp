@@ -1,0 +1,88 @@
+<view class="page">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-box">
+      <text class="s-icon">🔍</text>
+      <input class="s-input" placeholder="输入小区名，查历史成交价" value="{{query}}"
+             bindinput="onInput" bindconfirm="onSearchConfirm" confirm-type="search" focus="{{true}}"/>
+      <text class="s-clear" wx:if="{{query}}" bindtap="onClear">✕</text>
+    </view>
+  </view>
+
+  <!-- 瞬搜结果 -->
+  <view wx:if="{{query && searched}}">
+    <view wx:if="{{loading}}" class="loading-msg">搜索中...</view>
+    <block wx:elif="{{error}}">
+      <view class="empty-block" bindtap="doSearch">
+        <text class="empty-icon">⚠️</text>
+        <text>加载失败，点击重试</text>
+      </view>
+    </block>
+    <block wx:elif="{{results.length === 0}}">
+      <view class="empty-block">
+        <text class="empty-icon">📭</text>
+        <text>未找到「{{query}}」的成交记录，换个关键词试试</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="result-list">
+        <view class="qr-card" wx:for="{{results}}" wx:key="community"
+              data-community="{{item.community}}" bindtap="onResultTap">
+          <view class="qr-left">
+            <text class="qr-name">{{item.community}}</text>
+            <text class="qr-meta">{{item.count}}条成交 · 均价{{item.avg_price}}万</text>
+          </view>
+          <text class="qr-arrow">›</text>
+        </view>
+        <view wx:if="{{results.length >= 5}}" class="view-all-row" bindtap="onSearchConfirm">
+          <text>查看全部结果 →</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 初始状态 -->
+  <view wx:if="{{!query || !searched}}">
+    <!-- 全局统计 -->
+    <view class="stat-row" wx:if="{{stats}}">
+      <view class="stat-card">
+        <text class="stat-num">{{stats.totalLabel}}</text>
+        <text class="stat-label">历史成交</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{stats.communitiesLabel}}</text>
+        <text class="stat-label">覆盖小区</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-num">{{stats.avgPriceLabel}}</text>
+        <text class="stat-label">平均总价</text>
+      </view>
+    </view>
+
+    <!-- 热门小区 -->
+    <view class="section" wx:if="{{hot.length}}">
+      <view class="sec-title">热门小区</view>
+      <view class="hot-tags">
+        <view class="hot-tag" wx:for="{{hot}}" wx:key="community_name"
+              data-community="{{item.community_name}}" bindtap="onHotTap">
+          <text class="ht-name">{{item.community_name}} <text class="ht-zone" wx:if="{{item.zone}}">{{item.zone}}</text></text>
+          <text class="ht-count">{{item.cnt}}条</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 按区域浏览 -->
+    <view class="section" wx:if="{{zones.length}}">
+      <view class="sec-title">按区域浏览</view>
+      <view class="zone-grid">
+        <view class="zone-card" wx:for="{{zones}}" wx:key="id"
+              data-zone-id="{{item.id}}" data-zone-name="{{item.name}}" bindtap="onZoneTap">
+          <text class="zc-name">{{item.name}}</text>
+          <text class="zc-sub">{{item.community_count}}个小区 · {{item.record_count}}条成交</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tip">支持按小区名搜索 · 数据来源：贝壳、乐有家</view>
+  </view>
+</view>

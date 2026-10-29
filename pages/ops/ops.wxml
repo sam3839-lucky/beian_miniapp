@@ -70,9 +70,9 @@
       </view>
     </view>
 
-    <!-- ═══ 各区可售住宅 ═══ -->
+    <!-- ═══ 各区可售房源 ═══ -->
     <view class="section">
-      <view class="section-head"><text class="section-title">各区可售住宅</text></view>
+      <view class="section-head"><text class="section-title">各区可售房源</text></view>
       <view class="info-card">
         <view class="info-row" wx:for="{{status.zones}}" wx:key="name">
           <text class="k">{{item.name}}</text>

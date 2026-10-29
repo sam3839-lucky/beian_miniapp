@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>深圳楼市成交分析 · 日均成交 V2</title>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --card: #fff;
+      --text: #1a1a1a;
+      --secondary: #666;
+      --hint: #999;
+      --line: #eee;
+      --green: #07c160;
+      --blue: #3b82f6;
+      --orange: #ff8c00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #ececec;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+    .phone {
+      width: 390px;
+      min-height: 844px;
+      overflow: hidden;
+      border: 8px solid #202020;
+      border-radius: 34px;
+      background: var(--bg);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, .18);
+    }
+    .status-bar {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .nav {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .content { height: 760px; overflow: hidden; padding: 12px 16px 30px; }
+    .search {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: #fff;
+      color: #b5b5b5;
+      font-size: 13px;
+    }
+    .search-badge { margin-left: auto; padding: 4px 9px; border-radius: 999px; background: #effaf3; color: #079b50; font-size: 10px; font-weight: 700; }
+    .section { margin-top: 12px; }
+    .card { border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+
+    .ring-card { padding: 16px 16px 13px; text-align: center; }
+    .ring-title { color: var(--secondary); font-size: 13px; font-weight: 700; }
+    .ring-date { margin-top: 4px; color: var(--hint); font-size: 11px; }
+    .ring-row { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 11px; }
+    .donut { width: 124px; height: 124px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--orange) 0 81.2%, var(--green) 81.2% 100%); position: relative; }
+    .donut::after { content: ""; position: absolute; inset: 16px; border-radius: 50%; background: #fff; }
+    .donut-center { position: relative; z-index: 1; text-align: center; }
+    .donut-total { font-size: 23px; font-weight: 800; letter-spacing: -1px; }
+    .donut-unit { margin-left: 3px; color: var(--hint); font-size: 10px; }
+    .donut-label { margin-top: 3px; color: var(--hint); font-size: 10px; }
+    .ring-values { min-width: 118px; text-align: left; }
+    .ring-value { display: flex; align-items: center; gap: 6px; margin: 9px 0; font-size: 12px; }
+    .dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; }
+    .dot.new { background: var(--green); }
+    .dot.used { background: var(--orange); }
+    .ring-number { margin-left: auto; font-weight: 800; }
+    .ring-pct { width: 36px; color: var(--hint); text-align: right; font-size: 11px; }
+
+    /* V2: one complete module with a shared edge and a tighter vertical rhythm. */
+    .average-card { padding: 18px 16px 16px; }
+    .average-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .average-title { font-size: 16px; font-weight: 800; }
+    .average-note { margin-top: 4px; color: var(--hint); font-size: 11px; }
+    .status { padding: 4px 8px; border-radius: 999px; background: #fff7e6; color: #d97706; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .average-hero { margin-top: 14px; }
+    .average-hero-label { display: block; color: var(--secondary); font-size: 11px; }
+    .average-hero-number { margin-top: 3px; font-size: 30px; line-height: 1; font-weight: 800; letter-spacing: -1px; }
+    .average-hero-unit { margin-left: 4px; color: var(--secondary); font-size: 12px; }
+    .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .metric { padding: 10px 11px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fbfbfb; }
+    .metric-label { display: flex; align-items: center; gap: 6px; color: var(--secondary); font-size: 11px; }
+    .metric-number { margin-top: 5px; font-size: 20px; font-weight: 800; letter-spacing: -.5px; }
+    .metric-number span { margin-left: 3px; color: var(--secondary); font-size: 10px; font-weight: 500; }
+    .metric.new .metric-number { color: var(--blue); }
+    .metric.used .metric-number { color: var(--orange); }
+    .forecast { margin-top: 12px; padding: 11px 12px 10px; border: 1px solid #dbeafe; border-radius: 8px; background: #f5f9ff; }
+    .forecast-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .forecast-label { color: #53657d; font-size: 11px; font-weight: 700; }
+    .forecast-tag { color: var(--blue); font-size: 10px; font-weight: 700; }
+    .forecast-value { margin-top: 3px; font-size: 24px; font-weight: 800; letter-spacing: -.5px; }
+    .forecast-value span { margin-left: 4px; color: var(--secondary); font-size: 11px; font-weight: 500; }
+    .forecast-formula { margin-top: 3px; color: #718096; font-size: 10px; line-height: 1.4; }
+    .forecast-track { height: 5px; overflow: hidden; margin-top: 8px; border-radius: 999px; background: #dbeafe; }
+    .forecast-progress { width: 67%; height: 100%; border-radius: inherit; background: var(--blue); }
+    .forecast-foot { display: flex; justify-content: space-between; margin-top: 4px; color: #8090a5; font-size: 10px; }
+
+    .section-title { margin: 16px 0 8px; font-size: 15px; font-weight: 800; }
+    .district-card { padding: 11px 12px; }
+    .district-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .district-col { padding: 8px 9px 7px; border: 1px solid var(--line); border-radius: 8px; }
+    .district-col-title { display: flex; align-items: center; gap: 5px; color: var(--secondary); font-size: 11px; font-weight: 700; }
+    .district-row { display: grid; grid-template-columns: 30px 1fr 28px 36px; align-items: center; gap: 4px; padding-top: 7px; font-size: 10px; }
+    .district-bar { height: 5px; overflow: hidden; border-radius: 999px; background: #eee; }
+    .district-bar i { display: block; height: 100%; border-radius: inherit; }
+    .district-count, .district-pct { text-align: right; color: var(--secondary); }
+    .district-count { font-weight: 700; }
+    .caption { margin-top: 10px; color: #aaa; font-size: 10px; text-align: center; }
+    @media (max-width: 430px) {
+      body { padding: 0; background: var(--bg); }
+      .phone { width: 100%; min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+      .content { height: calc(100vh - 76px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <div class="status-bar"><span>20:32</span><span>▮▮▮　Wi-Fi　▰</span></div>
+    <div class="nav">深圳楼市成交分析</div>
+    <div class="content">
+      <div class="search"><span>⌕</span><span>搜小区，查历史成交价</span><span class="search-badge">13.9万条</span></div>
+
+      <section class="section card ring-card">
+        <div class="ring-title">2026年9月累计成交统计</div>
+        <div class="ring-date">数据截至 9月20日</div>
+        <div class="ring-row">
+          <div class="donut"><div class="donut-center"><span class="donut-total">5367</span><span class="donut-unit">套</span><div class="donut-label">本月累计</div></div></div>
+          <div class="ring-values">
+            <div class="ring-value"><i class="dot new"></i><span>一手</span><b class="ring-number">1009</b><span class="ring-pct">18.8%</span></div>
+            <div class="ring-value"><i class="dot used"></i><span>二手</span><b class="ring-number">4358</b><span class="ring-pct">81.2%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section card average-card">
+        <div class="average-head">
+          <div><div class="average-title">本月日均成交</div><div class="average-note">9月1日—9月20日 · 按自然日计算</div></div>
+          <span class="status">进行中</span>
+        </div>
+        <div class="average-hero">
+          <span class="average-hero-label">总成交日均</span>
+          <strong class="average-hero-number">268.4</strong><span class="average-hero-unit">套/日</span>
+        </div>
+        <div class="metric-grid">
+          <div class="metric new"><div class="metric-label"><i class="dot new"></i>新房</div><div class="metric-number">50.5<span>套/日</span></div></div>
+          <div class="metric used"><div class="metric-label"><i class="dot used"></i>二手房</div><div class="metric-number">217.9<span>套/日</span></div></div>
+        </div>
+        <div class="forecast">
+          <div class="forecast-head"><span class="forecast-label">本月预估总成交</span><span class="forecast-tag">按当前速度测算</span></div>
+          <div class="forecast-value">约 8,051<span>套</span></div>
+          <div class="forecast-formula">已成交 5,367 套 + 当前日均 268.4 套 × 剩余 10 天</div>
+          <div class="forecast-track"><div class="forecast-progress"></div></div>
+          <div class="forecast-foot"><span>当前完成约 67%</span><span>本月共 30 天</span></div>
+        </div>
+      </section>
+
+      <div class="section-title">各区成交占比</div>
+      <section class="card district-card">
+        <div class="district-grid">
+          <div class="district-col">
+            <div class="district-col-title"><i class="dot new"></i>一手</div>
+            <div class="district-row"><span>龙华</span><span class="district-bar"><i style="width:82%;background:#07c160"></i></span><b class="district-count">270</b><span class="district-pct">26.8%</span></div>
+            <div class="district-row"><span>宝安</span><span class="district-bar"><i style="width:69%;background:#07c160"></i></span><b class="district-count">227</b><span class="district-pct">22.5%</span></div>
+            <div class="district-row"><span>光明</span><span class="district-bar"><i style="width:58%;background:#07c160"></i></span><b class="district-count">193</b><span class="district-pct">19.1%</span></div>
+          </div>
+          <div class="district-col">
+            <div class="district-col-title"><i class="dot used"></i>二手</div>
+            <div class="district-row"><span>龙岗</span><span class="district-bar"><i style="width:82%;background:#ff8c00"></i></span><b class="district-count">1005</b><span class="district-pct">23.1%</span></div>
+            <div class="district-row"><span>福田</span><span class="district-bar"><i style="width:65%;background:#ff8c00"></i></span><b class="district-count">798</b><span class="district-pct">18.3%</span></div>
+            <div class="district-row"><span>罗湖</span><span class="district-bar"><i style="width:57%;background:#ff8c00"></i></span><b class="district-count">707</b><span class="district-pct">16.2%</span></div>
+          </div>
+        </div>
+      </section>
+      <div class="caption">数据来源：深圳市住房和建设局公开信息</div>
+    </div>
+  </main>
+</body>
+</html>

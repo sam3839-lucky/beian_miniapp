@@ -1,0 +1,79 @@
+.card {
+  background: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 32rpx;
+  margin-bottom: 12rpx;
+}
+
+.main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.info {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.layout {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.area {
+  font-size: 26rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.price-col {
+  flex-shrink: 0;
+}
+
+.price {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #FF4D4F;
+}
+
+.price-unit {
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.sub-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8rpx;
+}
+
+.meta {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.date {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.bottom-row {
+  margin-top: 6rpx;
+}
+
+.unit-price {
+  font-size: 24rpx;
+  color: #FF8C00;
+}
+
+.source {
+  font-size: 24rpx;
+  color: #bbb;
+}

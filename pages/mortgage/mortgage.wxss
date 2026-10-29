@@ -1,0 +1,177 @@
+/* ═══ 房贷计算器 — 设计系统 v2 ═══ */
+.wrapper { background: #F5F5F5; min-height: 100vh; padding-bottom: 64rpx; }
+
+/* ── 模式切换 ── */
+.mode-bar {
+  display: flex;
+  margin: 24rpx 32rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 8rpx;
+}
+.mode-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  border-radius: 8rpx;
+  color: #666;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out, opacity 150ms ease-out;
+}
+.mode-item.on {
+  background: #07C160;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── 输入卡片 ── */
+.card {
+  background: #fff;
+  margin: 0 32rpx 24rpx;
+  border-radius: 12rpx;
+  padding: 32rpx;
+}
+.field {
+  margin-bottom: 32rpx;
+}
+.field-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+.field-input {
+  width: 100%;
+  height: 80rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+  padding: 0 24rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1A1A1A;
+  box-sizing: border-box;
+}
+
+/* ── Chips ── */
+.chip-row {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+.chip {
+  font-size: 24rpx;
+  padding: 8rpx 20rpx;
+  border-radius: 9999px;
+  background: #F5F5F5;
+  color: #666;
+  transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out, opacity 150ms ease-out;
+}
+.chip.on {
+  background: #07C160;
+  color: #fff;
+}
+
+/* ── 百分比/年限输入 ── */
+.pct-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.pct-input {
+  width: 100rpx;
+  text-align: center;
+  height: 64rpx;
+  background: #F5F5F5;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+.pct-suffix {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* ── 计算按钮 ── */
+.calc-btn {
+  margin-top: 16rpx;
+  text-align: center;
+  padding: 24rpx 0;
+  background: #07C160;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 700;
+  border-radius: 12rpx;
+}
+.calc-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* ── 结果卡片 ── */
+.result-card {
+  background: #fff;
+  margin: 24rpx 32rpx;
+  border-radius: 12rpx;
+  padding: 32rpx;
+  border-left: 8rpx solid #07C160;
+}
+.result-head {
+  margin-bottom: 24rpx;
+}
+.result-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 4rpx;
+}
+.result-sub {
+  font-size: 22rpx;
+  color: #999;
+}
+.result-grid {
+  /* container */
+}
+.rg-item.hero {
+  text-align: center;
+  padding: 24rpx 0;
+  margin-bottom: 16rpx;
+  background: #F0FFF4;
+  border-radius: 8rpx;
+}
+.rg-item.hero .rg-label { font-size: 24rpx; color: #666; display: block; margin-bottom: 4rpx; }
+.rg-item.hero .rg-value { font-size: 56rpx; font-weight: 800; }
+.rg-value.primary { color: #07C160; }
+.rg-value.warn { color: #FF8C00; }
+
+.rg-row {
+  display: flex;
+  border-bottom: 1rpx solid #F0F0F0;
+  padding: 20rpx 0;
+}
+.rg-row:last-child { border-bottom: none; }
+.rg-item {
+  flex: 1;
+}
+.rg-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 4rpx;
+}
+.rg-value {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+/* ── 提示 ── */
+.result-note {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #F0F0F0;
+  font-size: 22rpx;
+  color: #999;
+  line-height: 1.6;
+}

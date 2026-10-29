@@ -1,0 +1,15 @@
+<view class="ub-wrap" wx:if="{{show && max > 0}}">
+  <view class="ub-bar {{remaining <= 3 ? 'low' : ''}}">
+    <view class="ub-left">
+      <text class="ub-count">今日{{label}} <text class="ub-num">{{used}}/{{max}}</text> 次</text>
+      <text class="ub-remain" wx:if="{{remaining <= 5}}">剩余 <text class="ub-num-low">{{remaining}}</text> 次</text>
+    </view>
+    <view class="ub-right" bindtap="onUpgrade" hover-class="ub-right-hover">
+      <text>无限{{label}}</text>
+      <text class="ub-arrow">→</text>
+    </view>
+  </view>
+  <view class="ub-progress" wx:if="{{pct >= 60}}">
+    <view class="ub-progress-inner" style="width:{{pct}}%"></view>
+  </view>
+</view>

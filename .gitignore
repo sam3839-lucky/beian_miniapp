@@ -27,3 +27,4 @@ docs/preview/
 *.key
 .env
 .env.*
+.gstack/
