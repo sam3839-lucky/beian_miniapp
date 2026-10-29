@@ -28,9 +28,39 @@ fi
 
 DESC="${2:-更新}"
 
+# 服务器专属文件：本地没有，靠 --delete 会被整批删掉
+# private.key 删了上传必失败；.env / *.db 是服务器上的运行数据
+PROTECTED=(private.key .env property.db .review-state.json .deploy-backups .gstack)
+
 echo "==> rsync ${PROJECT} → ${SERVER}"
-rsync -avz --delete --exclude 'node_modules' --exclude '.git' --exclude 'sync/*.db' \
-  --exclude '__pycache__' "${SCRIPT_DIR}/" "${SERVER}:${REMOTE_DIR}/"
+rsync -avz --delete \
+  --exclude 'node_modules' \
+  --exclude '.git' \
+  --exclude '__pycache__' \
+  --exclude 'private.key' \
+  --exclude '.env' \
+  --exclude '.env.*' \
+  --exclude '*.db' \
+  --exclude '*.db-shm' \
+  --exclude '*.db-wal' \
+  --exclude '.deploy-backups' \
+  --exclude '.review-state.json' \
+  --exclude '.gstack' \
+  "${SCRIPT_DIR}/" "${SERVER}:${REMOTE_DIR}/"
+
+echo "==> 校验服务器专属文件未被误删"
+MISSING=""
+for f in "${PROTECTED[@]}"; do
+  if ! ssh "${SERVER}" "test -e '${REMOTE_DIR}/${f}'"; then
+    MISSING="${MISSING} ${f}"
+  fi
+done
+if [ -n "$MISSING" ]; then
+  echo "❌ rsync 后缺少服务器专属文件:${MISSING}"
+  echo "   已中止，未执行上传。请先恢复这些文件再重试。"
+  exit 1
+fi
+echo "    OK: ${PROTECTED[*]}"
 
 echo "==> upload to WeChat (version=${VERSION})"
 ssh "${SERVER}" "cd ${REMOTE_DIR} && node scripts/upload.js '${VERSION}' '${DESC}'"

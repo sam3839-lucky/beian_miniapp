@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.11.0] - 2026-10-29
+
+### Added
+
+- Added 近三年 / 近四年 / 近五年 range options to historical transaction comparison, alongside the existing 往年 default.
+
+### Changed
+
+- Bound the range label, its internal key and its year count into a single configuration table so the three can no longer drift apart.
+
+### Fixed
+
+- 近三年 previously rendered four year columns; it now renders exactly three, matching its label.
+- Stopped rendering year columns that contain no data when the backend returns fewer years than the selected range asks for; the year-range label now derives from the columns actually rendered instead of the requested range.
+
 ## [1.10.0] - 2026-09-21
 
 ### Added
