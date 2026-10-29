@@ -9,8 +9,17 @@
  */
 
 const https = require('https');
+const { loadEnv, requireEnv } = require('./load-env');
+
+loadEnv();
+
 const APPID = 'wx0c0ca47c02bcd376';
-const SECRET = 'e8fa6b52cfdb1d6f7fcaf7a83454423f';
+// AppSecret 一律从环境变量读取，禁止再写进代码：
+// 它曾被明文提交进公开仓库，只能在微信后台重置止损。
+const SECRET = requireEnv(
+  'WX_APPSECRET',
+  '请在小程序后台 开发 → 开发设置 重置 AppSecret，然后写入 .env: WX_APPSECRET=...'
+);
 
 function request(method, path, body) {
   return new Promise((resolve, reject) => {
@@ -70,7 +79,7 @@ async function status(token) {
 
   try {
     const token = await getToken();
-    console.log(`Token: ${token.slice(0, 10)}...`);
+    console.log('Token: 已获取');
 
     if (cmd === 'submit') {
       const auditid = await submit(token, desc);

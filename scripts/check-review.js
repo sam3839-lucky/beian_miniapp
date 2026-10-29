@@ -12,9 +12,16 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { loadEnv, requireEnv } = require('./load-env');
+
+loadEnv();
 
 const APPID = 'wx0c0ca47c02bcd376';
-const SECRET = 'e8fa6b52cfdb1d6f7fcaf7a83454423f';
+// AppSecret 一律从环境变量读取，禁止再写进代码（详见 review.js 注释）
+const SECRET = requireEnv(
+  'WX_APPSECRET',
+  '请在小程序后台 开发 → 开发设置 重置 AppSecret，然后写入 .env: WX_APPSECRET=...'
+);
 const CHAT_ID = 'oc_d34beb716d5b7f0e9315e968af182fd2';
 const STATE_FILE = path.join(__dirname, '..', '.review-state.json');
 const POLL_INTERVAL = 30 * 60 * 1000; // 30 分钟
