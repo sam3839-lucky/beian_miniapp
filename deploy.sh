@@ -32,6 +32,11 @@ DESC="${2:-更新}"
 # private.key 删了上传必失败；.env / *.db 是服务器上的运行数据
 PROTECTED=(private.key .env property.db .review-state.json .deploy-backups .gstack)
 
+# 只对 rsync 之前确实存在的文件做校验：.review-state.json 之类是运行时才生成的
+echo "==> 记录 rsync 前服务器上已存在的专属文件"
+EXISTED=$(ssh "${SERVER}" "cd '${REMOTE_DIR}' && for f in ${PROTECTED[*]}; do test -e \"\$f\" && echo \"\$f\"; done" | tr '\n' ' ')
+echo "    ${EXISTED:-（无）}"
+
 echo "==> rsync ${PROJECT} → ${SERVER}"
 rsync -avz --delete \
   --exclude 'node_modules' \
@@ -49,18 +54,20 @@ rsync -avz --delete \
   "${SCRIPT_DIR}/" "${SERVER}:${REMOTE_DIR}/"
 
 echo "==> 校验服务器专属文件未被误删"
+STILL=$(ssh "${SERVER}" "cd '${REMOTE_DIR}' && for f in ${PROTECTED[*]}; do test -e \"\$f\" && echo \"\$f\"; done" | tr '\n' ' ')
 MISSING=""
-for f in "${PROTECTED[@]}"; do
-  if ! ssh "${SERVER}" "test -e '${REMOTE_DIR}/${f}'"; then
-    MISSING="${MISSING} ${f}"
-  fi
+for f in ${EXISTED}; do
+  case " ${STILL} " in
+    *" ${f} "*) ;;
+    *) MISSING="${MISSING} ${f}" ;;
+  esac
 done
 if [ -n "$MISSING" ]; then
   echo "❌ rsync 后缺少服务器专属文件:${MISSING}"
   echo "   已中止，未执行上传。请先恢复这些文件再重试。"
   exit 1
 fi
-echo "    OK: ${PROTECTED[*]}"
+echo "    OK: ${EXISTED:-（本次无可校验项）}"
 
 echo "==> upload to WeChat (version=${VERSION})"
 ssh "${SERVER}" "cd ${REMOTE_DIR} && node scripts/upload.js '${VERSION}' '${DESC}'"
